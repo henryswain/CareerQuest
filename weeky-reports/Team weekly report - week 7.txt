@@ -11,8 +11,12 @@ Team weekly report 7
 
 • Team member 1: Henry
 o Stories completed
+- redid the search to work with papaParse
+- presented my slides on Friday
 o Progress report
+- this week was mostly a presentation week, so I didn't do much coding, but I did have to fix the search function prior to presentation day.
 o Plan for next week
+- will discuss the details next week
 
 • Team member 2: Marcus Bodnar
 o Stories completed
