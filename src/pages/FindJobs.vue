@@ -157,15 +157,55 @@
                       ></button>
                     </div>
                     <div class="modal-body">
-                      <h5>Job Description</h5>
-                      <p>{{ item["Job Description"] }}</p>
-                      <h5>Basic Qual Requirements</h5>
-                      <p>{{ item["Minimum Qual Requirements"] }}</p>
-                      <h5>Preferred Skills</h5>
-                      <p>{{ item["Preferred Skills"] }}</p>
-                      <h5>To Apply</h5>
-                      <p>{{ item["To Apply"] }}</p>
-                    </div>
+
+                    <h5>Job Description</h5>
+                    <p v-if="item['Job Description']">
+                      {{ isExpanded(item['Job ID'], 'description') ? cleanText(item['Job Description']) : shortenText(cleanText(item['Job Description'])) }}
+                    </p>
+                    <button
+                      v-if="item['Job Description']"
+                      class="btn btn-link"
+                      @click="toggleExpand(item['Job ID'], 'description')"
+                    >
+                      {{ isExpanded(item['Job ID'], 'description') ? "Show Less" : "Show More" }}
+                    </button>
+
+                    <h5>Minimum Qualifications</h5>
+                    <p v-if="item['Minimum Qual Requirements']">
+                      {{ isExpanded(item['Job ID'], 'requirements') ? cleanText(item['Minimum Qual Requirements']) : shortenText(cleanText(item['Minimum Qual Requirements'])) }}
+                    </p>
+                    <button
+                      v-if="item['Minimum Qual Requirements']"
+                      class="btn btn-link"
+                      @click="toggleExpand(item['Job ID'], 'requirements')"
+                    >
+                      {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
+                    </button>
+
+                    <h5>Preferred Skills</h5>
+                    <p v-if="item['Preferred Skills']">
+                      {{ isExpanded(item['Job ID'], 'skills') ? cleanText(item['Preferred Skills']) : shortenText(cleanText(item['Preferred Skills'])) }}
+                    </p>
+                    <button
+                      v-if="item['Preferred Skills']"
+                      class="btn btn-link"
+                      @click="toggleExpand(item['Job ID'], 'skills')"
+                    >
+                      {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
+                    </button>
+
+                    <h5>To Apply</h5>
+                    <p v-if="item['To Apply']">
+                      {{ isExpanded(item['Job ID'], 'apply') ? cleanText(item['To Apply']) : shortenText(cleanText(item['To Apply'])) }}
+                    </p>
+                    <button
+                      v-if="item['To Apply']"
+                      class="btn btn-link"
+                      @click="toggleExpand(item['Job ID'], 'apply')"
+                    >
+                      {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
+                    </button>
+
                     <div class="modal-footer">
                       <button
                         type="button"
@@ -184,7 +224,7 @@
         </div>
       </div>
     </div>
-
+</div>
     <!-- Pagination -->
     <div class="pagination-controls">
       <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
@@ -223,6 +263,7 @@ const itemsPerPage = ref(
   JSON.parse(localStorage.getItem('userSettings'))?.itemsPerPage || 10
 );
 
+const currentJob = ref(null);
 
 // const searchText = ref(props.query || "");
 
@@ -269,6 +310,40 @@ onMounted(() => {
     },
   });
 });
+
+
+// Cleaning function
+function cleanText(text) {
+  if (typeof text !== "string") {
+    return "";
+  }
+
+  return text
+    .replace(/â/g, '"')
+    .replace(/â¢/g, '-')
+    .replace(/â/g, '"')
+    .replace(/â/g, "''")
+    .replace(/â/g, '—')
+    .replace(/[^\x20-\u00FF]/g, '');
+}
+
+// Track if expanded
+const expanded = ref({});
+
+const isExpanded = (jobId, section) => expanded.value[jobId]?.[section] || false;
+
+const toggleExpand = (jobId, section) => {
+  if (!expanded.value[jobId]) {
+    expanded.value[jobId] = {};
+  }
+  expanded.value[jobId][section] = !expanded.value[jobId][section];
+};
+
+// Shorten for preview
+const shortenText = (text, length = 150) => {
+  if (!text) return "";
+  return text.length > length ? text.slice(0, length) + "..." : text;
+};
 
 // Pagination
 const paginatedItems = computed(() => {
@@ -383,6 +458,8 @@ function applyFilters(newQueryString = "") {
   filteredJobs.value = results;
   currentPage.value = 1;
 }
+
+
 
 // If user changes query param, re-run filters or revert
 watch(

@@ -1,0 +1,45 @@
+Team weekly report 7
+• Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
+
+
+• Team progress/achieved things/accomplished tasks/stories completed
+• Team blockers/issues
+• Team tasks for next week
+
+• Meeting minutes - details of meetings
+
+• Team member 1: Henry
+o Stories completed
+o Progress report
+o Plan for next week
+
+• Team member 2: Marcus Bodnar
+o Stories completed
+o Progress report
+o Plan for next week
+
+• Team member 3: Tommy
+o Stories completed
+o Progress report
+o Plan for next week
+
+• Team member 4: Ryan Witcraft
+o Stories completed
+- Sprint 2 presentation, my story slide/adding a couple challenges/future goals
+- Added a cleaning function for description modal
+- Re-added expandable and retractable job descriptions to findJobs
+o Progress report
+- The switch to papaParse messed with some variables and merging issues so got that fixed
+- Cleaning function decodes encoding errors for correct descriptions
+- Cleaning function is on-demand
+o Plan for next week
+- Add cleaning function to savedJobs
+- Add Marcus's logic for fetching jobs
+- Saving account info to database
+- To apply QOL and functionality
+
+• Team member 5: Magnolia Wallerich
+o Stories completed
+o Progress report
+o Plan for next week
