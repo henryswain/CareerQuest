@@ -207,6 +207,12 @@
                     >
                       {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
                     </button>
+                    <button
+                      v-else="item['To Apply']"
+                      class="btn btn-primary"
+                    >
+                      Generic Apply Button
+                    </button>
 
                     <div class="modal-footer">
                       <button
