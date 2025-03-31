@@ -64,6 +64,7 @@ onMounted(() => {
   max-width: 1000px;
   text-align: center;
   border-radius: 50px;
+  border: 2px solid #9db3dd;
 }
 
 .home-page-logo {
@@ -87,6 +88,10 @@ onMounted(() => {
 
 .dark-mode .home-page-logo {
   content: url("@/assets/CQ_logo_darkmode.svg");
+}
+
+.dark-mode .center-logo-area {
+  border: 2px solid #ffffff;
 }
 
 </style>
