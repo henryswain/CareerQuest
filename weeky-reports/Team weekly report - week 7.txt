@@ -20,9 +20,13 @@ o Plan for next week
 
 • Team member 2: Marcus Bodnar
 o Stories completed
+    -Added the filtering to the find-jobs page with papaParse  
+    -Worked on dark mode filtering and settings page
+    -Presented to the class Friday
 o Progress report
+    -Presentations were this week so I got all of the dark mode settings to properly display (modals will have to be worked on for those)
 o Plan for next week
-
+    -We will figure this out Monday for me. I will constantly update the dark mode
 • Team member 3: Tommy
 o Stories completed
 - Modified profile page even more to allow for better user accessiblity, and allowed for user experience to be more fluid
