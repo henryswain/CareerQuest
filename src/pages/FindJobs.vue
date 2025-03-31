@@ -182,7 +182,9 @@
                       {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
                     </button>
 
-                    <h5>Preferred Skills</h5>
+                    <h5 v-if="item['Preferred Skills']">
+                      Preferred Skills
+                    </h5>
                     <p v-if="item['Preferred Skills']">
                       {{ isExpanded(item['Job ID'], 'skills') ? cleanText(item['Preferred Skills']) : shortenText(cleanText(item['Preferred Skills'])) }}
                     </p>
