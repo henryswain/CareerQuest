@@ -49,5 +49,11 @@ o Plan for next week
 
 • Team member 5: Magnolia Wallerich
 o Stories completed
+- Made some graphics for the homepage and general page logo
+- Got the graphics implemented into the homepage and started working out what we wanted for a layout with Tommy
 o Progress report
+- I got everything working except the darkmode background for the homepage working which for some reason works locally but not on AWS Amplify
 o Plan for next week
+- Start working on making graphics and styling for the rest of the page, probably focused on the navbar and maybe profile picture 
+    implementation with the folks working on the authenticator
+- Continue Tommy and I's work on making a nice landing page as the homepage currently leaves much to be desired from just my additions
