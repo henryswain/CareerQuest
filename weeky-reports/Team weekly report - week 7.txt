@@ -25,8 +25,12 @@ o Plan for next week
 
 • Team member 3: Tommy
 o Stories completed
+- Modified profile page even more to allow for better user accessiblity, and allowed for user experience to be more fluid
+- Worked on presentation slides / created presentation
 o Progress report
+- Presentation week, didn't feel like there was much that was needed to be done. Completed goals for sprint 2.
 o Plan for next week
+- Discuss and figure out plans for sprint 3
 
 • Team member 4: Ryan Witcraft
 o Stories completed
