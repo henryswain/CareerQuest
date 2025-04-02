@@ -1,0 +1,62 @@
+Team weekly report
+
+* Team members and team number
+Team 3: Henry, Marcus, Tommy, Ryan, and Magnolia
+
+* Team progress/achieved things/accomplished tasks/stories completed
+- Presentation and minor improvements
+
+* Team blockers/issues
+
+* Team tasks for next week
+Work on the login/signup pages
+
+* Meeting minutes - details of meetings 
+
+* Team member 1: Henry Swain
+o Stories completed
+- updated powerpoint with sprint goal, each team members completed stories, and how users stories contributed to sprint goal
+- presented those slides on Wednesday
+- looked into groups in AWS and began setting it up to prepare for switching to AWS.
+o Progress report 
+- most just worked on presentations, but I begain research into aws migration
+o Plan for next week
+- migrate to aws
+
+Team member 2: Marcus Bodnar
+o Stories completed
+- Created the slides for the sprint retrospective. 
+-Presented Wednesday
+o Progress report 
+Mainly just worked on the presentation this week and team evals.
+o Plan for next week
+Work on the functionality on the buttons. Add an apply feature
+
+Team member 3: Tommy Le
+o Stories completed
+- Worked on the intro and conclusion slides
+o Progress report 
+- Presented and started working on the login/sign up pages a bit
+o Plan for next week
+Work on development of the sign in/log in page and see how we are going to 
+store user data 
+
+
+Team member 4: Ryan Witcraft 
+o Stories completed 
+- Base settings and saved job pages 
+- Updated profile page to save to local drive as a temporary solution until AWS integration 
+- AWS troubleshooting 
+o Progress report  
+- More functionality for profile page and can apply to saved jobs/settings if user is not signed in. 
+o Plan for next week 
+- AWS integration and added functionality for settings/saved job pages 
+
+
+Team member 5: Magnolia Wallerich
+o Stories completed
+- Added my bits to the presentation and made all the slides look presentable as well as doing some general spell checking and tidying up.
+o Progress report 
+- Completed all of the aforementioned and we presented our sprint on Wednesday which I believe went well.
+o Plan for next week
+- Would like to begin working on migrating our database to AWS DynamoDB and implementing associated functionality.
