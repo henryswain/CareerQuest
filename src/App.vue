@@ -1,11 +1,12 @@
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"></link>
 <template>
   <div id="app">
     <!-- Desktop navbar -->
-    <nav class="navbar navbar-expand bg-primary navbar-dark fixed-top d-none d-lg-flex">
+    <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
       <div class="container-fluid">
-        <router-link class="navbar-brand fw-bold" to="/home-page">
+        <router-link class="navbarlogo navbar-brand fw-bold" to="/home-page">
           <img
-            src="@/assets/CQ_logo_darkmode.svg"
+            src="@/assets/CQ_logo_lightmode.svg"
             style="width: 150px;"
             class="logo"
             alt="CareerQuest logo"
@@ -13,10 +14,10 @@
         </router-link>
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <router-link class="nav-link" to="/find-jobs">Find Jobs</router-link>
+            <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/saved-jobs">Saved Jobs</router-link>
+            <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
           </li>
         </ul>
         <form class="d-flex me-3" @submit.prevent="handleSubmit">
@@ -26,7 +27,7 @@
             v-model="searchText"
             placeholder="Search jobs..."
           />
-          <button class="btn btn-outline-light" type="text">Search</button>
+          <button class="btn btn-primary" type="text">Search</button>
         </form>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -166,13 +167,13 @@
 import { ref, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 
-  import { Amplify } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
   // import outputs from '../amplify_outputs.json';
 
   // Amplify.configure(outputs);
 
 
-  import originalConfig from '../amplify_outputs.json';
+import originalConfig from '../amplify_outputs.json';
 
 // Function to replace env variable placeholders
 const resolveConfig = (config) => {
@@ -191,8 +192,8 @@ const amplifyConfig = resolveConfig(originalConfig);
 
 Amplify.configure(amplifyConfig)
 
-  import { Authenticator } from "@aws-amplify/ui-vue";
-  import "@aws-amplify/ui-vue/styles.css";
+import { Authenticator } from "@aws-amplify/ui-vue";
+import "@aws-amplify/ui-vue/styles.css";
 
 import { Hub } from 'aws-amplify/utils';
 import { getCurrentUser } from 'aws-amplify/auth';
@@ -240,6 +241,37 @@ async function handleSubmit() {
 <style scoped>
 .navbar {
   z-index: 2000;
+  background-color: #ffffff;
+  border-bottom: 2px solid #a1a1a1;
+  height: fit-content;
+  padding: 10px;
+}
+
+.navbarlogo {
+  padding: 0.5rem;
+  transition: background-color .15s ease-in-out;
+  border-radius: 50px;
+}
+
+.navbarlogo:hover {
+  color: #0073b1;
+  background: rgba(0, 115, 177, 0.1);
+}
+
+.navbarlink {
+  display: block;
+  color: #272727;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  transition: background-color .15s ease-in-out;
+  border-radius: 50px;
+}
+
+.navbarlink:hover {
+  color: #0073b1;
+  background: rgba(0, 115, 177, 0.1);
 }
 </style>
 

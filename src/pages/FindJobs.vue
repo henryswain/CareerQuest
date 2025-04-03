@@ -82,7 +82,7 @@
             :key="item['Job ID']"
             class="card mb-3"
           >
-            <h5 class="card-header">{{ item["Civil Service Title"] }}</h5>
+            <h5 class="card-header">{{ toTitleCase(item["Civil Service Title"]) }}</h5>
             <div class="card-body">
               <!-- Salary Frequency / FT/PT logic -->
               <div
@@ -147,7 +147,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h1 class="modal-title fs-5">
-                        {{ item["Civil Service Title"] }}
+                        {{ toTitleCase(item["Civil Service Title"]) }}
                       </h1>
                       <button
                         type="button"
@@ -305,6 +305,10 @@ function toggleJob(job) {
 
 function isJobSaved(jobId) {
   return savedJobs.value.some(job => job.id === jobId);
+}
+
+function toTitleCase(jobTitle) {
+  return jobTitle.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
 }
 
 // Parse CSV on mount
