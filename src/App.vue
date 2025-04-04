@@ -1,16 +1,11 @@
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"></link>
 <template>
   <div id="app">
     <!-- Desktop navbar -->
     <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
       <div class="container-fluid">
-        <router-link class="navbarlogo navbar-brand fw-bold" to="/home-page">
-          <img
-            src="@/assets/CQ_logo_lightmode.svg"
-            style="width: 150px;"
-            class="logo"
-            alt="CareerQuest logo"
-            />
+        <!-- Left justified links -->
+        <router-link class="navbar_logo_container" to="/home-page">
+          <img class="navbar_logo_img" alt="CareerQuest logo"/>
         </router-link>
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
@@ -20,6 +15,7 @@
             <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
           </li>
         </ul>
+        <!-- Right justified components -->
         <form class="d-flex me-3" @submit.prevent="handleSubmit">
           <input
             class="form-control me-2"
@@ -27,7 +23,7 @@
             v-model="searchText"
             placeholder="Search jobs..."
           />
-          <button class="btn btn-primary" type="text">Search</button>
+          <button class="searchbutton btn btn-primary" type="text">Search</button>
         </form>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -61,6 +57,7 @@
     </nav>
 
     <!-- Mobile navbar -->
+     <!-- new navbar not yet implemented for mobile-->
     <nav class="navbar navbar-expand-lg bg-primary navbar-dark fixed-top d-lg-none">
       <div class="container-fluid">
         <router-link class="navbar-brand fw-bold" to="/">CareerQuest</router-link>
@@ -247,13 +244,18 @@ async function handleSubmit() {
   padding: 10px;
 }
 
-.navbarlogo {
+.navbar_logo_container {
   padding: 0.5rem;
   transition: background-color .15s ease-in-out;
   border-radius: 50px;
+  width: 150px;
 }
 
-.navbarlogo:hover {
+.navbar_logo_img {
+  content: url("@/assets/CQ_logo_lightmode.svg");
+}
+
+.navbar_logo_container:hover {
   color: #0073b1;
   background: rgba(0, 115, 177, 0.1);
 }
@@ -273,6 +275,13 @@ async function handleSubmit() {
   color: #0073b1;
   background: rgba(0, 115, 177, 0.1);
 }
+
+.searchbutton {
+  border-radius: 50px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
+  font-size: 1rem;
+  font-weight: 500;
+}
 </style>
 
 <style>
@@ -287,6 +296,7 @@ async function handleSubmit() {
 }
 </style>
 
+<!-- Darkmode overrides -->
 <style>
 .dark-mode .form-control,
 .dark-mode input[type="text"],
@@ -321,6 +331,31 @@ async function handleSubmit() {
 .dark-mode .btn-close {
   filter: invert(1);
 }
+
+/* Navbar overrides */
+.dark-mode .navbar {
+  background-color: #181818;
+  border-bottom: #525151;
+}
+
+.dark-mode .navbar_logo_img {
+  content: url("@/assets/CQ_logo_darkmode.svg");
+}
+
+.dark-mode .navbar_logo_container:hover {
+  color: #0073b1;
+  background: rgba(73, 142, 179, 0.2);
+}
+
+.dark-mode .navbarlink {
+  color: #ffffff;
+}
+
+.dark-mode .navbarlink:hover {
+  color: #b2dbf1;
+  background: rgba(73, 142, 179, 0.2);
+}
+
 /* For Saved Jobs cards */
 .dark-mode .saved-jobs-container,
 .dark-mode .saved-jobs-container * {
@@ -336,8 +371,6 @@ async function handleSubmit() {
   color: #ffffff !important;
   border-color: #555555 !important;
 }
-
-
 
 /* Dark mode OVR for ProfilePage */
 .dark-mode .profile-container {
