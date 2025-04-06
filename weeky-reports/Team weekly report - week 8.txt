@@ -1,0 +1,52 @@
+Team weekly report 8
+• Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
+
+
+• Team progress/achieved things/accomplished tasks/stories completed
+• Team blockers/issues
+• Team tasks for next week
+
+• Meeting minutes - details of meetings
+
+• Team member 1: Henry
+o Stories completed
+
+o Progress report
+
+o Plan for next week
+
+
+• Team member 2: Marcus Bodnar
+o Stories completed
+
+o Progress report
+
+o Plan for next week
+
+• Team member 3: Tommy
+o Stories completed
+
+o Progress report
+
+o Plan for next week
+
+• Team member 4: Ryan Witcraft
+o Stories completed
+- Started frontend implementation for Amazon AWS
+- Fixed some syntax for description modal
+o Progress report
+- Saved jobs save to DynamoDB table through an API Henry developed
+- Saved jobs are removed from table when button is toggled
+- Saved jobs save to user ID
+o Plan for next week
+- Fix bug where same job can be saved multiple times
+- Implement frontend for savedJobs page
+
+
+• Team member 5: Magnolia Wallerich
+o Stories completed
+
+o Progress report
+
+o Plan for next week
