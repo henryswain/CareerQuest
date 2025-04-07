@@ -19,10 +19,12 @@ o Plan for next week
 
 • Team member 2: Marcus Bodnar
 o Stories completed
+-created lambda functions and corresponding apis, and new DynamoDB table for handling adding reading, and removing saved jobs instead of using local storage
 
 o Progress report
-
+-it went well, though it was a bit tricky to troubleshoot some of the errors throughout the process
 o Plan for next week
+- probably work on documentation, but will discuss next week.
 
 • Team member 3: Tommy
 o Stories completed
