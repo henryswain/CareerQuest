@@ -1,0 +1,67 @@
+Team weekly report 8
+• Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
+
+
+• Team progress/achieved things/accomplished tasks/stories completed
+• Team blockers/issues
+• Team tasks for next week
+
+• Meeting minutes - details of meetings
+
+• Team member 1: Henry
+o Stories completed
+
+o Progress report
+
+o Plan for next week
+
+
+• Team member 2: Marcus Bodnar
+o Stories completed
+-created lambda functions and corresponding APIs, and new DynamoDB table for handling adding reading, and removing saved jobs instead of using local storage
+
+o Progress report
+-it went well, though it was a bit tricky to troubleshoot some of the errors throughout the process
+o Plan for next week
+- probably work on documentation, but will discuss next week.
+
+• Team member 3: Tommy
+o Stories completed
+- Modified profile page and attempted to connect user data to profile page
+- Worked on homepage (added carousel and footer)
+o Progress report
+- Homepage needs to be implemented with dark-mode properly
+- Footer needs to extend throughout all the pages
+o Plan for next week
+- About and Terms of Service pages
+- Footer design needs to be properly implemented.
+
+• Team member 4: Ryan Witcraft
+o Stories completed
+- Started frontend implementation for Amazon AWS
+- Fixed some syntax for description modal
+o Progress report
+- Saved jobs save to DynamoDB table through an API Henry developed
+- Saved jobs are removed from table when button is toggled
+- Saved jobs save to user ID
+o Plan for next week
+- Fix bug where same job can be saved multiple times
+- Implement frontend for savedJobs page
+
+
+• Team member 5: Magnolia Wallerich
+o Stories completed
+- Fixed some random things on the FindJobs page. "Preferred Skills" section now no longer displays if the particular job entry had none listed. Made a generic apply button that shows when an entry
+    had no apply information that I plan to try to link to the original job listing site that we got this dataset from. Created a function that runs on each of the job listing titles so that they
+    display in Title Format With the First Letter Capitalized as opposed to the old all caps as they are in the dataset.
+- Made a new navbar with improved styling over the old one. Added darkmode to it as well.
+- Attempted to change the site icon to no avail though I did create the icon so once I figure out what the issue is I have everything I need
+o Progress report
+- All the changes on FindJobs that were mentioned previously are completed bar the apply button which I need to figure out the proper link for the original jobs listing site
+- The new navbar is working in all but one area that being I'm having some issues showing the logo in the top left in darkmode but this is an issue of CSS as far as I can tell
+- As mentioned I made the new icon for the site tab but haven't been able to get it to actually show yet.
+o Plan for next week
+- Continue to style the navbar and likely branch out to some other parts of the site
+- Figure out the icon issues
+- Possibly add some of the new pages listed on Tommy's new iteration of the home page
