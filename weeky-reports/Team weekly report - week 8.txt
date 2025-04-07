@@ -9,13 +9,6 @@ Team weekly report 8
 
 • Meeting minutes - details of meetings
 
-• Team member 1: Henry
-o Stories completed
-
-o Progress report
-
-o Plan for next week
-
 • Team member 1: Henry Swain
 o Stories completed
 -created lambda functions and corresponding APIs, and new DynamoDB table for handling adding reading, and removing saved jobs instead of using local storage

@@ -109,7 +109,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#authenticationModal"
                   >
-                    Sign in/Sign up
+                    Login/Sign up
                   </button>
                   <button
                     v-else
@@ -118,7 +118,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#authenticationModal"
                   >
-                    Sign out
+                    Sign Out
                   </button>
                 </div>
               </li>

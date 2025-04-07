@@ -20,21 +20,21 @@
         <div class="carousel-item active">
           <div class="carousel-content">
             <h2>Find Your Dream Job</h2>
-            <p>Browse through thousands of opportunities tailored to your skills and experience.</p>
+            <p>Need to get of mom's basement?</p>
           </div>
         </div>
 
         <div class="carousel-item">
           <div class="carousel-content">
             <h2>Smart Job Matching</h2>
-            <p>Our AI-powered system matches you with the most relevant positions.</p>
+            <p>Need to put food on the table?</p>
           </div>
         </div>
 
         <div class="carousel-item">
           <div class="carousel-content">
             <h2>Track Your Progress</h2>
-            <p>Keep track of your applications and interviews all in one place.</p>
+            <p>Stop being a hobo and find your job today!</p>
           </div>
         </div>
       </div>
