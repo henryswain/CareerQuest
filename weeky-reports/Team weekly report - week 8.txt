@@ -16,8 +16,7 @@ o Progress report
 
 o Plan for next week
 
-
-• Team member 2: Marcus Bodnar
+• Team member 1: Henry Swain
 o Stories completed
 -created lambda functions and corresponding APIs, and new DynamoDB table for handling adding reading, and removing saved jobs instead of using local storage
 
@@ -25,6 +24,17 @@ o Progress report
 -it went well, though it was a bit tricky to troubleshoot some of the errors throughout the process
 o Plan for next week
 - probably work on documentation, but will discuss next week.
+
+• Team member 2: Marcus Bodnar
+o Stories completed
+- Working on additions pertaining to the sprint 2 feedback
+
+o Progress report
+- Waiting for the users to be able to connect to the database with an ID so I can add a change password
+- Fixed the filtering view to make it look nicer/easier for people. 
+o Plan for next week
+- Documentation and keep adding items from the feedback. Lots of little fixes need to be done 
+for better usability.
 
 • Team member 3: Tommy
 o Stories completed
