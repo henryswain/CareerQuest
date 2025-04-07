@@ -50,7 +50,16 @@ o Plan for next week
 
 • Team member 5: Magnolia Wallerich
 o Stories completed
-
+- Fixed some random things on the FindJobs page. "Preferred Skills" section now no longer displays if the particular job entry had none listed. Made a generic apply button that shows when an entry
+    had no apply information that I plan to try to link to the original job listing site that we got this dataset from. Created a function that runs on each of the job listing titles so that they
+    display in Title Format With the First Letter Capitalized as opposed to the old all caps as they are in the dataset.
+- Made a new navbar with improved styling over the old one. Added darkmode to it as well.
+- Attempted to change the site icon to no avail though I did create the icon so once I figure out what the issue is I have everything I need
 o Progress report
-
+- All the changes on FindJobs that were mentioned previously are completed bar the apply button which I need to figure out the proper link for the original jobs listing site
+- The new navbar is working in all but one area that being I'm having some issues showing the logo in the top left in darkmode but this is an issue of CSS as far as I can tell
+- As mentioned I made the new icon for the site tab but haven't been able to get it to actually show yet.
 o Plan for next week
+- Continue to style the navbar and likely branch out to some other parts of the site
+- Figure out the icon issues
+- Possibly add some of the new pages listed on Tommy's new iteration of the home page
