@@ -58,10 +58,12 @@
     </nav>
 
     <!-- Mobile navbar -->
-     <!-- new navbar not yet implemented for mobile-->
-    <nav class="navbar navbar-expand-lg bg-primary navbar-dark fixed-top d-lg-none">
+        <!-- New navbar for mobile. Is not white and adopts new logo-->
+      <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
       <div class="container-fluid">
-        <router-link class="navbar-brand fw-bold" to="/">CareerQuest</router-link>
+        <router-link class="navbar_logo_container" to="/home-page">
+        <img class="navbar_logo_img" alt="CareerQuest logo"/>
+        </router-link>
         <button
           class="navbar-toggler bg-primary"
           type="button"
