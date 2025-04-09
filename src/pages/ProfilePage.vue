@@ -162,7 +162,7 @@ const deleteItem = (array, index) => {
             </div>
           </div>
         </div>
-        <-- Education section -->
+        <!-- Education section -->
         <div class="card">
           <h2>Education</h2>
           <div class="education-list">
@@ -284,7 +284,7 @@ const deleteItem = (array, index) => {
         <input v-model="user.socialLinks.github" class="input-field" placeholder="Enter GitHub URL" />
         <input v-model="user.socialLinks.website" class="input-field" placeholder="Enter Website URL" />
       </div>
-      <! Save & cancel buttons for editing profile
+      <! Save & cancel buttons for editing profile -->
       <div class="profile-actions">
         <button class="btn btn-success" @click="saveProfile">Save</button>
         <button class="btn btn-secondary" @click="isEditing = false">Cancel</button>
