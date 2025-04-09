@@ -59,11 +59,13 @@
 
     <!-- Mobile navbar -->
      <!-- new navbar not yet implemented for mobile-->
-    <nav class="navbar navbar-expand-lg bg-primary navbar-dark fixed-top d-lg-none">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top d-lg-none">
       <div class="container-fluid">
-        <router-link class="navbar-brand fw-bold" to="/">CareerQuest</router-link>
+        <router-link class="navbar_logo_container" to="/home-page">
+          <img class="navbar_logo_img" alt="CareerQuest logo"/>
+        </router-link>
         <button
-          class="navbar-toggler"
+          class="navbar-toggler bg-primary"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavMobile"
@@ -73,10 +75,10 @@
         <div class="collapse navbar-collapse flex-column align-items-center" id="navbarNavMobile">
           <ul class="navbar-nav mb-2 w-100 d-flex justify-content-center">
             <li class="nav-item">
-              <router-link class="nav-link" :to="`/find-jobs?q=${searchText}`">Find Jobs</router-link>
+              <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/saved-jobs">Saved Jobs</router-link>
+              <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
             </li>
           </ul>
           <form class="d-flex me-3" @submit.prevent="handleSubmit">
