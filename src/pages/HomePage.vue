@@ -1,6 +1,7 @@
 <template>
   <div class="home-page">
     <br>
+    <!-- Logo and introductory text section -->
     <div class="center-logo-area">
       <!-- Logo is handled by CSS content property -->
       <img class="home-page-logo" alt="Company Logo" />
@@ -8,37 +9,37 @@
       <h4>Taking your job search to new heights</h4>
       <br>
     </div>
-
+    <!-- Carousel to showcase key features of the website -->
     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
-
+      <!-- Carousel slides with content -->
       <div class="carousel-inner">
         <div class="carousel-item active">
           <div class="carousel-content">
             <h2>Find Your Dream Job</h2>
-            <p>Need to get of mom's basement?</p>
+            <p>Browse through thousands of opportunities tailored to your skills and experience.</p>
           </div>
         </div>
 
         <div class="carousel-item">
           <div class="carousel-content">
             <h2>Smart Job Matching</h2>
-            <p>Need to put food on the table?</p>
+            <p>Our AI-powered system matches you with the most relevant positions.</p>
           </div>
         </div>
 
         <div class="carousel-item">
           <div class="carousel-content">
             <h2>Track Your Progress</h2>
-            <p>Stop being a hobo and find your job today!</p>
+            <p>Keep track of your applications and interviews all in one place.</p>
           </div>
         </div>
       </div>
-
+         <!-- Carousel controls for previous and next slide -->
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -49,17 +50,17 @@
       </button>
     </div>
 
-    <!-- Add Footer -->
+    <!-- Footer -->
     <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
           <p class="copyright">&copy; 2024 CareerQuest, Inc</p>
         </div>
-
+        <!-- logo in footer -->
         <div class="footer-section">
           <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
         </div>
-
+        <!-- footer links section-->
         <div class="footer-section">
           <ul class="footer-links">
             <li><a href="/about">About</a></li>
@@ -78,7 +79,7 @@ import { useRoute } from 'vue-router';
 import { ref, onMounted, defineProps, watch, computed } from 'vue';
 
 const darkMode = ref(false);
-
+// loads user settings from localStorage
 const loadSettings = () => {
   const savedSettings = localStorage.getItem('userSettings');
   if (savedSettings) {
@@ -95,9 +96,9 @@ const applyDarkMode = () => {
     document.body.classList.remove('dark-mode');
   }
 };
-
+// Watch for changes to darkmode and apply accordingly
 watch(darkMode, applyDarkMode);
-
+// On component mount, load user settings and apply dark mode
 onMounted(() => {
   loadSettings();
   applyDarkMode();
@@ -118,7 +119,7 @@ onMounted(() => {
   position: relative;
   margin-top: 50px;
 }
-
+/* Logo and introductory area with a blurred background */
 .center-logo-area {
   backdrop-filter: blur(6px);
   margin: 20px auto;
@@ -129,7 +130,7 @@ onMounted(() => {
   border: 2px solid #9db3dd;
   padding: 20px;
 }
-
+/* Logo styling */
 .home-page-logo {
   content: url("@/assets/CQ_logo_lightmode.svg");
   width: 100%;
@@ -137,7 +138,7 @@ onMounted(() => {
   height: auto;
   padding: 20px;
 }
-
+/* Carosel container styling */
 .carousel {
   width: 90%;
   max-width: 1200px;
@@ -152,7 +153,7 @@ onMounted(() => {
 .carousel-item {
   height: 400px;
 }
-
+/* Carousel content */
 .carousel-content {
   display: flex;
   flex-direction: column;
@@ -183,7 +184,7 @@ onMounted(() => {
   width: 10%;
   opacity: 0.8;
 }
-
+/* Indicators and control buttons */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-color: rgba(0, 0, 0, 0.6);

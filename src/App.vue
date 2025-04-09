@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- Desktop navbar -->
+    <!-- Desktop navbar (Hidden on mobile)-->
     <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
       <div class="container-fluid">
         <!-- Left justified links -->
@@ -42,6 +42,7 @@
             <li><router-link class="dropdown-item" to="/register">Register</router-link></li>
             <li><router-link class="dropdown-item text-danger" to="/logout">Logout</router-link></li> -->
             <li>
+              <!-- Auth sign in and sign out buttons -->
               <div>
                 <button v-if="!isAuthenticated" type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#authenticationModal">
                   Sign in/Sign up
@@ -139,6 +140,7 @@
         <div class="modal-body">
           <!-- Basic authenticator without slots -->
           <authenticator>
+            <!-- AWS Amplify auth for login/signup -->
             <template v-slot="{ user, signOut }">
               <h1>Hello {{ user.username }}!</h1>
               <button class="btn btn-primary" @click="signOut">Sign Out</button>
@@ -198,8 +200,10 @@ import { getCurrentUser } from 'aws-amplify/auth';
 const isAuthenticated = ref(false);
 
 const closeModal = () => {
+  // Function to close the modal programmatically
 
   console.log("close modal")
+
   // Select the element you want to fire the event on
   const modalElement = document.getElementById('authenticationModal');
 
@@ -226,6 +230,7 @@ Hub.listen('auth', async ({ payload }) => {
   }
 });
 
+// Router and search handling
 const router = useRouter();
 const searchText = ref("");
 
@@ -236,6 +241,7 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
+/* Styles for the navbar (desktop version) */
 .navbar {
   z-index: 2000;
   background-color: #ffffff;
@@ -243,7 +249,7 @@ async function handleSubmit() {
   height: fit-content;
   padding: 10px;
 }
-
+/* Logo container and image styling */
 .navbar_logo_container {
   padding: 0.5rem;
   transition: background-color .15s ease-in-out;
