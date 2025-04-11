@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- Desktop navbar -->
+    <!-- Desktop navbar (Hidden on mobile)-->
     <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
       <div class="container-fluid">
         <!-- Left justified links -->
@@ -42,6 +42,7 @@
             <li><router-link class="dropdown-item" to="/register">Register</router-link></li>
             <li><router-link class="dropdown-item text-danger" to="/logout">Logout</router-link></li> -->
             <li>
+              <!-- Auth sign in and sign out buttons -->
               <div>
                 <button v-if="!isAuthenticated" type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#authenticationModal">
                   Sign in/Sign up
@@ -57,12 +58,14 @@
     </nav>
 
     <!-- Mobile navbar -->
-     <!-- new navbar not yet implemented for mobile-->
-    <nav class="navbar navbar-expand-lg bg-primary navbar-dark fixed-top d-lg-none">
+        <!-- New navbar for mobile. Is not white and adopts new logo-->
+      <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
       <div class="container-fluid">
-        <router-link class="navbar-brand fw-bold" to="/">CareerQuest</router-link>
+        <router-link class="navbar_logo_container" to="/home-page">
+        <img class="navbar_logo_img" alt="CareerQuest logo"/>
+        </router-link>
         <button
-          class="navbar-toggler"
+          class="navbar-toggler bg-primary"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavMobile"
@@ -72,10 +75,10 @@
         <div class="collapse navbar-collapse flex-column align-items-center" id="navbarNavMobile">
           <ul class="navbar-nav mb-2 w-100 d-flex justify-content-center">
             <li class="nav-item">
-              <router-link class="nav-link" :to="`/find-jobs?q=${searchText}`">Find Jobs</router-link>
+              <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/saved-jobs">Saved Jobs</router-link>
+              <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
             </li>
           </ul>
           <form class="d-flex me-3" @submit.prevent="handleSubmit">
@@ -138,7 +141,8 @@
         </div>
         <div class="modal-body">
           <!-- Basic authenticator without slots -->
-          <authenticator>
+          <authenticator style="margin-left: auto; margin-right: auto; display: block;">
+            <!-- AWS Amplify auth for login/signup -->
             <template v-slot="{ user, signOut }">
               <h1>Hello {{ user.username }}!</h1>
               <button class="btn btn-primary" @click="signOut">Sign Out</button>
@@ -198,8 +202,10 @@ import { getCurrentUser } from 'aws-amplify/auth';
 const isAuthenticated = ref(false);
 
 const closeModal = () => {
+  // Function to close the modal programmatically
 
   console.log("close modal")
+
   // Select the element you want to fire the event on
   const modalElement = document.getElementById('authenticationModal');
 
@@ -226,6 +232,7 @@ Hub.listen('auth', async ({ payload }) => {
   }
 });
 
+// Router and search handling
 const router = useRouter();
 const searchText = ref("");
 
@@ -236,6 +243,7 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
+/* Styles for the navbar (desktop version) */
 .navbar {
   z-index: 2000;
   background-color: #ffffff;
@@ -243,7 +251,7 @@ async function handleSubmit() {
   height: fit-content;
   padding: 10px;
 }
-
+/* Logo container and image styling */
 .navbar_logo_container {
   padding: 0.5rem;
   transition: background-color .15s ease-in-out;
@@ -414,4 +422,42 @@ async function handleSubmit() {
 }
 
 
+</style>
+
+
+<style>
+  :root {
+    --amplify-components-authenticator-router-box-shadow: none !important;
+    --amplify-components-authenticator-router-border-width: 0 !important;
+    --amplify-components-input-focus-border-color: #0073b1d !important;
+    --amplify-components-fieldcontrol-focus-box-shadow: 0 0 0 1px #0073b1 !important
+  }
+
+  .amplify-heading--3 {
+    color: #1a1a1a;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .amplify-label {
+    color: #444;
+  }
+  .amplify-button.amplify-button--primary {
+    background-color: #0073b1;
+  }
+
+  .amplify-button.amplify-button--primary:hover {
+    background-color: #005d92;
+  }
+
+  .amplify-tabs__item {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .amplify-tabs__item:hover {
+    color: #0073b1;
+  }
+
+  .amplify-tabs__item--active {
+    color: #0073b1;
+    border-color: #0073b1;
+  }
 </style>

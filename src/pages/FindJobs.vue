@@ -11,6 +11,7 @@
             <div class="filter-group">
               <h6>Job Type</h6>
               <div class="filter-options">
+                <!-- Loop through jobTypeOptions and render filter buttons -->
                 <button
                   v-for="option in jobTypeOptions"
                   :key="option"
@@ -26,6 +27,7 @@
             <div class="filter-group mt-3">
               <h6>Job Category</h6>
               <div class="filter-options">
+                <!-- Loop through jobCategoryOptions and render filter buttons -->
                 <button
                   v-for="option in jobCategoryOptions"
                   :key="option"
@@ -41,6 +43,7 @@
             <div class="filter-group mt-3">
               <h6>Career Level</h6>
               <div class="filter-options">
+                <!-- Loop through careerLevelOptions and render filter buttons -->
                 <button
                   v-for="option in careerLevelOptions"
                   :key="option"
@@ -77,6 +80,7 @@
           <p>No matching jobs found.</p>
         </div>
         <div v-else>
+         <!-- Loop through paginated jobs and display them -->
           <div
             v-for="(item, index) in paginatedItems"
             :key="item['Job ID']"
@@ -115,7 +119,7 @@
               </div>
               <p class="card-text">Location: {{ item["Work Location"] }}</p>
 
-              <!-- Action Buttons -->
+              <!-- Action Buttons: Learn more & Save/remove job -->
               <div class="btn-group">
                 <button
                   type="button"
@@ -136,7 +140,7 @@
 
               </div>
 
-              <!-- Modal -->
+              <!-- Modal for showing job details -->
               <div
                 class="modal fade"
                 :id="`modal_${item['Job ID']}`"
@@ -157,7 +161,7 @@
                       ></button>
                     </div>
                     <div class="modal-body">
-
+                    <!-- Job Description, Qualifications, Skills, and Apply Info -->
                     <h5>Job Description</h5>
                     <p v-if="item['Job Description']">
                       {{ isExpanded(item['Job ID'], 'description') ? cleanText(item['Job Description']) : shortenText(cleanText(item['Job Description'])) }}

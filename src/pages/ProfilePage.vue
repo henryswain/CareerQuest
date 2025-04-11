@@ -131,13 +131,14 @@ const deleteItem = (array, index) => {
           </label>
         </div>
         <div class="profile-info">
+           <!-- User Name, Headline, and Location -->
           <h1 class="user-name">{{ user.name }}</h1>
           <p class="headline">{{ user.headline }}</p>
           <p class="location">{{ user.location }}</p>
         </div>
       </div>
     </div>
-
+    <!-- Profile Layout: Main Content and Sidebar -->
     <div class="profile-layout">
       <!-- Main Profile Content -->
       <div class="profile-main">
@@ -145,24 +146,27 @@ const deleteItem = (array, index) => {
           <h2>About</h2>
           <p class="about-text">{{ user.about }}</p>
         </div>
-
+        <!-- Experience section -->
         <div class="card">
           <h2>Experience</h2>
           <div class="timeline">
+            <!-- Loop through experience and display each job -->
             <div v-for="(job, index) in user.experience" :key="index" class="timeline-item">
               <div class="timeline-content">
                 <h3>{{ job.position }}</h3>
                 <p class="company">{{ job.company }}</p>
                 <p class="duration">{{ job.duration }}</p>
+                <!-- Delete button only viewable in editing mode -->
                 <button v-if="isEditing" @click="deleteItem(user.experience, index)" class="btn-icon">×</button>
               </div>
             </div>
           </div>
         </div>
-
+        <!-- Education section -->
         <div class="card">
           <h2>Education</h2>
           <div class="education-list">
+            <!-- Loop through education list and displays entries -->
             <div v-for="(edu, index) in user.education" :key="index" class="education-item">
               <h3>{{ edu.degree }}</h3>
               <p class="institution">{{ edu.institution }}</p>
@@ -173,11 +177,12 @@ const deleteItem = (array, index) => {
         </div>
       </div>
 
-      <!-- Sidebar -->
+      <!-- Sidebar (Skills & Socials-->
       <div class="profile-sidebar">
         <div class="card">
           <h2>Skills</h2>
           <div class="skills-grid">
+            <!-- Loop through skills and displays skills -->
             <div v-for="(skill, index) in user.skills" :key="index" class="skill-tag">
               {{ skill }}
             </div>
@@ -222,40 +227,45 @@ const deleteItem = (array, index) => {
         <input v-model="user.name" class="input-field" placeholder="Enter Name" />
         <input v-model="user.headline" class="input-field" placeholder="Enter Headline" />
       </div>
-
+      <!-- About Edit Section -->
       <div class="profile-edit-section">
         <h3>About</h3>
         <textarea v-model="user.about" class="input-field" placeholder="Enter About"></textarea>
       </div>
 
       <div class="profile-edit-section">
+        <!-- Experience Edit Section -->
         <h3>Experience</h3>
         <ul>
+          <!-- Loop through experience list and show delete button -->
           <li v-for="(job, index) in user.experience" :key="index">
             <strong>{{ job.position }}</strong> at {{ job.company }} ({{ job.duration }})
             <button @click="deleteItem(user.experience, index)" class="btn btn-delete">Delete</button>
           </li>
         </ul>
+        <!--User inputs for adding new experience -->
         <input v-model="newExperience.position" class="input-field" placeholder="Position" />
         <input v-model="newExperience.company" class="input-field" placeholder="Company" />
         <input v-model="newExperience.duration" class="input-field" placeholder="Duration" />
         <button class="btn btn-secondary" @click="addExperience">Add Experience</button>
       </div>
-
+      <!-- Education Edit Section -->
       <div class="profile-edit-section">
         <h3>Education</h3>
         <ul>
+          <!-- Loop through education list and show delete button -->
           <li v-for="(edu, index) in user.education" :key="index">
             <strong>{{ edu.degree }}</strong> - {{ edu.institution }} ({{ edu.year }})
             <button @click="deleteItem(user.education, index)" class="btn btn-delete">Delete</button>
           </li>
         </ul>
+        <!-- Input fields for adding new education -->
         <input v-model="newEducation.degree" class="input-field" placeholder="Degree" />
         <input v-model="newEducation.institution" class="input-field" placeholder="Institution" />
         <input v-model="newEducation.year" class="input-field" placeholder="Year" />
         <button class="btn btn-secondary" @click="addEducation">Add Education</button>
       </div>
-
+      <!-- Skills edit section -->
       <div class="profile-edit-section">
         <h3>Skills</h3>
         <ul>
@@ -274,7 +284,7 @@ const deleteItem = (array, index) => {
         <input v-model="user.socialLinks.github" class="input-field" placeholder="Enter GitHub URL" />
         <input v-model="user.socialLinks.website" class="input-field" placeholder="Enter Website URL" />
       </div>
-
+      <! Save & cancel buttons for editing profile -->
       <div class="profile-actions">
         <button class="btn btn-success" @click="saveProfile">Save</button>
         <button class="btn btn-secondary" @click="isEditing = false">Cancel</button>
