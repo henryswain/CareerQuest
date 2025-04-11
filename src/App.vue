@@ -141,7 +141,7 @@
         </div>
         <div class="modal-body">
           <!-- Basic authenticator without slots -->
-          <authenticator>
+          <authenticator style="margin-left: auto; margin-right: auto; display: block;">
             <!-- AWS Amplify auth for login/signup -->
             <template v-slot="{ user, signOut }">
               <h1>Hello {{ user.username }}!</h1>
@@ -422,4 +422,42 @@ async function handleSubmit() {
 }
 
 
+</style>
+
+
+<style>
+  :root {
+    --amplify-components-authenticator-router-box-shadow: none !important;
+    --amplify-components-authenticator-router-border-width: 0 !important;
+    --amplify-components-input-focus-border-color: #0073b1d !important;
+    --amplify-components-fieldcontrol-focus-box-shadow: 0 0 0 1px #0073b1 !important
+  }
+
+  .amplify-heading--3 {
+    color: #1a1a1a;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .amplify-label {
+    color: #444;
+  }
+  .amplify-button.amplify-button--primary {
+    background-color: #0073b1;
+  }
+
+  .amplify-button.amplify-button--primary:hover {
+    background-color: #005d92;
+  }
+
+  .amplify-tabs__item {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .amplify-tabs__item:hover {
+    color: #0073b1;
+  }
+
+  .amplify-tabs__item--active {
+    color: #0073b1;
+    border-color: #0073b1;
+  }
 </style>
