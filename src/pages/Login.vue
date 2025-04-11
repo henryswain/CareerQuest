@@ -1,6 +1,6 @@
 <template>
     <div class="Login-page">
-      <-- User login form -->
+      <!-- User login form -->
       <form @submit.prevent="submitForm">
         <!-- Email input -->
         <div class="form-group">
@@ -18,7 +18,7 @@
             We'll never share your email with anyone else.
           </small>
         </div>
-        <! password input -->
+        <!-- password input -->
         <div class="form-group">
           <label for="password">Password</label>
           <input 
@@ -49,26 +49,37 @@
   </template>
   
   <script>
+
+  import { signIn, getCurrentUser } from 'aws-amplify/auth';
+
   export default {
     data() {
       return {
-        // Data properties to hold email, password, and rememberMe state
+        // Hold user data
         email: "",
         password: "",
         rememberMe: false,
       };
     },
     methods: {
-      // Handles form submisstion
-      submitForm() {
-        // Logs email, pw, &rememberMe state to console via .log
-        console.log("Email:", this.email);
-        console.log("Password:", this.password);
-        console.log("Remember Me:", this.rememberMe);
+      // Form submisstion
+    async submitForm() {
+      try {
+        const user = await signIn({ username: this.email, password: this.password });
+        console.log("Login successful:", user);
+
+        const { username } = await getCurrentUser();
+
+        await fetch(`https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update?id=${username}`); // Saves to DynamoDB from API call
+        alert("Logged in and registered in DB!");
+      } catch (err) {
+        console.error("Login failed:", err);
+        alert("Login failed: " + (err.message || "Unknown error"));
       }
     }
+  }
   };
-  </script>
+</script>
   
   <style scoped>
 /* Styles for the login page container */

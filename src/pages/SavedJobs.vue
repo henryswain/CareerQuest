@@ -15,7 +15,7 @@
           <button type="button" class="btn btn-primary" @click="fetchJobDetails(job.id)" data-bs-toggle="modal" :data-bs-target="'#modal_' + job.id">
             Learn More
           </button>
-          <!-- Remove -->
+          <!-- Remove button -->
           <button class="btn btn-danger ms-2" @click="removeJob(job.id)">Remove</button>
         </div>
 
@@ -29,28 +29,42 @@
               </div>
               <div class="modal-body">
                 <h5>Job Description</h5>
-                <p v-if="jobDetails[job.id]">{{ isExpanded(job.id, 'description') ? jobDetails[job.id].description : shortenText(jobDetails[job.id].description) }}</p>
+                <p v-if="jobDetails[job.id]">
+                  {{ isExpanded(job.id, 'description')
+                    ? cleanText(jobDetails[job.id].description)
+                    : shortenText(cleanText(jobDetails[job.id].description)) }}
+                </p>
                 <button v-if="jobDetails[job.id]" class="btn btn-link" @click="toggleExpand(job.id, 'description')">
                   {{ isExpanded(job.id, 'description') ? "Show Less" : "Show More" }}
                 </button>
 
                 <h5>Basic Qual Requirements</h5>
-                <p v-if="jobDetails[job.id]">{{ isExpanded(job.id, 'requirements') ? jobDetails[job.id].requirements : shortenText(jobDetails[job.id].requirements) }}</p>
+                <p v-if="jobDetails[job.id]">
+                  {{ isExpanded(job.id, 'requirements')
+                    ? cleanText(jobDetails[job.id].requirements)
+                    : shortenText(cleanText(jobDetails[job.id].requirements)) }}
+                </p>
                 <button v-if="jobDetails[job.id]" class="btn btn-link" @click="toggleExpand(job.id, 'requirements')">
                   {{ isExpanded(job.id, 'requirements') ? "Show Less" : "Show More" }}
                 </button>
 
                 <h5>Preferred Skills</h5>
-                <p v-if="jobDetails[job.id]">{{ isExpanded(job.id, 'skills') ? jobDetails[job.id].skills : shortenText(jobDetails[job.id].skills) }}</p>
+                <p v-if="jobDetails[job.id]">
+                  {{ isExpanded(job.id, 'skills')
+                    ? cleanText(jobDetails[job.id].skills)
+                    : shortenText(cleanText(jobDetails[job.id].skills)) }}
+                </p>
                 <button v-if="jobDetails[job.id]" class="btn btn-link" @click="toggleExpand(job.id, 'skills')">
                   {{ isExpanded(job.id, 'skills') ? "Show Less" : "Show More" }}
                 </button>
 
                 <h5>To Apply</h5>
-                <p v-if="jobDetails[job.id]">{{ jobDetails[job.id].apply }}</p>
+                <p v-if="jobDetails[job.id]">
+                  {{ cleanText(jobDetails[job.id].apply) }}
+                </p>
 
                 <p v-if="!jobDetails[job.id]" class="text-muted">Loading job details...</p>
-              </div>
+                </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
@@ -65,22 +79,63 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { onMounted } from 'vue';
+import { getCurrentUser } from 'aws-amplify/auth';
+import jobsCsv from "@/assets/Jobs_NYC_Postings.csv?raw";
+import Papa from "papaparse";
 
-// Load saved jobs
-const loadSavedJobs = () => {
-  const storedJobs = localStorage.getItem('savedJobs');
-  return storedJobs ? JSON.parse(storedJobs) : [];
-};
+const savedJobs = ref([]);
+const userId = ref("");
+const LAMBDA_URL = "https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update";
+const allJobs = ref([]);
 
-const savedJobs = ref(loadSavedJobs());
+onMounted(async () => {
+  try {
+    const { username } = await getCurrentUser();
+    userId.value = username;
 
-// Save updates
-watch(savedJobs, (newJobs) => {
-  localStorage.setItem('savedJobs', JSON.stringify(newJobs));
-}, { deep: true });
+    const res = await fetch(`${LAMBDA_URL}?crud_type=read&user_id=${userId.value}`);
+    const data = await res.json();
+    const ids = Array.isArray(data.body) ? data.body : JSON.parse(data.body);
+    const jobIdList = ids.map(id => String(id));
 
-function removeJob(id) {
-  savedJobs.value = savedJobs.value.filter(job => job.id !== id);
+    // Parse CSV after saved job IDs are ready
+    Papa.parse(jobsCsv, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        allJobs.value = results.data;
+
+        savedJobs.value = jobIdList.map(id => {
+          const match = allJobs.value.find(j => j["Job ID"] === id);
+          return {
+            id,
+            title: match?.["Civil Service Title"] || "Unknown Title",
+            company: match?.["Agency"] || "Unknown Agency",
+            location: match?.["Work Location"] || "Unknown Location"
+          };
+        });
+      }
+    });
+  } catch (e) {
+    console.error("Auth or DB error:", e.message);
+  }
+});
+
+
+//text cleaning function
+function cleanText(text) {
+  if (typeof text !== "string") {
+    return "";
+  }
+
+  return text
+    .replace(/â/g, '"')
+    .replace(/â¢/g, '-')
+    .replace(/â/g, '"')
+    .replace(/â/g, "''")
+    .replace(/â/g, '—')
+    .replace(/[^\x20-\u00FF]/g, '');
 }
 
 // Track if expanded
@@ -101,16 +156,26 @@ const shortenText = (text, length = 150) => {
   return text.length > length ? text.slice(0, length) + "..." : text;
 };
 
-// Fetch job details
 const jobDetails = ref({});
+
+
+// Remove job from DB using API call
+async function removeJob(id) {
+  try {
+    await fetch(`${LAMBDA_URL}?crud_type=delete&user_id=${userId.value}&job_id=${id}`);
+    savedJobs.value = savedJobs.value.filter(job => job.id !== id);
+  } catch (err) {
+    console.error("Remove job failed:", err);
+  }
+}
 
 const fetchJobDetails = async (jobId) => {
   if (jobDetails.value[jobId]) return; // Stop duplicates
   try {
     const response = await fetch(`https://npvdpxycgi.execute-api.us-east-2.amazonaws.com/dev2/reading?id=${jobId}`);
     const data = await response.json();
-
-    if (data.items && data.items.length > 0) {
+  
+    if (data.items && data.items.length > 0) { //null values
       const job = data.items[0];
       jobDetails.value[jobId] = {
         description: job["Job Description"] || "No description.",

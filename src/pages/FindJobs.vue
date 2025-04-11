@@ -259,6 +259,10 @@ import { ref, onMounted, defineProps, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Papa from "papaparse";
 import jobsCsv from "@/assets/Jobs_NYC_Postings.csv?raw";
+import { getCurrentUser } from 'aws-amplify/auth';
+
+const API_URL = "https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update";
+const userId = ref("");
 
 const props = defineProps({
   query: String,
@@ -280,28 +284,31 @@ const currentJob = ref(null);
 // const searchText = ref(props.query || "");
 
 // For saved jobs
-const savedJobs = ref(JSON.parse(localStorage.getItem("savedJobs")) || []);
+const savedJobs = ref([]);
 
-function saveJob(job) {
-  if (!isJobSaved(job["Job ID"])) {
-    savedJobs.value.push({
-      id: job["Job ID"],
-      title: job["Civil Service Title"],
-      company: job["Agency"],
-      location: job["Work Location"],
-    });
-    localStorage.setItem("savedJobs", JSON.stringify(savedJobs.value));
+async function saveJob(job) {
+  const jobId = String(job["Job ID"]);
+  try {
+    await fetch(`${API_URL}?crud_type=create&user_id=${userId.value}&job_id=${jobId}`);
+    savedJobs.value.push({ id: jobId });
+  } catch (err) {
+    console.error("Save job failed:", err);
   }
 }
 
-function removeJob(jobId) {
-  savedJobs.value = savedJobs.value.filter(job => job.id !== jobId);
-  localStorage.setItem("savedJobs", JSON.stringify(savedJobs.value));
+async function removeJob(jobId) {
+  try {
+    await fetch(`${API_URL}?crud_type=delete&user_id=${userId.value}&job_id=${jobId}`);
+    savedJobs.value = savedJobs.value.filter(job => job.id !== jobId);
+  } catch (err) {
+    console.error("Remove job failed:", err);
+  }
 }
 
 function toggleJob(job) {
-  if (isJobSaved(job["Job ID"])) {
-    removeJob(job["Job ID"]);
+  const jobId = String(job["Job ID"]);
+  if (isJobSaved(jobId)) {
+    removeJob(jobId);
   } else {
     saveJob(job);
   }
@@ -315,8 +322,20 @@ function toTitleCase(jobTitle) {
   return jobTitle.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
 }
 
-// Parse CSV on mount
-onMounted(() => {
+// Parse CSV on mount and load user data from API call
+onMounted(async () => {
+  try {
+    const { username } = await getCurrentUser();
+    userId.value = username;
+
+    const response = await fetch(`${API_URL}?crud_type=read&user_id=${userId.value}`);
+    const data = await response.json();
+    const jobIds = Array.isArray(data.body) ? data.body : JSON.parse(data.body);
+    savedJobs.value = jobIds.map(id => ({ id: String(id) }));
+  } catch (err) {
+    console.error("Auth or DB error:", err);
+  }
+
   Papa.parse(jobsCsv, {
     header: true,
     skipEmptyLines: true,
