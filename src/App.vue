@@ -103,6 +103,7 @@
               <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
               <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
               <li><hr class="dropdown-divider" /></li>
+              <!-- login and signup button links -->
               <li>
                 <div>
                   <button
@@ -140,9 +141,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- Basic authenticator without slots -->
           <authenticator style="margin-left: auto; margin-right: auto; display: block;">
-            <!-- AWS Amplify auth for login/signup -->
             <template v-slot="{ user, signOut }">
               <h1>Hello {{ user.username }}!</h1>
               <button class="btn btn-primary" @click="signOut">Sign Out</button>
@@ -169,11 +168,6 @@ import { ref, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Amplify } from 'aws-amplify';
-  // import outputs from '../amplify_outputs.json';
-
-  // Amplify.configure(outputs);
-
-
 import originalConfig from '../amplify_outputs.json';
 
 // Function to replace env variable placeholders
@@ -217,6 +211,7 @@ const closeModal = () => {
   modalElement.dispatchEvent(event);
 };
 
+// detect authentication events
 Hub.listen('auth', async ({ payload }) => {
   const { username, userId, signInDetails } = await getCurrentUser();
   switch (payload.event) {
@@ -426,6 +421,7 @@ async function handleSubmit() {
 
 
 <style>
+  /* override the default authentication styles to fit the CareerQuest theme */
   :root {
     --amplify-components-authenticator-router-box-shadow: none !important;
     --amplify-components-authenticator-router-border-width: 0 !important;

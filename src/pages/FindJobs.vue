@@ -1,3 +1,6 @@
+<!-- this page containes the various filters for job sorting, the list of
+ jobs, pagination buttons, and the modals for the individual jobs -->
+
 <template>
   <div class="find-jobs-page">
     <div class="grid-container">
@@ -303,8 +306,6 @@ const itemsPerPage = ref(
 
 const currentJob = ref(null);
 
-// const searchText = ref(props.query || "");
-
 // For saved jobs
 const savedJobs = ref([]);
 
@@ -500,9 +501,8 @@ function applyFilters(newQueryString = "") {
     );
   }
 
+  // 5) search match in job title, job description, minimum qualifications, or prefered skills
   if (newQueryString.length > 0) {
-    // console.log("filters.value.searchText.length > 0: ", filters.value.searchText)
-    // const searchText2 = filters.value.searchText.toLowerCase();
     const newString = newQueryString.toLowerCase()
     results = results.filter((job) => {
       if (job["Civil Service Title"]?.toLowerCase()?.includes(newString) || job["Job Description"]?.toLowerCase()?.includes(newString) || job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) || job["Preferred Skills"]?.toLowerCase().includes(newString)) {
@@ -510,7 +510,6 @@ function applyFilters(newQueryString = "") {
       }
     });
   }
-
 
   filteredJobs.value = results;
   currentPage.value = 1;
