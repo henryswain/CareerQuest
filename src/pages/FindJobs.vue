@@ -9,12 +9,10 @@
         <div class="card filter-card mb-4">
           <div class="card-body">
             <h5 class="card-title">Filter Your Search</h5>
-
             <!-- Job Type Filter -->
             <div class="filter-group">
               <h6>Job Type</h6>
               <div class="filter-options">
-                <!-- Loop through jobTypeOptions and render filter buttons -->
                 <button
                   v-for="option in jobTypeOptions"
                   :key="option"
@@ -25,12 +23,10 @@
                 </button>
               </div>
             </div>
-
             <!-- Job Category Filter -->
             <div class="filter-group mt-3">
               <h6>Job Category</h6>
               <div class="filter-options">
-                <!-- Loop through jobCategoryOptions and render filter buttons -->
                 <button
                   v-for="option in jobCategoryOptions"
                   :key="option"
@@ -41,12 +37,10 @@
                 </button>
               </div>
             </div>
-
             <!-- Career Level Filter -->
             <div class="filter-group mt-3">
               <h6>Career Level</h6>
               <div class="filter-options">
-                <!-- Loop through careerLevelOptions and render filter buttons -->
                 <button
                   v-for="option in careerLevelOptions"
                   :key="option"
@@ -57,7 +51,6 @@
                 </button>
               </div>
             </div>
-
             <!-- Location Filter -->
             <div class="filter-group mt-3">
               <h6>Location</h6>
@@ -68,7 +61,6 @@
                 v-model="filters.location"
               />
             </div>
-
             <!-- Apply Filters -->
             <button class="btn btn-primary w-100 mt-3" @click="applyFilters(props.query)">
               Apply Filters
@@ -83,46 +75,48 @@
           <p>No matching jobs found.</p>
         </div>
         <div v-else>
-         <!-- Loop through paginated jobs and display them -->
-          <div
-            v-for="(item, index) in paginatedItems"
-            :key="item['Job ID']"
-            class="card mb-3"
-          >
-            <h5 class="card-header">{{ toTitleCase(item["Civil Service Title"]) }}</h5>
-            <div class="card-body">
-              <!-- Salary Frequency / FT/PT logic -->
-              <div
-                v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'
+          <!-- Loop through paginated jobs and display them -->
+          <div v-for="(item, index) in paginatedItems" :key="item['Job ID']" class="card mb-3">
+            <h5 class="card-header d-flex justify-content-between align-items-center">
+              <!-- Use getField() for the title; this helper always fetches the right field -->
+              <span>{{ toTitleCase(getField(item, "Civil Service Title")) }}</span>
+              <button
+                class="icon-button"
+                @click="toggleJob(item)"
+                :aria-label="isJobSaved(item['Job ID']) ? 'Remove bookmark' : 'Save bookmark'"
               >
+                <img
+                  :src="isJobSaved(item['Job ID']) ? bookmarkFilled : bookmarkBlank"
+                  alt="Bookmark Icon"
+                  class="bookmark-icon"
+                />
+              </button>
+            </h5>
+            <div class="card-body">
+              <!-- Salary and Location (unchanged) -->
+              <div v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'>
                 <p class="card-text">
                   {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Full-time
                 </p>
               </div>
-              <div
-                v-else-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "P"'
-              >
+              <div v-else-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "P"'>
                 <p class="card-text">
                   {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Part-time
                 </p>
               </div>
-              <div
-                v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "F"'
-              >
+              <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "F"'>
                 <p class="card-text">
                   {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Full-time
                 </p>
               </div>
-              <div
-                v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "P"'
-              >
+              <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "P"'>
                 <p class="card-text">
                   {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Part-time
                 </p>
               </div>
               <p class="card-text">Location: {{ item["Work Location"] }}</p>
 
-              <!-- Action Buttons: Learn more & Save/remove job -->
+              <!-- Action Buttons -->
               <div class="btn-group">
                 <button
                   type="button"
@@ -133,28 +127,15 @@
                 >
                   Learn More
                 </button>
-                <button
-                  type="button"
-                  :class="isJobSaved(item['Job ID']) ? 'btn btn-danger ms-2' : 'btn btn-success ms-2'"
-                  @click="toggleJob(item)"
-                >
-                  {{ isJobSaved(item["Job ID"]) ? "Remove Job" : "Save Job" }}
-                </button>
-
               </div>
 
-              <!-- Modal for showing job details -->
-              <div
-                class="modal fade"
-                :id="`modal_${item['Job ID']}`"
-                tabindex="-1"
-                aria-hidden="true"
-              >
+              <!-- Modal for Job Details -->
+              <div class="modal fade" :id="`modal_${item['Job ID']}`" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h1 class="modal-title fs-5">
-                        {{ toTitleCase(item["Civil Service Title"]) }}
+                        {{ toTitleCase(getField(item, "Civil Service Title")) }}
                       </h1>
                       <button
                         type="button"
@@ -164,71 +145,62 @@
                       ></button>
                     </div>
                     <div class="modal-body">
-                    <!-- Job Description, Qualifications, Skills, and Apply Info -->
-                    <h5>Job Description</h5>
-                    <p v-if="item['Job Description']">
-                      {{ isExpanded(item['Job ID'], 'description') ? cleanText(item['Job Description']) : shortenText(cleanText(item['Job Description'])) }}
-                    </p>
-                    <button
-                      v-if="item['Job Description']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'description')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'description') ? "Show Less" : "Show More" }}
-                    </button>
-
-                    <h5>Minimum Qualifications</h5>
-                    <p v-if="item['Minimum Qual Requirements']">
-                      {{ isExpanded(item['Job ID'], 'requirements') ? cleanText(item['Minimum Qual Requirements']) : shortenText(cleanText(item['Minimum Qual Requirements'])) }}
-                    </p>
-                    <button
-                      v-if="item['Minimum Qual Requirements']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'requirements')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
-                    </button>
-
-                    <h5 v-if="item['Preferred Skills']">
-                      Preferred Skills
-                    </h5>
-                    <p v-if="item['Preferred Skills']">
-                      {{ isExpanded(item['Job ID'], 'skills') ? cleanText(item['Preferred Skills']) : shortenText(cleanText(item['Preferred Skills'])) }}
-                    </p>
-                    <button
-                      v-if="item['Preferred Skills']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'skills')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
-                    </button>
-
-                    <h5>To Apply</h5>
-                    <p v-if="item['To Apply']">
-                      {{ isExpanded(item['Job ID'], 'apply') ? cleanText(item['To Apply']) : shortenText(cleanText(item['To Apply'])) }}
-                    </p>
-                    <button
-                      v-if="item['To Apply']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'apply')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
-                    </button>
-                    <button
-                      v-else="item['To Apply']"
-                      class="btn btn-primary"
-                    >
-                      Generic Apply Button
-                    </button>
-
-                    <div class="modal-footer">
+                      <h5>Job Description</h5>
+                      <p v-if="getField(item, 'Job Description')">
+                        {{ isExpanded(item['Job ID'], 'description') ? cleanText(getField(item, "Job Description")) : shortenText(cleanText(getField(item, "Job Description"))) }}
+                      </p>
                       <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
+                        v-if="getField(item, 'Job Description')"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'description')"
                       >
-                        Close
+                        {{ isExpanded(item['Job ID'], 'description') ? "Show Less" : "Show More" }}
                       </button>
+
+                      <h5>Minimum Qualifications</h5>
+                      <p v-if="getField(item, 'Minimum Qual Requirements')">
+                        {{ isExpanded(item['Job ID'], 'requirements') ? cleanText(getField(item, "Minimum Qual Requirements")) : shortenText(cleanText(getField(item, "Minimum Qual Requirements"))) }}
+                      </p>
+                      <button
+                        v-if="getField(item, 'Minimum Qual Requirements')"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'requirements')"
+                      >
+                        {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
+                      </button>
+
+                      <h5 v-if="getField(item, 'Preferred Skills')">Preferred Skills</h5>
+                      <p v-if="getField(item, 'Preferred Skills')">
+                        {{ isExpanded(item['Job ID'], 'skills') ? cleanText(getField(item, "Preferred Skills")) : shortenText(cleanText(getField(item, "Preferred Skills"))) }}
+                      </p>
+                      <button
+                        v-if="getField(item, 'Preferred Skills')"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'skills')"
+                      >
+                        {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
+                      </button>
+
+                      <h5>To Apply</h5>
+                      <p v-if="getField(item, 'To Apply')">
+                        {{ isExpanded(item['Job ID'], 'apply') ? cleanText(getField(item, "To Apply")) : shortenText(cleanText(getField(item, "To Apply"))) }}
+                      </p>
+                      <button
+                        v-if="getField(item, 'To Apply')"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'apply')"
+                      >
+                        {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
+                      </button>
+                      <button v-else class="btn btn-primary">
+                        Generic Apply Button
+                      </button>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                          Close
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -239,8 +211,7 @@
         </div>
       </div>
     </div>
-</div>
-    <!-- Pagination -->
+    <!-- Pagination Controls -->
     <div class="pagination-controls">
       <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
         Previous
@@ -275,39 +246,81 @@
           </ul>
         </div>
       </div>
-    </footer>
-
+      <div class="footer-section">
+        <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
+      </div>
+      <div class="footer-section">
+        <ul class="footer-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <script setup>
 import { ref, onMounted, defineProps, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Papa from "papaparse";
-import jobsCsv from "@/assets/Jobs_NYC_Postings.csv?raw";
-import { getCurrentUser } from 'aws-amplify/auth';
+// Import both CSV sources:
+import jobsCsvEnglish from "@/assets/Jobs_NYC_Postings.csv?raw";
+import jobsCsvSpanish from "@/assets/Jobs_NYC_Postings_translated.csv?raw";
+import { getCurrentUser } from "aws-amplify/auth";
+
+// Import bookmark images
+import bookmarkFilled from "@/assets/bookmark_filled.png";
+import bookmarkBlank from "@/assets/bookmark_blank.png";
 
 const API_URL = "https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update";
 const userId = ref("");
-
-const props = defineProps({
-  query: String,
-});
-
+const props = defineProps({ query: String });
 const route = useRoute();
 const router = useRouter();
 
 const allJobs = ref([]);
 const filteredJobs = ref([]);
 const currentPage = ref(1);
-// this saves the itemsperpage locally so we can change it in the settings
-const itemsPerPage = ref(
-  JSON.parse(localStorage.getItem('userSettings'))?.itemsPerPage || 10
+const itemsPerPage = ref(JSON.parse(localStorage.getItem("userSettings"))?.itemsPerPage || 10);
+const savedJobs = ref([]);
+
+// --- Language & CSV Source Helper ---
+// Get initial language from localStorage "userSettings", default to "en"
+const getInitialLanguage = () => {
+  try {
+    return (JSON.parse(localStorage.getItem("userSettings")) || {}).language || "en";
+  } catch (error) {
+    return "en";
+  }
+};
+const currentLanguage = ref(getInitialLanguage());
+
+// Listen for custom "language-changed" events from Settings.vue
+window.addEventListener("language-changed", (event) => {
+  currentLanguage.value = event.detail;
+  console.log("Language changed to:", currentLanguage.value);
+  // Reload jobs when language changes:
+  loadJobs();
+});
+
+// Compute the appropriate CSV source based on language
+const selectedCsv = computed(() =>
+  currentLanguage.value === "es" ? jobsCsvSpanish : jobsCsvEnglish
 );
 
-const currentJob = ref(null);
-
-// For saved jobs
-const savedJobs = ref([]);
+// --- Helper to get the appropriate field value ---
+function getField(job, fieldName) {
+  // If language is Spanish, return Spanish column if available; else fallback to English.
+  if (currentLanguage.value === "es") {
+    const spanishField = `${fieldName} (Spanish)`;
+    return job[spanishField] && job[spanishField].trim() !== ""
+      ? job[spanishField]
+      : job[fieldName] || "";
+  }
+  return job[fieldName] || "";
+}
 
 async function saveJob(job) {
   const jobId = String(job["Job ID"]);
@@ -322,7 +335,7 @@ async function saveJob(job) {
 async function removeJob(jobId) {
   try {
     await fetch(`${API_URL}?crud_type=delete&user_id=${userId.value}&job_id=${jobId}`);
-    savedJobs.value = savedJobs.value.filter(job => job.id !== jobId);
+    savedJobs.value = savedJobs.value.filter((job) => job.id !== jobId);
   } catch (err) {
     console.error("Remove job failed:", err);
   }
@@ -338,28 +351,15 @@ function toggleJob(job) {
 }
 
 function isJobSaved(jobId) {
-  return savedJobs.value.some(job => job.id === jobId);
+  return savedJobs.value.some((job) => job.id === jobId);
 }
 
 function toTitleCase(jobTitle) {
-  return jobTitle.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+  return jobTitle.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase());
 }
 
-// Parse CSV on mount and load user data from API call
-onMounted(async () => {
-  try {
-    const { username } = await getCurrentUser();
-    userId.value = username;
-
-    const response = await fetch(`${API_URL}?crud_type=read&user_id=${userId.value}`);
-    const data = await response.json();
-    const jobIds = Array.isArray(data.body) ? data.body : JSON.parse(data.body);
-    savedJobs.value = jobIds.map(id => ({ id: String(id) }));
-  } catch (err) {
-    console.error("Auth or DB error:", err);
-  }
-
-  Papa.parse(jobsCsv, {
+function loadJobs() {
+  Papa.parse(selectedCsv.value, {
     header: true,
     skipEmptyLines: true,
     complete: (results) => {
@@ -367,29 +367,61 @@ onMounted(async () => {
       filteredJobs.value = results.data;
     },
   });
+}
+
+onMounted(async () => {
+  try {
+    const { username } = await getCurrentUser();
+    userId.value = username;
+    const response = await fetch(`${API_URL}?crud_type=read&user_id=${userId.value}`);
+    const data = await response.json();
+    const jobIds = Array.isArray(data.body) ? data.body : JSON.parse(data.body);
+    savedJobs.value = jobIds.map((id) => ({ id: String(id) }));
+  } catch (err) {
+    console.error("Auth or DB error:", err);
+  }
+  loadJobs();
 });
 
-
-// Cleaning function
 function cleanText(text) {
   if (typeof text !== "string") {
     return "";
   }
 
-  return text
+  // Replace known mis-encodings with their proper characters
+  text = text
+    // Remove hashtags (I think these need to be added to Civil Service Title)
+    .replace(/#/g, "")
+    .replace(/#(\s|$)/g, "")
+    // Common curly quotes
     .replace(/â/g, '"')
-    .replace(/â¢/g, '-')
     .replace(/â/g, '"')
-    .replace(/â/g, "''")
-    .replace(/â/g, '—')
-    .replace(/[^\x20-\u00FF]/g, '');
+    .replace(/â/g, "'")
+    .replace(/â/g, "'")
+  
+    // Bullets and dashes
+    .replace(/â¢/g, "-")
+    .replace(/â/g, "–")  // En dash
+    .replace(/â/g, "—")  // Em dash
+  
+    // Handle some accented letters if they appear mangled
+    .replace(/Ã±/g, "ñ")
+    .replace(/Ã¡/g, "á")
+    .replace(/Ã©/g, "é")
+    .replace(/Ã­/g, "í")
+    .replace(/Ã³/g, "ó")
+    .replace(/Ãº/g, "ú")
+    .replace(/Ã¼/g, "ü");
+  
+  // Optionally, add more cleaning steps here
+  text = text.replace(/\s+/g, " ").trim();
+  
+  return text;
 }
 
-// Track if expanded
+
 const expanded = ref({});
-
 const isExpanded = (jobId, section) => expanded.value[jobId]?.[section] || false;
-
 const toggleExpand = (jobId, section) => {
   if (!expanded.value[jobId]) {
     expanded.value[jobId] = {};
@@ -397,38 +429,42 @@ const toggleExpand = (jobId, section) => {
   expanded.value[jobId][section] = !expanded.value[jobId][section];
 };
 
-// Shorten for preview
 const shortenText = (text, length = 150) => {
   if (!text) return "";
   return text.length > length ? text.slice(0, length) + "..." : text;
 };
 
-// Pagination
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredJobs.value.slice(start, start + itemsPerPage.value);
 });
-
+// Brings user to the Next page. Also scrolls the page up to the top
 function nextPage() {
   if (currentPage.value * itemsPerPage.value < filteredJobs.value.length) {
     currentPage.value++;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
+function safeTitle(job) {
+  const rawTitle = job["Civil Service Title"] || "";
+  const cleaned = cleanText(rawTitle);
+  return cleaned || "Untitled Position";
+}
 
+
+// Brings user to prev page and scrolls to the top on click
 function prevPage() {
   if (currentPage.value > 1) {
     currentPage.value--;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
 
-// Filter arrays
 const jobTypeOptions = ["Full-Time", "Part-Time"];
 const jobCategoryOptions = [
-  // Add whichever categories you want the user to select
   "Engineering, Architecture, & Planning",
   "Health",
   "Public Safety, Inspections, & Enforcement",
-  // ...
 ];
 const careerLevelOptions = [
   "Entry-Level",
@@ -437,16 +473,14 @@ const careerLevelOptions = [
   "Student",
 ];
 
-// Filter object
 const filters = ref({
   jobTypes: [],
   industries: [],
   careerLevels: [],
   location: "",
-  searchText: props.query || ""
+  searchText: props.query || "",
 });
 
-// Toggle a filter
 function toggleFilter(filterCategory, option) {
   const index = filters.value[filterCategory].indexOf(option);
   if (index === -1) {
@@ -456,27 +490,16 @@ function toggleFilter(filterCategory, option) {
   }
 }
 
-// Apply filter logic
 function applyFilters(newQueryString = "") {
   let results = [...allJobs.value];
+  const mapJobType = { "Full-Time": "F", "Part-Time": "P" };
 
-  // Convert "Full-Time"/"Part-Time" to "F"/"P"
-  const mapJobType = {
-    "Full-Time": "F",
-    "Part-Time": "P",
-  };
-
-  // 1) Full-Time/Part-Time
   if (filters.value.jobTypes.length > 0) {
     results = results.filter((job) => {
-      const csvVal = job["Full-Time/Part-Time indicator"]; // "F" or "P"
-      return filters.value.jobTypes.some((selected) => {
-        return csvVal === mapJobType[selected];
-      });
+      const csvVal = job["Full-Time/Part-Time indicator"];
+      return filters.value.jobTypes.some((selected) => csvVal === mapJobType[selected]);
     });
   }
-
-  // 2) Job Category (substring match)
   if (filters.value.industries.length > 0) {
     results = results.filter((job) => {
       const catStr = job["Job Category"] || "";
@@ -485,54 +508,44 @@ function applyFilters(newQueryString = "") {
       );
     });
   }
-
-  // 3) Career Level (needs to be exact)
   if (filters.value.careerLevels.length > 0) {
     results = results.filter((job) =>
       filters.value.careerLevels.includes(job["Career Level"])
     );
   }
-
-  // 4) Location (partial match)
   if (filters.value.location.trim()) {
     const loc = filters.value.location.toLowerCase();
     results = results.filter((job) =>
       job["Work Location"]?.toLowerCase()?.includes(loc)
     );
   }
-
-  // 5) search match in job title, job description, minimum qualifications, or prefered skills
   if (newQueryString.length > 0) {
-    const newString = newQueryString.toLowerCase()
+    const newString = newQueryString.toLowerCase();
     results = results.filter((job) => {
-      if (job["Civil Service Title"]?.toLowerCase()?.includes(newString) || job["Job Description"]?.toLowerCase()?.includes(newString) || job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) || job["Preferred Skills"]?.toLowerCase().includes(newString)) {
-        return true
-      }
+      return (
+        job["Civil Service Title"]?.toLowerCase()?.includes(newString) ||
+        job["Job Description"]?.toLowerCase()?.includes(newString) ||
+        job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) ||
+        job["Preferred Skills"]?.toLowerCase().includes(newString)
+      );
     });
   }
-
   filteredJobs.value = results;
   currentPage.value = 1;
 }
 
-
-
-// If user changes query param, re-run filters or revert
 watch(
   () => props.query,
   (newQueryString) => {
-    console.log("watch called")
     if (newQueryString) {
-      console.log("newQueryString: ", newQueryString)
-      console.log("inside if statement")
       applyFilters(newQueryString);
     } else {
-      console.log("inside else statement")
       filteredJobs.value = [...allJobs.value];
     }
   }
 );
 </script>
+
 
 <style scoped>
 .find-jobs-page {
@@ -597,6 +610,20 @@ watch(
     grid-template-columns: 1fr;
   }
 }
+.bookmark-icon {
+  width: 24px;
+  height: 24px;
+}
+.icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.icon-button:focus {
+  outline: none;
+  box-shadow: none;
+}
 </style>
 
 <style>
@@ -609,7 +636,6 @@ watch(
 .modal-dialog {
   margin-top: 80px;
 }
-
 .footer {
   margin-top: auto;
   width: 100%;
@@ -619,7 +645,6 @@ watch(
   padding: 2rem 0;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
 }
-
 .footer-content {
   max-width: 1400px;
   margin: 0 auto;
@@ -628,7 +653,6 @@ watch(
   align-items: center;
   padding: 0 3rem;
 }
-
 .footer-logo {
   height: 40px;
   width: auto;
@@ -654,7 +678,6 @@ watch(
 .footer-section:nth-child(3) {
   justify-content: flex-end;
 }
-
 .footer-links {
   list-style: none;
   display: flex;
@@ -662,7 +685,6 @@ watch(
   margin: 0;
   padding: 0;
 }
-
 .footer-links a {
   color: #444;
   text-decoration: none;
@@ -672,10 +694,8 @@ watch(
   padding: 0.5rem 1rem;
   border-radius: 20px;
 }
-
 .footer-links a:hover {
   color: #0073b1;
   background: rgba(0, 115, 177, 0.1);
 }
-
 </style>
