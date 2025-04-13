@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <!-- Desktop navbar (Hidden on mobile)-->
+    <!-- Desktop navbar -->
     <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
       <div class="container-fluid">
         <!-- Left justified links -->
@@ -25,6 +26,25 @@
           />
           <button class="searchbutton btn btn-primary" type="text">Search</button>
         </form>
+        <!-- Add auth button here -->
+        <button 
+          v-if="!isAuthenticated" 
+          type="button" 
+          class="auth-button me-3" 
+          data-bs-toggle="modal" 
+          data-bs-target="#authenticationModal"
+        >
+          Sign in
+        </button>
+        <button 
+          v-else 
+          type="button" 
+          class="auth-button me-3" 
+          data-bs-toggle="modal" 
+          data-bs-target="#authenticationModal"
+        >
+          Sign out
+        </button>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
             <img
@@ -34,24 +54,18 @@
               class="rounded-circle"
             />
           </button>
+          <!-- Desktop navbar dropdown -->
           <ul class="dropdown-menu dropdown-menu-end">
             <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
             <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-            <li><hr class="dropdown-divider" /></li>
-            <!-- <li><router-link class="dropdown-item" to="/login">Login</router-link></li>
-            <li><router-link class="dropdown-item" to="/register">Register</router-link></li>
-            <li><router-link class="dropdown-item text-danger" to="/logout">Logout</router-link></li> -->
-            <li>
-              <!-- Auth sign in and sign out buttons -->
-              <div>
-                <button v-if="!isAuthenticated" type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#authenticationModal">
-                  Sign in/Sign up
-                </button>
-                <button v-else type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#authenticationModal">
-                  Sign out
-                </button>
-              </div>
-            </li>
+            <!-- Remove the divider and auth buttons -->
+          </ul>
+          
+          <!-- Mobile navbar dropdown -->
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
+            <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+            <!-- Remove the divider and auth buttons -->
           </ul>
         </div>
       </div>
@@ -284,6 +298,32 @@ async function handleSubmit() {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
   font-size: 1rem;
   font-weight: 500;
+}
+
+.auth-button {
+  background-color: transparent;
+  border: 2px solid #0073b1;
+  color: #0073b1;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.auth-button:hover {
+  background-color: rgba(0, 115, 177, 0.1);
+  color: #0073b1;
+}
+
+/* Add to dark mode section */
+.dark-mode .auth-button {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.dark-mode .auth-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 </style>
 

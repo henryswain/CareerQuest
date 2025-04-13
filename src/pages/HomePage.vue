@@ -54,7 +54,7 @@
     <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
-          <p class="copyright">&copy; 2024 CareerQuest, Inc</p>
+          <p class="copyright">&copy; 2025 CareerQuest, Inc</p>
         </div>
         <!-- logo in footer -->
         <div class="footer-section">
@@ -243,14 +243,22 @@ onMounted(() => {
   margin: 0 auto;
 }
 
-.footer-section:nth-child(2) {
-  justify-content: center;
+.footer-section {
+  flex: 1;
   display: flex;
   align-items: center;
 }
 
-.footer-logo:hover {
-  opacity: 0.8;
+.footer-section:nth-child(1) {
+  justify-content: flex-start;
+}
+
+.footer-section:nth-child(2) {
+  justify-content: center;
+}
+
+.footer-section:nth-child(3) {
+  justify-content: flex-end;
 }
 
 .footer-links {
