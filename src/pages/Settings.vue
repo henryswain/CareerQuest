@@ -60,7 +60,6 @@
         <select id="languageSelect" v-model="settings.language">
           <option value="en">English</option>
           <option value="es">Español</option>
-          <option value="fr">Français</option>
           <!-- Add more languages if needed -->
         </select>
       </div>
@@ -101,6 +100,12 @@ const settings = ref(loadSettings());
 watch(settings, (newVal) => {
   localStorage.setItem('userSettings', JSON.stringify(newVal));
 }, { deep: true });
+
+//  Watch for language changes to notify other parts of the app
+watch(() => settings.value.language, (newLang) => {
+  console.log('Language updated:', newLang);
+   window.dispatchEvent(new CustomEvent('language-changed', { detail: newLang }));
+});
 
 // Apply dark mode by toggling a class on document body
 const applyDarkMode = () => {
