@@ -9,10 +9,19 @@ Team weekly report #9
 
 • Meeting minutes - details of meetings
 
-• Team member 1:
+• Team member 1: Henry Swain
 o Stories completed
+- updated comments
+- restyled authenticator to fit withe the careerquest theme
+- created and filled out readme
 o Progress report
+- restyling the authenticator was a pain since the documentation for custom styles 
+is horrible and incomprehensive, and the way I wanted to do it ended up not being possible (I think it was more built into the javascript
+of the componenet and less the css), but I was still able to make solid changes.
+- the readme file was tedious but I think its looking pretty good now. Since I'm still a bit new to readme
+ files, and it felt partially incomplete, I reached out to my group members for feedback, but I never heard back (despite multiple texts).
 o Plan for next week
+- not sure yet, will discuss next week
 
 • Team member 2: Marcus Bodnar
 o Stories completed
