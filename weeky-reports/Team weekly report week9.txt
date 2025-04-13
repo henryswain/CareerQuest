@@ -1,0 +1,41 @@
+Team weekly report
+• Team members and team number
+• Team progress/achieved things/accomplished tasks/stories completed
+• Team blockers/issues
+• Team tasks for next week:
+    Get the app in preparation for the next sprint
+
+• Meeting minutes - details of meetings
+
+• Team member 1:
+o Stories completed
+o Progress report
+o Plan for next week
+
+• Team member 2: Marcus Bodnar
+o Stories completed
+    -Worked on QOL
+    -Working on the translation of the csv 
+o Progress report
+    -It's been 9 hours and the csv is still translating for spanish. 
+    -Added bookmark to save jobs for a better look
+    - Made next and previous buttons scroll you to the top of the page. (This helps since the filtering is locked to the top)
+o Plan for next week
+    - Get powerpoint slides ready
+    - Try and find a better layout for the find-jobs page
+    - Apply darkmode to new pages for this sprint
+
+• Team member 3:
+o Stories completed
+o Progress report
+o Plan for next week
+
+• Team member 4:
+o Stories completed
+o Progress report
+o Plan for next week
+
+• Team member 5:
+o Stories completed
+o Progress report
+o Plan for next week

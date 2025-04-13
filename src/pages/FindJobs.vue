@@ -399,18 +399,22 @@ const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredJobs.value.slice(start, start + itemsPerPage.value);
 });
-
+// Brings user to the Next page. Also scrolls the page up to the top
 function nextPage() {
   if (currentPage.value * itemsPerPage.value < filteredJobs.value.length) {
     currentPage.value++;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
 
+// Brings user to prev page and scrolls to the top on click
 function prevPage() {
   if (currentPage.value > 1) {
     currentPage.value--;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
+
 
 const jobTypeOptions = ["Full-Time", "Part-Time"];
 const jobCategoryOptions = [
