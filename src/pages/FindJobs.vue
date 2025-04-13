@@ -9,12 +9,10 @@
         <div class="card filter-card mb-4">
           <div class="card-body">
             <h5 class="card-title">Filter Your Search</h5>
-
             <!-- Job Type Filter -->
             <div class="filter-group">
               <h6>Job Type</h6>
               <div class="filter-options">
-                <!-- Loop through jobTypeOptions and render filter buttons -->
                 <button
                   v-for="option in jobTypeOptions"
                   :key="option"
@@ -25,12 +23,10 @@
                 </button>
               </div>
             </div>
-
             <!-- Job Category Filter -->
             <div class="filter-group mt-3">
               <h6>Job Category</h6>
               <div class="filter-options">
-                <!-- Loop through jobCategoryOptions and render filter buttons -->
                 <button
                   v-for="option in jobCategoryOptions"
                   :key="option"
@@ -41,12 +37,10 @@
                 </button>
               </div>
             </div>
-
             <!-- Career Level Filter -->
             <div class="filter-group mt-3">
               <h6>Career Level</h6>
               <div class="filter-options">
-                <!-- Loop through careerLevelOptions and render filter buttons -->
                 <button
                   v-for="option in careerLevelOptions"
                   :key="option"
@@ -57,7 +51,6 @@
                 </button>
               </div>
             </div>
-
             <!-- Location Filter -->
             <div class="filter-group mt-3">
               <h6>Location</h6>
@@ -68,7 +61,6 @@
                 v-model="filters.location"
               />
             </div>
-
             <!-- Apply Filters -->
             <button class="btn btn-primary w-100 mt-3" @click="applyFilters(props.query)">
               Apply Filters
@@ -83,15 +75,29 @@
           <p>No matching jobs found.</p>
         </div>
         <div v-else>
-         <!-- Loop through paginated jobs and display them -->
+          <!-- Loop through paginated jobs and display them -->
           <div
             v-for="(item, index) in paginatedItems"
             :key="item['Job ID']"
             class="card mb-3"
           >
-            <h5 class="card-header">{{ toTitleCase(item["Civil Service Title"]) }}</h5>
+            <h5 class="card-header d-flex justify-content-between align-items-center">
+  <span>{{ toTitleCase(item["Civil Service Title"]) }}</span>
+  <button
+    class="icon-button"
+    @click="toggleJob(item)"
+    :aria-label="isJobSaved(item['Job ID']) ? 'Remove bookmark' : 'Save bookmark'"
+  >
+    <img
+      :src="isJobSaved(item['Job ID']) ? bookmarkFilled : bookmarkBlank"
+      alt="Bookmark Icon"
+      class="bookmark-icon"
+    />
+  </button>
+</h5>
+
             <div class="card-body">
-              <!-- Salary Frequency / FT/PT logic -->
+              <!-- Salary and Location -->
               <div
                 v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'
               >
@@ -122,7 +128,7 @@
               </div>
               <p class="card-text">Location: {{ item["Work Location"] }}</p>
 
-              <!-- Action Buttons: Learn more & Save/remove job -->
+              <!-- Action Buttons: Learn More & Save/Remove Job with Bookmark Icon -->
               <div class="btn-group">
                 <button
                   type="button"
@@ -133,17 +139,9 @@
                 >
                   Learn More
                 </button>
-                <button
-                  type="button"
-                  :class="isJobSaved(item['Job ID']) ? 'btn btn-danger ms-2' : 'btn btn-success ms-2'"
-                  @click="toggleJob(item)"
-                >
-                  {{ isJobSaved(item["Job ID"]) ? "Remove Job" : "Save Job" }}
-                </button>
-
               </div>
 
-              <!-- Modal for showing job details -->
+              <!-- Modal for Job Details -->
               <div
                 class="modal fade"
                 :id="`modal_${item['Job ID']}`"
@@ -164,71 +162,71 @@
                       ></button>
                     </div>
                     <div class="modal-body">
-                    <!-- Job Description, Qualifications, Skills, and Apply Info -->
-                    <h5>Job Description</h5>
-                    <p v-if="item['Job Description']">
-                      {{ isExpanded(item['Job ID'], 'description') ? cleanText(item['Job Description']) : shortenText(cleanText(item['Job Description'])) }}
-                    </p>
-                    <button
-                      v-if="item['Job Description']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'description')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'description') ? "Show Less" : "Show More" }}
-                    </button>
-
-                    <h5>Minimum Qualifications</h5>
-                    <p v-if="item['Minimum Qual Requirements']">
-                      {{ isExpanded(item['Job ID'], 'requirements') ? cleanText(item['Minimum Qual Requirements']) : shortenText(cleanText(item['Minimum Qual Requirements'])) }}
-                    </p>
-                    <button
-                      v-if="item['Minimum Qual Requirements']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'requirements')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
-                    </button>
-
-                    <h5 v-if="item['Preferred Skills']">
-                      Preferred Skills
-                    </h5>
-                    <p v-if="item['Preferred Skills']">
-                      {{ isExpanded(item['Job ID'], 'skills') ? cleanText(item['Preferred Skills']) : shortenText(cleanText(item['Preferred Skills'])) }}
-                    </p>
-                    <button
-                      v-if="item['Preferred Skills']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'skills')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
-                    </button>
-
-                    <h5>To Apply</h5>
-                    <p v-if="item['To Apply']">
-                      {{ isExpanded(item['Job ID'], 'apply') ? cleanText(item['To Apply']) : shortenText(cleanText(item['To Apply'])) }}
-                    </p>
-                    <button
-                      v-if="item['To Apply']"
-                      class="btn btn-link"
-                      @click="toggleExpand(item['Job ID'], 'apply')"
-                    >
-                      {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
-                    </button>
-                    <button
-                      v-else="item['To Apply']"
-                      class="btn btn-primary"
-                    >
-                      Generic Apply Button
-                    </button>
-
-                    <div class="modal-footer">
+                      <h5>Job Description</h5>
+                      <p v-if="item['Job Description']">
+                        {{ isExpanded(item['Job ID'], 'description') ? cleanText(item['Job Description']) : shortenText(cleanText(item['Job Description'])) }}
+                      </p>
                       <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
+                        v-if="item['Job Description']"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'description')"
                       >
-                        Close
+                        {{ isExpanded(item['Job ID'], 'description') ? "Show Less" : "Show More" }}
                       </button>
+
+                      <h5>Minimum Qualifications</h5>
+                      <p v-if="item['Minimum Qual Requirements']">
+                        {{ isExpanded(item['Job ID'], 'requirements') ? cleanText(item['Minimum Qual Requirements']) : shortenText(cleanText(item['Minimum Qual Requirements'])) }}
+                      </p>
+                      <button
+                        v-if="item['Minimum Qual Requirements']"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'requirements')"
+                      >
+                        {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
+                      </button>
+
+                      <h5 v-if="item['Preferred Skills']">
+                        Preferred Skills
+                      </h5>
+                      <p v-if="item['Preferred Skills']">
+                        {{ isExpanded(item['Job ID'], 'skills') ? cleanText(item['Preferred Skills']) : shortenText(cleanText(item['Preferred Skills'])) }}
+                      </p>
+                      <button
+                        v-if="item['Preferred Skills']"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'skills')"
+                      >
+                        {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
+                      </button>
+
+                      <h5>To Apply</h5>
+                      <p v-if="item['To Apply']">
+                        {{ isExpanded(item['Job ID'], 'apply') ? cleanText(item['To Apply']) : shortenText(cleanText(item['To Apply'])) }}
+                      </p>
+                      <button
+                        v-if="item['To Apply']"
+                        class="btn btn-link"
+                        @click="toggleExpand(item['Job ID'], 'apply')"
+                      >
+                        {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
+                      </button>
+                      <button
+                        v-else
+                        class="btn btn-primary"
+                      >
+                        Generic Apply Button
+                      </button>
+
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -239,7 +237,6 @@
         </div>
       </div>
     </div>
-</div>
     <!-- Pagination -->
     <div class="pagination-controls">
       <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
@@ -257,26 +254,23 @@
   </div>
 
   <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <p class="copyright">&copy; 2024 CareerQuest, Inc</p>
-        </div>
-
-        <div class="footer-section">
-          <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
-        </div>
-
-        <div class="footer-section">
-          <ul class="footer-links">
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/privacy">Privacy</a></li>
-            <li><a href="/terms">Terms</a></li>
-          </ul>
-        </div>
+    <div class="footer-content">
+      <div class="footer-section">
+        <p class="copyright">&copy; 2024 CareerQuest, Inc</p>
       </div>
-    </footer>
-
+      <div class="footer-section">
+        <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
+      </div>
+      <div class="footer-section">
+        <ul class="footer-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <script setup>
@@ -285,6 +279,10 @@ import { useRoute, useRouter } from "vue-router";
 import Papa from "papaparse";
 import jobsCsv from "@/assets/Jobs_NYC_Postings.csv?raw";
 import { getCurrentUser } from 'aws-amplify/auth';
+
+// Import bookmark images
+import bookmarkFilled from '@/assets/bookmark_filled.png';
+import bookmarkBlank from '@/assets/bookmark_blank.png';
 
 const API_URL = "https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update";
 const userId = ref("");
@@ -299,7 +297,6 @@ const router = useRouter();
 const allJobs = ref([]);
 const filteredJobs = ref([]);
 const currentPage = ref(1);
-// this saves the itemsperpage locally so we can change it in the settings
 const itemsPerPage = ref(
   JSON.parse(localStorage.getItem('userSettings'))?.itemsPerPage || 10
 );
@@ -345,7 +342,6 @@ function toTitleCase(jobTitle) {
   return jobTitle.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
 }
 
-// Parse CSV on mount and load user data from API call
 onMounted(async () => {
   try {
     const { username } = await getCurrentUser();
@@ -369,13 +365,11 @@ onMounted(async () => {
   });
 });
 
-
 // Cleaning function
 function cleanText(text) {
   if (typeof text !== "string") {
     return "";
   }
-
   return text
     .replace(/â/g, '"')
     .replace(/â¢/g, '-')
@@ -385,7 +379,6 @@ function cleanText(text) {
     .replace(/[^\x20-\u00FF]/g, '');
 }
 
-// Track if expanded
 const expanded = ref({});
 
 const isExpanded = (jobId, section) => expanded.value[jobId]?.[section] || false;
@@ -397,13 +390,11 @@ const toggleExpand = (jobId, section) => {
   expanded.value[jobId][section] = !expanded.value[jobId][section];
 };
 
-// Shorten for preview
 const shortenText = (text, length = 150) => {
   if (!text) return "";
   return text.length > length ? text.slice(0, length) + "..." : text;
 };
 
-// Pagination
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredJobs.value.slice(start, start + itemsPerPage.value);
@@ -421,23 +412,19 @@ function prevPage() {
   }
 }
 
-// Filter arrays
 const jobTypeOptions = ["Full-Time", "Part-Time"];
 const jobCategoryOptions = [
-  // Add whichever categories you want the user to select
   "Engineering, Architecture, & Planning",
   "Health",
-  "Public Safety, Inspections, & Enforcement",
-  // ...
+  "Public Safety, Inspections, & Enforcement"
 ];
 const careerLevelOptions = [
   "Entry-Level",
   "Experienced (non-manager)",
   "Manager",
-  "Student",
+  "Student"
 ];
 
-// Filter object
 const filters = ref({
   jobTypes: [],
   industries: [],
@@ -446,7 +433,6 @@ const filters = ref({
   searchText: props.query || ""
 });
 
-// Toggle a filter
 function toggleFilter(filterCategory, option) {
   const index = filters.value[filterCategory].indexOf(option);
   if (index === -1) {
@@ -456,27 +442,20 @@ function toggleFilter(filterCategory, option) {
   }
 }
 
-// Apply filter logic
 function applyFilters(newQueryString = "") {
   let results = [...allJobs.value];
-
-  // Convert "Full-Time"/"Part-Time" to "F"/"P"
   const mapJobType = {
     "Full-Time": "F",
     "Part-Time": "P",
   };
 
-  // 1) Full-Time/Part-Time
   if (filters.value.jobTypes.length > 0) {
     results = results.filter((job) => {
-      const csvVal = job["Full-Time/Part-Time indicator"]; // "F" or "P"
-      return filters.value.jobTypes.some((selected) => {
-        return csvVal === mapJobType[selected];
-      });
+      const csvVal = job["Full-Time/Part-Time indicator"];
+      return filters.value.jobTypes.some((selected) => csvVal === mapJobType[selected]);
     });
   }
 
-  // 2) Job Category (substring match)
   if (filters.value.industries.length > 0) {
     results = results.filter((job) => {
       const catStr = job["Job Category"] || "";
@@ -486,14 +465,12 @@ function applyFilters(newQueryString = "") {
     });
   }
 
-  // 3) Career Level (needs to be exact)
   if (filters.value.careerLevels.length > 0) {
     results = results.filter((job) =>
       filters.value.careerLevels.includes(job["Career Level"])
     );
   }
 
-  // 4) Location (partial match)
   if (filters.value.location.trim()) {
     const loc = filters.value.location.toLowerCase();
     results = results.filter((job) =>
@@ -501,13 +478,15 @@ function applyFilters(newQueryString = "") {
     );
   }
 
-  // 5) search match in job title, job description, minimum qualifications, or prefered skills
   if (newQueryString.length > 0) {
-    const newString = newQueryString.toLowerCase()
+    const newString = newQueryString.toLowerCase();
     results = results.filter((job) => {
-      if (job["Civil Service Title"]?.toLowerCase()?.includes(newString) || job["Job Description"]?.toLowerCase()?.includes(newString) || job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) || job["Preferred Skills"]?.toLowerCase().includes(newString)) {
-        return true
-      }
+      return (
+        job["Civil Service Title"]?.toLowerCase()?.includes(newString) ||
+        job["Job Description"]?.toLowerCase()?.includes(newString) ||
+        job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) ||
+        job["Preferred Skills"]?.toLowerCase().includes(newString)
+      );
     });
   }
 
@@ -515,19 +494,12 @@ function applyFilters(newQueryString = "") {
   currentPage.value = 1;
 }
 
-
-
-// If user changes query param, re-run filters or revert
 watch(
   () => props.query,
   (newQueryString) => {
-    console.log("watch called")
     if (newQueryString) {
-      console.log("newQueryString: ", newQueryString)
-      console.log("inside if statement")
       applyFilters(newQueryString);
     } else {
-      console.log("inside else statement")
       filteredJobs.value = [...allJobs.value];
     }
   }
@@ -597,6 +569,24 @@ watch(
     grid-template-columns: 1fr;
   }
 }
+
+/* Optional styling for the bookmark icon */
+.bookmark-icon {
+  width: 24px;
+  height: 24px;
+}
+/* Custom icon-button style to remove borders, background, etc. */
+.icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icon-button:focus {
+  outline: none;      /* Remove focus outline if desired */
+  box-shadow: none;   /* Remove any default focus shadow */
+}
 </style>
 
 <style>
@@ -609,7 +599,6 @@ watch(
 .modal-dialog {
   margin-top: 80px;
 }
-
 .footer {
   margin-top: auto;
   width: 100%;
@@ -619,7 +608,6 @@ watch(
   padding: 2rem 0;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
 }
-
 .footer-content {
   max-width: 1400px;
   margin: 0 auto;
@@ -628,7 +616,6 @@ watch(
   align-items: center;
   padding: 0 3rem;
 }
-
 .footer-logo {
   height: 40px;
   width: auto;
@@ -636,17 +623,14 @@ watch(
   display: block;
   margin: 0 auto;
 }
-
 .footer-section:nth-child(2) {
   justify-content: center;
   display: flex;
   align-items: center;
 }
-
 .footer-logo:hover {
   opacity: 0.8;
 }
-
 .footer-links {
   list-style: none;
   display: flex;
@@ -654,7 +638,6 @@ watch(
   margin: 0;
   padding: 0;
 }
-
 .footer-links a {
   color: #444;
   text-decoration: none;
@@ -664,10 +647,8 @@ watch(
   padding: 0.5rem 1rem;
   border-radius: 20px;
 }
-
 .footer-links a:hover {
   color: #0073b1;
   background: rgba(0, 115, 177, 0.1);
 }
-
 </style>
