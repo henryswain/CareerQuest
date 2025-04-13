@@ -1,6 +1,8 @@
-Team weekly report
+Team weekly report #9
 • Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
 • Team progress/achieved things/accomplished tasks/stories completed
+    Amazon AWS integration, improvements to UI, more pages for information
 • Team blockers/issues
 • Team tasks for next week:
     Get the app in preparation for the next sprint
@@ -38,10 +40,19 @@ o Plan for next week
 - Better layout for find-jobs page with Marcus
 - Connect profile page to user data
 
-• Team member 4:
+• Team member 4: Ryan Witcraft
 o Stories completed
+- AWS frontend implemented for SavedJobs
+- Can view saved jobs from any computer if under the same profile
 o Progress report
+- AWS frontend to call the read function to see what job IDs are saved
+- Stops duplicates and has same functionality as local storage did
+- Local storage for SavedJobs removed
+- Cleaned descriptions function also applied to SavedJobs page
 o Plan for next week
+- Work on sprint 3 presentation
+- Get sign-up to save new user to the DynamoDB
+- Incorporate settings and other user info to the DynamoDB
 
 • Team member 5:
 o Stories completed
