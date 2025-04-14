@@ -181,22 +181,25 @@
                         {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
                       </button>
 
-                      <h5>To Apply</h5>
-                      <p v-if="getField(item, 'To Apply')">
-                        {{ isExpanded(item['Job ID'], 'apply') ? cleanText(getField(item, "To Apply")) : shortenText(cleanText(getField(item, "To Apply"))) }}
+                      <h5 v-if="item['To Apply']">To Apply</h5>
+                      <p v-if="item['To Apply']">
+                        {{ isExpanded(item['Job ID'], 'apply') ? cleanText(item['To Apply']) : shortenText(cleanText(item['To Apply'])) }}
                       </p>
                       <button
-                        v-if="getField(item, 'To Apply')"
+                        v-if="item['To Apply']"
                         class="btn btn-link"
                         @click="toggleExpand(item['Job ID'], 'apply')"
                       >
                         {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
                       </button>
-                      <button v-else class="btn btn-primary">
-                        Generic Apply Button
-                      </button>
 
                       <div class="modal-footer">
+                        <button
+                          class="btn btn-primary"
+                          @click="goToApplyLink(item['Job ID'])"
+                          >
+                          View Original Listing
+                      </button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                           Close
                         </button>
@@ -344,6 +347,11 @@ function isJobSaved(jobId) {
 
 function toTitleCase(jobTitle) {
   return jobTitle.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase());
+}
+
+function goToApplyLink(jobId) {
+  window.open("https://cityjobs.nyc.gov/job/" + jobId, '_blank').focus();
+  console.log("https://cityjobs.nyc.gov/job/" + jobId);
 }
 
 function loadJobs() {

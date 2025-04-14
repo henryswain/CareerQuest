@@ -63,7 +63,16 @@ o Plan for next week
 - Get sign-up to save new user to the DynamoDB
 - Incorporate settings and other user info to the DynamoDB
 
-• Team member 5:
+• Team member 5: Magnolia Wallerich
 o Stories completed
+- Worked out a newer look for the navbar with a bit more personalized styling instead of the default bootstrap stuff
+- Added a function that adds a button to view the original listing for jobs to the FindJobs modals
+- Started trying to style the FindJobs page
 o Progress report
+- Function seems complete to the best of my ability though I hadn't pushed for a bit so I had to do some staging and I'm not sure if all I had done got brought over properly
+- I believe the navbar has been further iterated on but what I had originally wanted to do was completed as I wished
+- Didn't really make much of a dent in FindJobs though I had some ideas I tested out that I never actually got implemented
 o Plan for next week
+- Make our presentation for sprint 3
+- Get a solid plan for submitting everything this time so we well and truly have everything we need to have in, in
+- Figure out why I seem to have a memory leak when I try to npm run dev
