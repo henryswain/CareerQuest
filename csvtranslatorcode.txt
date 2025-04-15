@@ -1,0 +1,52 @@
+ChatGPT was used to help with the creation of this script. 
+It added logging and a throttle. Originally when the .py script was ran it made the terminal look frozen.
+It ended up just taking 8 hours to run and the logging helped.
+
+
+
+import pandas as pd
+import time
+from deep_translator import GoogleTranslator
+
+default_text = "Sin información disponible"
+
+def safe_translate(text, dest_lang="es"):
+    if pd.isna(text) or not isinstance(text, str) or text.strip() == "":
+        return default_text
+    try:
+        translated = GoogleTranslator(source='auto', target=dest_lang).translate(text)
+        return translated if translated and translated.strip() else default_text
+    except Exception as e:
+        print(f"Error translating '{text}': {e}")
+        return default_text
+
+def process_csv(filename):
+    df = pd.read_csv(filename)
+    fields_to_translate = [
+        'Civil Service Title',
+        'Job Description',
+        'Minimum Qual Requirements',
+        'Preferred Skills',
+        'To Apply'
+    ]
+    for field in fields_to_translate:
+        new_field = f"{field} (Spanish)"
+        translations = []
+        total_rows = len(df)
+        print(f"Translating field: {field}")
+        for i, text in enumerate(df[field]):
+            translated_text = safe_translate(text, dest_lang="es")
+            translations.append(translated_text)
+            if i % 10 == 0:  # log every 10 rows
+                print(f"  Processed {i+1}/{total_rows} rows for {field}")
+            time.sleep(0.2)  # delay to throttle requests
+        df[new_field] = translations
+    output_file = "Jobs_NYC_Postings_translated.csv"
+    df.to_csv(output_file, index=False)
+    print(f"Translation complete! The translated file is saved as '{output_file}'.")
+
+if __name__ == "__main__":
+    start_time = time.time()
+    process_csv("Jobs_NYC_Postings.csv")
+    end_time = time.time()
+    print(f"Total runtime: {end_time - start_time:.2f} seconds")

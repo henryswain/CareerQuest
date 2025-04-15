@@ -12,7 +12,7 @@
 - Authentication: AWS Amplify Authenticator Gen 2
 - API Style: REST APIs (held on AWS API Gateway)
 
-## Developemnt Setup
+## Development Setup
 Prerequisites
 - AWS Account (for setting up and using dynamodb, lambda, and api gateway)
 
