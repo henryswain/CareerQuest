@@ -445,6 +445,56 @@ const deleteItem = (array, index) => {
 .btn-icon:hover {
   background: #fff5f5;
 }
+/* Dark Mode Overrides */
+.dark-mode {
+  background-color: #121212; /* Dark background for the page */
+  color: white; /* White text color for dark mode */
+}
+
+/* Profile Card Box Styling for Dark Mode */
+.dark-mode .card {
+  background-color: #333; /* Darker background for cards */
+  border: 1px solid #444; /* Slightly lighter border */
+  color: white; /* White text inside the card */
+}
+
+/* Dark Mode for Text in the Card */
+.dark-mode .card h2 {
+  color: #f1f1f1; /* Lighter color for headers */
+}
+
+.dark-mode .about-text,
+.dark-mode .company,
+.dark-mode .duration,
+.dark-mode .institution,
+.dark-mode .year {
+  color: #ddd; 
+}
+
+/* Dark Mode for Profile Header Banner */
+.dark-mode .profile-header-banner {
+  background: linear-gradient(135deg, #004e6a, #00344a); /* Darker gradient for banner */
+}
+
+/* Dark Mode for Buttons */
+
+.dark-mode .btn-primary {
+  background: #0073b1;
+  color: white;
+}
+
+.dark-mode .btn-primary:hover {
+  background: #005582; /* Slightly darker hover effect */
+}
+
+.dark-mode .btn-icon {
+  color: #dc3545; /* Red for delete icons in dark mode */
+}
+
+.dark-mode .btn-icon:hover {
+  background: #fff5f5; /* Light background on hover */
+}
+
 
 @media (max-width: 768px) {
   .profile-layout {
@@ -456,4 +506,5 @@ const deleteItem = (array, index) => {
     text-align: center;
   }
 }
+
 </style>

@@ -1,0 +1,8 @@
+Marcus Notes:
+I got the job filtering to work. But since we are adding new pages the overrides 
+are getting messed up with the dark mode so I will not be touching that until 
+before the sprint.
+Topher Notes:
+Tommy Notes:
+Henry Notes:
+Ryan notes:

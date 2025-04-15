@@ -1,0 +1,73 @@
+Team weekly report
+
+* Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
+
+
+* Team progress/achieved things/accomplished tasks/stories completed
+
+* Team blockers/issues
+
+* Team tasks for next week
+
+* Meeting minutes - details of meetings
+
+* Team member 1: Henry Swain
+o Stories completed
+- created lambda function to read data from CSV file from S3 bucket into table in DynamoDB
+- Create lambda function to read/filter job data from dynamo DB table Based on optional event parameters, including search For filtering jobs based on keyword,
+ And pageToken To ensure that the remaining data Is queried On subsequent calls (not the full data set)..
+- Set up an API endpoint on API Gateway that accepts query string parameters (search and pageToken) To call the lambda Function
+- Reworked frontend to call the API and read data from object returned Instead of using a WSGI file.
+o Progress report
+- Overall successful, But I ran into some roadblocks with lambda's limitations. Apparently, PartIQL (AWS's sql compatable query language) has a maximum Return size of 1MB
+And lambda itself has a maximum return size of 6 MB, Which meant that it was impossible To return all the results in one API call, So I had to figure out a way to
+Call the API multiple times until there were no more results.
+o Plan for next week
+-Will be determined on Monday
+
+* Team member 2: Marcus Bodnar
+o Stories completed
+-merged Ryan's settings page and mine together
+-added on to the settings
+o Progress report
+- Got the dark mode to work on everything by having it force override
+-Switches text color so it is readable
+o Plan for next week
+- Initialize the job filtering
+
+
+* Team member 3: Tommy Le 
+o Stories completed
+- Created and implemented login and sign up page
+- Fixed functionality for Profile page (allow for people to delete experiences and skills)
+o Progress report
+- Transition more towards back end development after this split
+- Focus on implementing functionality towards everything
+o Plan for next week
+- Continue login and sign up page design and create a more optimal sign-up/login
+- Improvement of styling for all pages throughout
+
+* Team member 4: Ryan Witcraft
+o Stories completed
+- Implemented settings and saved jobs page
+- Functionality for settings implemented for FindJobs page
+- Dark mode, pagination, and clear local cache
+o Progress report
+- Implementation through local storage
+- Improvement to styling from dark mode and user interface through pagination
+- Saved jobs list still does not show description yet
+o Plan for next week
+- Fully integrate systems that are saved locally to AWS through API/Lambda/DynamoDB
+- Implement more settings and make them work on all pages
+- Improve darkmode styling
+
+
+
+* Team member 5: Magnolia
+o Stories completed
+- Changed the FindJobs page to fetch from the new read API and made it able to parse the JSON instead of HTML as that was what it was receiving previously
+o Progress report
+- The fetching on I implemented for FindJobs works well, though, as I have never used Vue before beyond that I didn't know how to do anything so I left that to Henry
+o Plan for next week
+- Not entirely certain but I would like to find some larger aspect to work on over spring break

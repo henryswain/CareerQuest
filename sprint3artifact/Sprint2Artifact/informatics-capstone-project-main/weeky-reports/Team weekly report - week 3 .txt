@@ -1,0 +1,65 @@
+Team weekly report
+
+* Team members and team number
+team 3 - Henry, Marcus, Tommy, Ryan, and Magnolia (Topher)
+
+* Team progress/achieved things/accomplished tasks/stories completed
+
+* Team blockers/issues
+
+* Team tasks for next week
+
+* Meeting minutes - details of meetings
+
+* Team member 1: Henry Swain
+o Stories completed
+- reworked cards to show information that users will want to see when quickly scrolling through jobs 
+(salary, location, part-time/full-time as opposed to job description, basic qual requirements, prefered skills and to apply).
+-fixed styling of learn button button
+-made learn more button open up modal with more full information about the job; content which was originally visible when scrolling
+ through the cards (job description, basic qual requirements, prefered skills, to apply), but ultimately made more sense to be visible when "learning more"
+o Progress report 
+- good progress was made, It's now much easier to see what jobs are available on a quick scroll, but the full information is readily available 
+with a well styled learn more button
+o Plan for next week
+-start to implement a job filtering system
+
+Team member 2: Marcus Bodnar
+o Stories completed
+- Added Styling to home page
+- Made navbar compatible with different screen sizes (responsiveness)
+- Filter compatible for different screen sizes
+o Progress report 
+- Things went well and the page looks more presentable now after adding the screen size responsiveness. I did not get around to the filters working since we were worries more about the layout of the page rather than overall functionality yet.
+- See if I can get the filtering next week instead.
+o Plan for next week
+Work on login/signup pages
+
+Team member 3: Tommy Le
+o Stories completed
+- Created profile page
+- Added ability to modify profile picture on profile page
+- Added ability to add qualifications through text and inserted in
+- Added ability to add skills through a textbox and inserted in
+- Added ability to add educuation and work experience
+o Progress report 
+- Super positive this week, prepared for presentation on Wednesday, only thing needed is to modify the styling of profile page
+o Plan for next week
+- Style profile page and make it more compatible with website, allowing for better user engagement.
+
+Team member 4: Ryan
+o Stories completed
+- Experiemented with AWS services
+o Progress report 
+- Found some success with integrating AWS into vue
+o Plan for next week
+- Work to implement AWS functionality into our project where neccessary
+
+Team member 5: Magnolia (Topher)
+o Stories completed
+- Worked on getting query strings to work but was busy with other stuff so didn't get much of a chance to really dig into it
+o Progress report 
+- Still not working entirely but have a better lead thanks to urllib added by Henry
+o Plan for next week
+- Try to really flesh out querying the database
+- Probably make some presentation materials for our first sprint presentation

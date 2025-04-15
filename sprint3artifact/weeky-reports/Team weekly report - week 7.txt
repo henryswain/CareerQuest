@@ -1,0 +1,63 @@
+Team weekly report 7
+• Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
+
+
+• Team progress/achieved things/accomplished tasks/stories completed
+• Team blockers/issues
+• Team tasks for next week
+
+• Meeting minutes - details of meetings
+
+• Team member 1: Henry
+o Stories completed
+- redid the search to work with papaParse
+- presented my slides on Friday
+o Progress report
+- this week was mostly a presentation week, so I didn't do much coding, but I did have to fix the search function prior to presentation day.
+o Plan for next week
+- will discuss the details next week
+
+• Team member 2: Marcus Bodnar
+o Stories completed
+    -Added the filtering to the find-jobs page with papaParse  
+    -Worked on dark mode filtering and settings page
+    -Presented to the class Friday
+o Progress report
+    -Presentations were this week so I got all of the dark mode settings to properly display (modals will have to be worked on for those)
+o Plan for next week
+    -We will figure this out Monday for me. I will constantly update the dark mode
+• Team member 3: Tommy
+o Stories completed
+- Modified profile page even more to allow for better user accessiblity, and allowed for user experience to be more fluid
+- Worked on presentation slides / created presentation
+o Progress report
+- Presentation week, didn't feel like there was much that was needed to be done. Completed goals for sprint 2.
+o Plan for next week
+- Discuss and figure out plans for sprint 3
+
+• Team member 4: Ryan Witcraft
+o Stories completed
+- Sprint 2 presentation, my story slide/adding a couple challenges/future goals
+- Added a cleaning function for description modal
+- Re-added expandable and retractable job descriptions to findJobs
+o Progress report
+- The switch to papaParse messed with some variables and merging issues so got that fixed
+- Cleaning function decodes encoding errors for correct descriptions
+- Cleaning function is on-demand
+o Plan for next week
+- Add cleaning function to savedJobs
+- Add Marcus's logic for fetching jobs
+- Saving account info to database
+- To apply QOL and functionality
+
+• Team member 5: Magnolia Wallerich
+o Stories completed
+- Made some graphics for the homepage and general page logo
+- Got the graphics implemented into the homepage and started working out what we wanted for a layout with Tommy
+o Progress report
+- I got everything working except the darkmode background for the homepage working which for some reason works locally but not on AWS Amplify
+o Plan for next week
+- Start working on making graphics and styling for the rest of the page, probably focused on the navbar and maybe profile picture 
+    implementation with the folks working on the authenticator
+- Continue Tommy and I's work on making a nice landing page as the homepage currently leaves much to be desired from just my additions

@@ -1,0 +1,78 @@
+Team weekly report #9
+• Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
+• Team progress/achieved things/accomplished tasks/stories completed
+    Amazon AWS integration, improvements to UI, more pages for information
+• Team blockers/issues
+• Team tasks for next week:
+    Get the app in preparation for the next sprint
+
+• Meeting minutes - details of meetings
+
+• Team member 1: Henry Swain
+o Stories completed
+- updated comments
+- restyled authenticator to fit withe the careerquest theme
+- created and filled out readme
+o Progress report
+- restyling the authenticator was a pain since the documentation for custom styles 
+is horrible and incomprehensive, and the way I wanted to do it ended up not being possible (I think it was more built into the javascript
+of the componenet and less the css), but I was still able to make solid changes.
+- the readme file was tedious but I think its looking pretty good now. Since I'm still a bit new to readme
+ files, and it felt partially incomplete, I reached out to my group members for feedback, but I never heard back (despite multiple texts).
+o Plan for next week
+- not sure yet, will discuss next week
+
+• Team member 2: Marcus Bodnar
+o Stories completed
+    -Worked on QOL
+    -Working on the translation of the csv 
+o Progress report
+    -It's been 9 hours and the csv is still translating for spanish. 
+    -Added bookmark to save jobs for a better look
+    - Made next and previous buttons scroll you to the top of the page. (This helps since the filtering is locked to the top)
+o Plan for next week
+    - Get powerpoint slides ready
+    - Try and find a better layout for the find-jobs page
+    - Apply darkmode to new pages for this sprint
+
+• Team member 3: Tommy Le
+o Stories completed
+- Restyled footer
+- Moved sign in/sign out button outside of dropdown and restyled it.
+- Completed about page, terms page, privacy page, and contact page for footer
+o Progress report
+- Complete contact page to work with email
+- Complete profile page for better user experience to edit
+o Plan for next week
+- Get powerpoint slides created and finished up
+- Better layout for find-jobs page with Marcus
+- Connect profile page to user data
+
+• Team member 4: Ryan Witcraft
+o Stories completed
+- AWS frontend implemented for SavedJobs
+- Can view saved jobs from any computer if under the same profile
+o Progress report
+- AWS frontend to call the read function to see what job IDs are saved
+- Stops duplicates and has same functionality as local storage did
+- Local storage for SavedJobs removed
+- Cleaned descriptions function also applied to SavedJobs page
+o Plan for next week
+- Work on sprint 3 presentation
+- Get sign-up to save new user to the DynamoDB
+- Incorporate settings and other user info to the DynamoDB
+
+• Team member 5: Magnolia Wallerich
+o Stories completed
+- Worked out a newer look for the navbar with a bit more personalized styling instead of the default bootstrap stuff
+- Added a function that adds a button to view the original listing for jobs to the FindJobs modals
+- Started trying to style the FindJobs page
+o Progress report
+- Function seems complete to the best of my ability though I hadn't pushed for a bit so I had to do some staging and I'm not sure if all I had done got brought over properly
+- I believe the navbar has been further iterated on but what I had originally wanted to do was completed as I wished
+- Didn't really make much of a dent in FindJobs though I had some ideas I tested out that I never actually got implemented
+o Plan for next week
+- Make our presentation for sprint 3
+- Get a solid plan for submitting everything this time so we well and truly have everything we need to have in, in
+- Figure out why I seem to have a memory leak when I try to npm run dev
