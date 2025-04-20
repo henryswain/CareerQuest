@@ -37,5 +37,12 @@ o Plan for next week
 
 * Team member 5: Magnolia Wallerich
 o Stories completed
+- Completed my slides for our presenation and presented them when we did ours on Friday
 o Progress report
+- Presentation was completed on time and our actual talk part went alright as far as I can tell
+- This time around we tried to have a more solid plan for submission and as far as I can tell that went better this sprint
 o Plan for next week
+- Figure out how to increase my memory allocation to VSCode for running the project as right now trying to "npm run dev" gives 
+    errors relating to memory since the introduction of the translated CSV
+- Investigate possible ways to make the project more efficient in an effort to decrease load times by figuring out what is 
+    taking the longest when rendering the site
