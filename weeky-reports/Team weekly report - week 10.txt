@@ -32,13 +32,24 @@ Work on the data for the csv still not being clean in spanish fully. Work on loa
 
 * Team member 3: Tommy Le 
 o Stories completed
+- Created / Presented Slides
 o Progress report
+- Super laidback week, feeling ready to finish this project and fix all bugs neccessary
 o Plan for next week
+- Finishing major bug fixes, connect profile page together and add new features
 
 * Team member 4: Ryan Witcraft
 o Stories completed
+- Worked on slides and presented my story slide
+- Found out how to fix memory overflow locally
 o Progress report
+- Slides completed and presented
+- Future plans were discussed this week
+- Planning bug fixes
 o Plan for next week
+- Memory bug fixes
+- Connect more features to AWS
+- Employer page
 
 * Team member 5: Magnolia Wallerich
 o Stories completed
