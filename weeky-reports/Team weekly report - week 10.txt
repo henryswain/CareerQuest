@@ -21,9 +21,14 @@ o Plan for next week
 - start working on the final large chunk of the site.
 
 * Team member 2: Marcus Bodnar
-o Stories completeds
+o Stories completed
+- Worked on Sprint presentation week
+- Fixed the API call for storing users into the DB with Henry
 o Progress report
+- Overall it was a good relaxed week. The presentation went really well :D
 o Plan for next week
+- Work on finishing dark mode for the final presentation. Implement Spanish for the rest of the website text. 
+Work on the data for the csv still not being clean in spanish fully. Work on load times for the site. Single csv/compressing images
 
 * Team member 3: Tommy Le 
 o Stories completed
@@ -35,8 +40,16 @@ o Plan for next week
 
 * Team member 4: Ryan Witcraft
 o Stories completed
+- Worked on slides and presented my story slide
+- Found out how to fix memory overflow locally
 o Progress report
+- Slides completed and presented
+- Future plans were discussed this week
+- Planning bug fixes
 o Plan for next week
+- Memory bug fixes
+- Connect more features to AWS
+- Employer page
 
 * Team member 5: Magnolia Wallerich
 o Stories completed
