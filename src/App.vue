@@ -26,24 +26,15 @@
           />
           <button class="searchbutton btn btn-primary" type="text">Search</button>
         </form>
-        <!-- Add auth button here -->
-        <button 
-          v-if="!isAuthenticated" 
+        <!-- sign in/sign out button -->
+        <button
+          id="desktop-auth-state"
           type="button" 
           class="auth-button me-3" 
           data-bs-toggle="modal" 
           data-bs-target="#authenticationModal"
         >
-          Sign in
-        </button>
-        <button 
-          v-else 
-          type="button" 
-          class="auth-button me-3" 
-          data-bs-toggle="modal" 
-          data-bs-target="#authenticationModal"
-        >
-          Sign out
+        Sign in
         </button>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -121,22 +112,13 @@
               <li>
                 <div>
                   <button
-                    v-if="!isAuthenticated"
+                    id="mobile-auth-state"
                     type="button"
                     class="btn btn-link"
                     data-bs-toggle="modal"
                     data-bs-target="#authenticationModal"
                   >
-                    Login/Sign up
-                  </button>
-                  <button
-                    v-else
-                    type="button"
-                    class="btn btn-link"
-                    data-bs-toggle="modal"
-                    data-bs-target="#authenticationModal"
-                  >
-                    Sign Out
+                    sign in
                   </button>
                 </div>
               </li>
@@ -163,7 +145,7 @@
           </authenticator>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="button" id="close-modal" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
         </div>
       </div>
     </div>
@@ -207,37 +189,31 @@ import "@aws-amplify/ui-vue/styles.css";
 import { Hub } from 'aws-amplify/utils';
 import { getCurrentUser } from 'aws-amplify/auth';
 
-const isAuthenticated = ref(false);
-
-const closeModal = () => {
-  // Function to close the modal programmatically
-
-  console.log("close modal")
-
-  // Select the element you want to fire the event on
-  const modalElement = document.getElementById('authenticationModal');
-
-  // Create the event, ensuring it matches the Bootstrap naming convention
-  const event = new Event('dismiss.bs.modal', {
-    bubbles: true, // Event will bubble up through the DOM tree
-    cancelable: true // Event can be canceled
-  });
-  modalElement.dispatchEvent(event);
-};
-
 // detect authentication events
 Hub.listen('auth', async ({ payload }) => {
-  const { username, userId, signInDetails } = await getCurrentUser();
-  switch (payload.event) {
-    case 'signedIn':
-      isAuthenticated.value = true;
-      closeModal();
-      break;
-    case 'signedOut':
-      isAuthenticated.value = false;
-      closeModal();
-      break;
-    // ... other events
+  // if the user is signed in
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    switch (payload.event) {
+      case 'signedIn':
+        console.log("signed in")
+        fetch(`https://gm4pbbszg2.execute-api.us-east-2.amazonaws.com/dev/add_user_id_to_user-data?id=${userId}`)
+        document.getElementById("close-modal").click()
+        document.getElementById("desktop-auth-state").textContent = "Sign Out"
+        document.getElementById("mobile-auth-state").textContent = "Sign Out"
+        break;
+    }
+  }
+  // otherwise
+  catch {
+    switch (payload.event) {
+      case 'signedOut':
+        console.log("signed out")
+        document.getElementById("close-modal").click()
+        document.getElementById("desktop-auth-state").textContent = "Sign in"
+        document.getElementById("mobile-auth-state").textContent = "Sign in"
+        break;
+    }
   }
 });
 
