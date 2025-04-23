@@ -353,16 +353,29 @@ function goToApplyLink(jobId) {
   window.open("https://cityjobs.nyc.gov/job/" + jobId, '_blank').focus();
   console.log("https://cityjobs.nyc.gov/job/" + jobId);
 }
-
+// loads csv by selected option in hopes to reduce load times
 function loadJobs() {
-  Papa.parse(selectedCsv.value, {
-    header: true,
-    skipEmptyLines: true,
-    complete: (results) => {
-      allJobs.value = results.data;
-      filteredJobs.value = results.data;
-    },
-  });
+  if (currentLanguage.value === "en") {
+    // Load English CSV
+    Papa.parse(jobsCsvEnglish, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        allJobs.value = results.data;
+        filteredJobs.value = results.data;
+      },
+    });
+  } else if (currentLanguage.value === "es") {
+    // Load Spanish CSV only if the language is Spanish
+    Papa.parse(jobsCsvSpanish, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        allJobs.value = results.data;
+        filteredJobs.value = results.data;
+      },
+    });
+  }
 }
 
 onMounted(async () => {
