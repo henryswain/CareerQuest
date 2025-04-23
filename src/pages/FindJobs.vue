@@ -545,13 +545,14 @@ watch(
 
 <style scoped>
 .find-jobs-page {
-  padding: 1rem;
+  padding: 0rem;
 }
 .grid-container {
   display: grid;
   grid-template-columns: 250px 1fr;
   gap: 20px;
-  padding: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 .filter-section {
   padding: 1rem;
@@ -572,6 +573,8 @@ watch(
   border-radius: 0.5rem;
 }
 .filter-card {
+  position: fixed;
+  width: 200px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
