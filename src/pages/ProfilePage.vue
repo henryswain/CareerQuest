@@ -1,125 +1,3 @@
-<script setup>
-import { ref, watch, onMounted } from 'vue';
-import { getCurrentUser } from 'aws-amplify/auth';
-import { Hub } from 'aws-amplify/utils';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-// Load profile data from localStorage
-const loadProfile = () => {
-  const savedProfile = localStorage.getItem('userProfile');
-  const defaultProfile = {
-    name: "Your Name",
-    headline: "Your Professional Headline",
-    email: "youremail@example.com",
-    location: "Your Location",
-    profilePicture: "", 
-    about: "A short summary about your professional background.",
-    experience: [],
-    education: [],
-    skills: [],
-    qualifications: [],
-    socialLinks: {
-      twitter: "",
-      linkedin: "",
-      github: "",
-      website: ""
-    }
-  };
-
-  if (!savedProfile) {
-    return defaultProfile;
-  }
-
-  const parsedProfile = JSON.parse(savedProfile);
-  // Ensure socialLinks exists
-  if (!parsedProfile.socialLinks) {
-    parsedProfile.socialLinks = defaultProfile.socialLinks;
-  }
-  
-  return parsedProfile;
-};
-
-const user = ref(loadProfile());
-const isEditing = ref(false);
-const newSkill = ref("");
-const newQualification = ref("");
-const newExperience = ref({ position: "", company: "", duration: "" });
-const newEducation = ref({ degree: "", institution: "", year: "" });
-
-// Watch and save changes to localStorage
-watch(user, (newVal) => {
-  localStorage.setItem('userProfile', JSON.stringify(newVal));
-}, { deep: true });
-
-// Save the profile and stop editing
-const saveProfile = () => {
-  isEditing.value = false;
-  console.log("Profile updated:", user.value);
-};
-
-// Add skill, qualification, experience, and education
-const addSkill = () => {
-  if (newSkill.value.trim()) {
-    user.value.skills.push(newSkill.value.trim());
-    newSkill.value = "";
-  }
-};
-
-const addQualification = () => {
-  if (newQualification.value.trim()) {
-    user.value.qualifications.push(newQualification.value.trim());
-    newQualification.value = "";
-  }
-};
-
-const addExperience = () => {
-  if (newExperience.value.position && newExperience.value.company && newExperience.value.duration) {
-    user.value.experience.push({ ...newExperience.value });
-    newExperience.value = { position: "", company: "", duration: "" };
-  }
-};
-
-const addEducation = () => {
-  if (newEducation.value.degree && newEducation.value.institution && newEducation.value.year) {
-    user.value.education.push({ ...newEducation.value });
-    newEducation.value = { degree: "", institution: "", year: "" };
-  }
-};
-
-// Handle profile picture upload
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      user.value.profilePicture = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-};
-
-const currentUserInfo = ref({});
-onMounted(async () => {
-  getUserInformation();
-});
-
-const getUserInformation = async () => {
-  try {
-    const { username, userId, signInDetails } = await getCurrentUser();
-    currentUserInfo.value = { username, userId, signInDetails };
-  } catch (e) {
-    console.log(e.message);
-    currentUserInfo.value = { username: undefined, userId: undefined, signInDetails: undefined };
-  }
-}
-
-// Delete experience, education, or qualification
-const deleteItem = (array, index) => {
-  array.splice(index, 1);
-};
-</script>
-
 <template>
   <div class="profile-container">
     <div class="profile-header-banner">
@@ -130,14 +8,17 @@ const deleteItem = (array, index) => {
             <img :src="user.profilePicture || '/user.png'" alt="Profile Picture" class="profile-picture" />
           </label>
         </div>
+
         <div class="profile-info">
            <!-- User Name, Headline, and Location -->
           <h1 class="user-name">{{ user.name }}</h1>
           <p class="headline">{{ user.headline }}</p>
           <p class="location">{{ user.location }}</p>
         </div>
+
       </div>
     </div>
+    
     <!-- Profile Layout: Main Content and Sidebar -->
     <div class="profile-layout">
       <!-- Main Profile Content -->
@@ -162,6 +43,8 @@ const deleteItem = (array, index) => {
             </div>
           </div>
         </div>
+
+
         <!-- Education section -->
         <div class="card">
           <h2>Education</h2>
@@ -292,6 +175,127 @@ const deleteItem = (array, index) => {
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+import { getCurrentUser } from 'aws-amplify/auth';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+// Load profile data from localStorage
+const loadProfile = () => {
+  const savedProfile = localStorage.getItem('userProfile');
+  const defaultProfile = {
+    name: "Your Name",
+    headline: "Your Professional Headline",
+    email: "youremail@example.com",
+    location: "Your Location",
+    profilePicture: "", 
+    about: "A short summary about your professional background.",
+    experience: [],
+    education: [],
+    skills: [],
+    qualifications: [],
+    socialLinks: {
+      twitter: "",
+      linkedin: "",
+      github: "",
+      website: ""
+    }
+  };
+
+  if (!savedProfile) {
+    return defaultProfile;
+  }
+
+  const parsedProfile = JSON.parse(savedProfile);
+  // Ensure socialLinks exists
+  if (!parsedProfile.socialLinks) {
+    parsedProfile.socialLinks = defaultProfile.socialLinks;
+  }
+  
+  return parsedProfile;
+};
+
+const user = ref(loadProfile());
+const isEditing = ref(false);
+const newSkill = ref("");
+const newQualification = ref("");
+const newExperience = ref({ position: "", company: "", duration: "" });
+const newEducation = ref({ degree: "", institution: "", year: "" });
+
+// Watch and save changes to localStorage
+watch(user, (newVal) => {
+  localStorage.setItem('userProfile', JSON.stringify(newVal));
+}, { deep: true });
+
+// Save the profile and stop editing
+const saveProfile = () => {
+  isEditing.value = false;
+  console.log("Profile updated:", user.value);
+};
+
+// Add skill, qualification, experience, and education
+const addSkill = () => {
+  if (newSkill.value.trim()) {
+    user.value.skills.push(newSkill.value.trim());
+    newSkill.value = "";
+  }
+};
+
+const addQualification = () => {
+  if (newQualification.value.trim()) {
+    user.value.qualifications.push(newQualification.value.trim());
+    newQualification.value = "";
+  }
+};
+
+const addExperience = () => {
+  if (newExperience.value.position && newExperience.value.company && newExperience.value.duration) {
+    user.value.experience.push({ ...newExperience.value });
+    newExperience.value = { position: "", company: "", duration: "" };
+  }
+};
+
+const addEducation = () => {
+  if (newEducation.value.degree && newEducation.value.institution && newEducation.value.year) {
+    user.value.education.push({ ...newEducation.value });
+    newEducation.value = { degree: "", institution: "", year: "" };
+  }
+};
+
+// Handle profile picture upload
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      user.value.profilePicture = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const currentUserInfo = ref({});
+onMounted(async () => {
+  getUserInformation();
+});
+
+const getUserInformation = async () => {
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    currentUserInfo.value = { username, userId, signInDetails };
+  } catch (e) {
+    console.log(e.message);
+    currentUserInfo.value = { username: undefined, userId: undefined, signInDetails: undefined };
+  }
+}
+
+// Delete experience, education, or qualification
+const deleteItem = (array, index) => {
+  array.splice(index, 1);
+};
+</script>
 
 <style scoped>
 .profile-container {
@@ -445,56 +449,6 @@ const deleteItem = (array, index) => {
 .btn-icon:hover {
   background: #fff5f5;
 }
-/* Dark Mode Overrides */
-.dark-mode {
-  background-color: #121212; /* Dark background for the page */
-  color: white; /* White text color for dark mode */
-}
-
-/* Profile Card Box Styling for Dark Mode */
-.dark-mode .card {
-  background-color: #333; /* Darker background for cards */
-  border: 1px solid #444; /* Slightly lighter border */
-  color: white; /* White text inside the card */
-}
-
-/* Dark Mode for Text in the Card */
-.dark-mode .card h2 {
-  color: #f1f1f1; /* Lighter color for headers */
-}
-
-.dark-mode .about-text,
-.dark-mode .company,
-.dark-mode .duration,
-.dark-mode .institution,
-.dark-mode .year {
-  color: #ddd; 
-}
-
-/* Dark Mode for Profile Header Banner */
-.dark-mode .profile-header-banner {
-  background: linear-gradient(135deg, #004e6a, #00344a); /* Darker gradient for banner */
-}
-
-/* Dark Mode for Buttons */
-
-.dark-mode .btn-primary {
-  background: #0073b1;
-  color: white;
-}
-
-.dark-mode .btn-primary:hover {
-  background: #005582; /* Slightly darker hover effect */
-}
-
-.dark-mode .btn-icon {
-  color: #dc3545; /* Red for delete icons in dark mode */
-}
-
-.dark-mode .btn-icon:hover {
-  background: #fff5f5; /* Light background on hover */
-}
-
 
 @media (max-width: 768px) {
   .profile-layout {
@@ -507,4 +461,143 @@ const deleteItem = (array, index) => {
   }
 }
 
+</style>
+
+<style>
+.profile-edit {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  margin: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.profile-edit-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.profile-picture-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.profile-edit-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.profile-edit-section h3 {
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+  border-color: #0073b1;
+  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.1);
+  outline: none;
+}
+
+textarea.input-field {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-success {
+  background: #0073b1;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #005582;
+}
+
+.btn-secondary {
+  background: #e1e4e8;
+  color: #2c3e50;
+}
+
+.btn-secondary:hover {
+  background: #d1d5da;
+}
+
+.btn-delete {
+  background: #fff5f5;
+  color: #dc3545;
+  padding: 6px 12px;
+  margin-left: 10px;
+}
+
+.btn-delete:hover {
+  background: #ffe3e3;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.profile-edit-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.profile-edit-section li {
+  background: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-edit {
+    margin: 16px;
+    padding: 20px;
+  }
+
+  .profile-edit-section {
+    padding: 16px;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
 </style>

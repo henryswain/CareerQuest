@@ -7,10 +7,10 @@
       <div class="contact-sections">
         <div class="contact-info">
           <h2>Get in Touch</h2>
-          <p><strong>Email:</strong> support@careerquest.com</p>
+          <p><strong>Email:</strong> CustomerHelpQuest@gmail.com</p>
           <p><strong>Phone:</strong> (206) 555-0123</p>
           <p><strong>Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM PST</p>
-          <p><strong>Location:</strong> Seattle, WA</p>
+          <p><strong>Location:</strong> Iowa City, IA</p>
         </div>
 
         <div class="contact-form">
@@ -67,6 +67,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import emailjs from '@emailjs/browser';
 
 const form = ref({
   name: '',
@@ -75,9 +76,34 @@ const form = ref({
   message: ''
 });
 
-const handleSubmit = () => {
-  // Handle form submission logic here
-  console.log('Form submitted:', form.value);
+const handleSubmit = async () => {
+  try {
+    const templateParams = {
+      from_name: form.value.name,
+      from_email: form.value.email,
+      subject: form.value.subject,
+      message: form.value.message
+    };
+
+    await emailjs.send(
+      'service_12b4n2q', // Replace with your EmailJS service ID
+      'template_hhk4ocf', // Replace with your EmailJS template ID
+      templateParams,
+      'Or21MKARoNuuU9eG_' // Replace with your EmailJS public key
+    );
+
+    alert('Message sent successfully!');
+    // Reset form after successful submission
+    form.value = {
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    alert('Failed to send message. Please try again.');
+  }
 };
 </script>
 
