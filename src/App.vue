@@ -16,6 +16,15 @@
             <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
           </li>
         </ul>
+        <button
+        class="Premium"
+        id="premium-now"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#premiumModal"
+        >
+        Premium
+        </button> 
         <!-- Right justified components -->
         <form class="d-flex me-3" @submit.prevent="handleSubmit">
           <input
@@ -26,24 +35,15 @@
           />
           <button class="searchbutton btn btn-primary" type="text">Search</button>
         </form>
-        <!-- Add auth button here -->
-        <button 
-          v-if="!isAuthenticated" 
+        <!-- sign in/sign out button -->
+        <button
+          id="desktop-auth-state"
           type="button" 
           class="auth-button me-3" 
           data-bs-toggle="modal" 
           data-bs-target="#authenticationModal"
         >
-          Sign in
-        </button>
-        <button 
-          v-else 
-          type="button" 
-          class="auth-button me-3" 
-          data-bs-toggle="modal" 
-          data-bs-target="#authenticationModal"
-        >
-          Sign out
+        Sign in
         </button>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -121,22 +121,13 @@
               <li>
                 <div>
                   <button
-                    v-if="!isAuthenticated"
+                    id="mobile-auth-state"
                     type="button"
                     class="btn btn-link"
                     data-bs-toggle="modal"
                     data-bs-target="#authenticationModal"
                   >
-                    Login/Sign up
-                  </button>
-                  <button
-                    v-else
-                    type="button"
-                    class="btn btn-link"
-                    data-bs-toggle="modal"
-                    data-bs-target="#authenticationModal"
-                  >
-                    Sign Out
+                    sign in
                   </button>
                 </div>
               </li>
@@ -145,7 +136,6 @@
         </div>
       </div>
     </nav>
-
 
       <!-- authentication modal -->
   <div class="modal fade" id="authenticationModal" tabindex="-1" aria-labelledby="authenticationModalLabel" aria-hidden="true">
@@ -163,12 +153,37 @@
           </authenticator>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="button" id="close-modal" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Premium Modal -->
+<div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="premiumModalLabel">Upgrade to Premium</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h4>Premium Benefits:</h4>
+        <ul>
+          <li>Unlimited job applications</li>
+          <li>Priority application status</li>
+          <li>Advanced job matching</li>
+          <li>Early access to new jobs</li>
+        </ul>
+        <div class="price-section">
+          <h5>Monthly Subscription: $9.99</h5>
+        </div>
+        <!-- PayPal Button Container -->
+        <div id="paypal-button-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- main content  -->
     <div style="margin-top: 70px;">
@@ -177,8 +192,9 @@
   </div>
 </template>
 
+
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Amplify } from 'aws-amplify';
@@ -207,37 +223,31 @@ import "@aws-amplify/ui-vue/styles.css";
 import { Hub } from 'aws-amplify/utils';
 import { getCurrentUser } from 'aws-amplify/auth';
 
-const isAuthenticated = ref(false);
-
-const closeModal = () => {
-  // Function to close the modal programmatically
-
-  console.log("close modal")
-
-  // Select the element you want to fire the event on
-  const modalElement = document.getElementById('authenticationModal');
-
-  // Create the event, ensuring it matches the Bootstrap naming convention
-  const event = new Event('dismiss.bs.modal', {
-    bubbles: true, // Event will bubble up through the DOM tree
-    cancelable: true // Event can be canceled
-  });
-  modalElement.dispatchEvent(event);
-};
-
 // detect authentication events
 Hub.listen('auth', async ({ payload }) => {
-  const { username, userId, signInDetails } = await getCurrentUser();
-  switch (payload.event) {
-    case 'signedIn':
-      isAuthenticated.value = true;
-      closeModal();
-      break;
-    case 'signedOut':
-      isAuthenticated.value = false;
-      closeModal();
-      break;
-    // ... other events
+  // if the user is signed in
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    switch (payload.event) {
+      case 'signedIn':
+        console.log("signed in")
+        fetch(`https://gm4pbbszg2.execute-api.us-east-2.amazonaws.com/dev/add_user_id_to_user-data?id=${userId}`)
+        document.getElementById("close-modal").click()
+        document.getElementById("desktop-auth-state").textContent = "Sign Out"
+        document.getElementById("mobile-auth-state").textContent = "Sign Out"
+        break;
+    }
+  }
+  // otherwise
+  catch {
+    switch (payload.event) {
+      case 'signedOut':
+        console.log("signed out")
+        document.getElementById("close-modal").click()
+        document.getElementById("desktop-auth-state").textContent = "Sign in"
+        document.getElementById("mobile-auth-state").textContent = "Sign in"
+        break;
+    }
   }
 });
 
@@ -249,6 +259,55 @@ async function handleSubmit() {
   router.replace({ path: '/find-jobs', query: { q: searchText.value } });
   await nextTick();
 }
+
+// Modify PayPal SDK loading function
+function loadPayPalScript() {
+  const script = document.createElement('script');
+  script.src = 'https://www.paypal.com/sdk/js?client-id=AfXN2AKlII2ctuOylHuBnHdkkzcPB-kqA8NIdz6Gw1c2nGOhqj-scGysrXaR_VGLrduOlACJAsU22o7K&currency=USD';
+  script.async = true;
+  
+  // Add event listeners for script loading
+  script.addEventListener('load', () => {
+    if (window.paypal) {
+      window.paypal.Buttons({
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: '9.99',
+                currency_code: 'USD'
+              },
+              description: 'CareerQuest Premium Subscription'
+            }]
+          });
+        },
+        onApprove: async (data, actions) => {
+          const order = await actions.order.capture();
+          console.log('Payment completed', order);
+          const modal = document.getElementById('premiumModal');
+          const bsModal = bootstrap.Modal.getInstance(modal);
+          bsModal.hide();
+          alert('Thank you for upgrading to Premium!');
+        },
+        onError: (err) => {
+          console.error('PayPal payment error:', err);
+          alert('There was an error processing your payment. Please try again.');
+        }
+      }).render('#paypal-button-container');
+    }
+  });
+
+  script.addEventListener('error', (error) => {
+    console.error('PayPal script loading error:', error);
+  });
+
+  document.body.appendChild(script);
+}
+
+onMounted(() => {
+  loadPayPalScript();
+});
+
 </script>
 
 <style scoped>
@@ -324,6 +383,65 @@ async function handleSubmit() {
 .dark-mode .auth-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+}
+
+.Premium {
+  background-color: transparent;
+  border: 2px solid #FFD700;
+  color: #FFD700;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-right: 1rem;
+}
+
+.Premium:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+  color: #FFD700;
+}
+
+/* Add to dark mode section */
+.dark-mode .Premium {
+  border-color: #FFD700;
+  color: #FFD700;
+}
+
+.dark-mode .Premium:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+  color: #FFD700;
+}
+
+/* Premium Modal Styles */
+#premiumModal .modal-body {
+  padding: 2rem;
+}
+
+#premiumModal .price-section {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+#premiumModal ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#premiumModal ul li {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+#premiumModal ul li:before {
+  content: '✓';
+  color: #28a745;
+  position: absolute;
+  left: 0;
+}
+
+#paypal-button-container {
+  margin-top: 1.5rem;
 }
 </style>
 
@@ -455,8 +573,6 @@ async function handleSubmit() {
 .dark-mode .btn-link {
   color: #ffffff !important;
 }
-
-
 </style>
 
 
