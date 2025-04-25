@@ -71,8 +71,9 @@
 
       <!-- Jobs Section -->
       <div class="jobs-section">
-        <div v-if="paginatedItems.length === 0">
-          <p>No matching jobs found.</p>
+        <!-- Check if there are no results and changes rendering -->
+        <div class="no-jobs-block" v-if="paginatedItems.length === 0">
+          <p class="no-jobs-text">No matching jobs found.</p>
         </div>
         <div v-else>
           <!-- Loop through paginated jobs and display them -->
@@ -212,21 +213,22 @@
             </div>
           </div>
         </div>
+      
+        <!-- Pagination Controls -->
+        <div class="pagination-controls" v-if="paginatedItems.length != 0">
+          <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
+            Previous
+          </button>
+          <span class="current-page-num">Page {{ currentPage }}</span>
+          <button
+            class="btn btn-secondary"
+            @click="nextPage"
+            :disabled="currentPage * itemsPerPage >= filteredJobs.length"
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </div>
-    <!-- Pagination Controls -->
-    <div class="pagination-controls">
-      <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
-        Previous
-      </button>
-      <span>Page {{ currentPage }}</span>
-      <button
-        class="btn btn-secondary"
-        @click="nextPage"
-        :disabled="currentPage * itemsPerPage >= filteredJobs.length"
-      >
-        Next
-      </button>
     </div>
   </div>
 
@@ -575,11 +577,29 @@ watch(
 .jobs-section {
   padding: 1rem;
 }
+
+.no-jobs-block {
+  height:100vh;
+}
+
+.no-jobs-text{
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  padding-top: 25vh;
+}
+
 .pagination-controls {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-top: 20px;
+  padding: 20px;
+}
+
+.current-page-num{
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 .card {
   border: 1px solid #ddd;
@@ -597,6 +617,7 @@ watch(
   color: #343a40;
 }
 .filter-options {
+  justify-content: center;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
