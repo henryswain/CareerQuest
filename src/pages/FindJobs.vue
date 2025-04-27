@@ -279,6 +279,33 @@ const currentPage = ref(1);
 const itemsPerPage = ref(JSON.parse(localStorage.getItem("userSettings"))?.itemsPerPage || 10);
 const savedJobs = ref([]);
 
+// Look at local storage settings and render in darkmode if necessary
+const darkMode = ref(false);
+// loads user settings from localStorage
+const loadSettings = () => {
+  const savedSettings = localStorage.getItem('userSettings');
+  if (savedSettings) {
+    const settings = JSON.parse(savedSettings);
+    darkMode.value = settings.darkMode || false;
+  }
+};
+
+// Apply dark mode 
+const applyDarkMode = () => {
+  if (darkMode.value) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+};
+// Watch for changes to darkmode and apply accordingly
+watch(darkMode, applyDarkMode);
+// On component mount, load user settings and apply dark mode
+onMounted(() => {
+  loadSettings();
+  applyDarkMode();
+});
+
 // --- Language & CSV Source Helper ---
 // Get initial language from localStorage "userSettings", default to "en"
 const getInitialLanguage = () => {
@@ -598,6 +625,7 @@ watch(
 }
 
 .current-page-num{
+  padding-top: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -657,9 +685,7 @@ watch(
   outline: none;
   box-shadow: none;
 }
-</style>
 
-<style>
 .modal {
   z-index: 2100 !important;
 }
@@ -669,6 +695,8 @@ watch(
 .modal-dialog {
   margin-top: 80px;
 }
+
+/* Footer styling */
 .footer {
   margin-top: auto;
   width: 100%;
@@ -730,5 +758,11 @@ watch(
 .footer-links a:hover {
   color: #0073b1;
   background: rgba(0, 115, 177, 0.1);
+}
+
+/* Dark Mode */
+
+.dark-mode .filter-section{
+  background-color: #ec1b1b;
 }
 </style>
