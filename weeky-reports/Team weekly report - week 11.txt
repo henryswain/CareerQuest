@@ -1,0 +1,55 @@
+Team weekly report
+
+* Team members and team number
+    Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
+
+* Team progress/achieved things/accomplished tasks/stories completed
+
+* Team blockers/issues
+
+* Team tasks for next week
+
+* Meeting minutes - details of meetings
+
+* Team member 1: Henry Swain
+o Stories completed
+- 
+o Progress report
+- 
+o Plan for next week
+-
+
+* Team member 2: Marcus Bodnar
+o Stories completed
+- 
+o Progress report
+- 
+o Plan for next week
+- 
+
+* Team member 3: Tommy Le 
+o Stories completed
+- 
+o Progress report
+- 
+o Plan for next week
+- 
+
+* Team member 4: Ryan Witcraft
+o Stories completed
+- 
+o Progress report
+- 
+o Plan for next week
+- 
+
+* Team member 5: Magnolia Wallerich
+o Stories completed
+- Worked on restyling FindJobs as in certain cases such as when no jobs can be found with your filters I noticed it would break with our new footer
+- Just started work on implementing dark mode for FindJobs
+o Progress report
+- Most of the not lightmode/darkmode specific styling is working just fine for the standard layout and I would consider it completed
+- The implementation of darkmode is not complete as I haven't worked on it very much and it seems to be not working like how the rest of the pages do
+o Plan for next week
+- Figure out the issues with darkmode on FindJobs and try to finish it up
+- Once FindJobs is well and complete I'd like to look towards other things we need to get implemented before the final presentation and focus on that
