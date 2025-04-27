@@ -62,7 +62,7 @@
               />
             </div>
             <!-- Apply Filters -->
-            <button class="btn btn-primary w-100 mt-3" @click="applyFilters(props.query)">
+            <button class="btn btn-primary w-100 mt-3" @click="applyFilters()">
               Apply Filters
             </button>
           </div>
@@ -97,22 +97,22 @@
               <!-- Salary and Location (unchanged) -->
               <div v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'>
                 <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Full-time
+                  ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/hr • Full-time
                 </p>
               </div>
               <div v-else-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "P"'>
                 <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Part-time
+                  ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/hr • Part-time
                 </p>
               </div>
               <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "F"'>
                 <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Full-time
+                  ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/yr • Full-time
                 </p>
               </div>
               <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "P"'>
                 <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Part-time
+                  ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/yr • Part-time
                 </p>
               </div>
               <p class="card-text">Location: {{ item["Work Location"] }}</p>
@@ -252,6 +252,26 @@
         </div>
       </div>
   </footer>
+  <!-- Modal: Prompt to sign in -->
+<div class="modal fade" id="signInRequiredModal" tabindex="-1" aria-labelledby="signInRequiredModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signInRequiredModalLabel">Sign In Required</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        You must be signed in to save jobs.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authenticationModal">
+          Sign In
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -262,15 +282,15 @@ import Papa from "papaparse";
 import jobsCsvEnglish from "@/assets/Jobs_NYC_Postings.csv?raw";
 import jobsCsvSpanish from "@/assets/Jobs_NYC_Postings_translated.csv?raw";
 import { getCurrentUser } from "aws-amplify/auth";
-
+import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // Import bookmark images
 import bookmarkFilled from "@/assets/bookmark_filled.png";
 import bookmarkBlank from "@/assets/bookmark_blank.png";
 
 const API_URL = "https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update";
 const userId = ref("");
-const props = defineProps({ query: String });
 const route = useRoute();
+const query = computed(() => route.query.q || "");
 const router = useRouter();
 
 const allJobs = ref([]);
@@ -305,6 +325,7 @@ onMounted(() => {
   loadSettings();
   applyDarkMode();
 });
+
 
 // --- Language & CSV Source Helper ---
 // Get initial language from localStorage "userSettings", default to "en"
@@ -362,6 +383,12 @@ async function removeJob(jobId) {
 }
 
 function toggleJob(job) {
+  if (!userId.value) {
+    const signInModal = new bootstrap.Modal(document.getElementById('signInRequiredModal'));
+    signInModal.show();
+    return;
+  }
+
   const jobId = String(job["Job ID"]);
   if (isJobSaved(jobId)) {
     removeJob(jobId);
@@ -369,6 +396,7 @@ function toggleJob(job) {
     saveJob(job);
   }
 }
+
 
 function isJobSaved(jobId) {
   return savedJobs.value.some((job) => job.id === jobId);
@@ -476,6 +504,7 @@ const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredJobs.value.slice(start, start + itemsPerPage.value);
 });
+
 // Brings user to the Next page. Also scrolls the page up to the top
 function nextPage() {
   if (currentPage.value * itemsPerPage.value < filteredJobs.value.length) {
@@ -488,7 +517,6 @@ function safeTitle(job) {
   const cleaned = cleanText(rawTitle);
   return cleaned || "Untitled Position";
 }
-
 
 // Brings user to prev page and scrolls to the top on click
 function prevPage() {
@@ -516,8 +544,9 @@ const filters = ref({
   industries: [],
   careerLevels: [],
   location: "",
-  searchText: props.query || "",
+  searchText: query.value || "",
 });
+
 
 function toggleFilter(filterCategory, option) {
   const index = filters.value[filterCategory].indexOf(option);
@@ -529,9 +558,27 @@ function toggleFilter(filterCategory, option) {
 }
 
 function applyFilters(newQueryString = "") {
-  let results = [...allJobs.value];
-  const mapJobType = { "Full-Time": "F", "Part-Time": "P" };
+  newQueryString = newQueryString || filters.value.searchText;
 
+  let results = [...allJobs.value];
+  
+  // Filter by query string
+  if (newQueryString.trim > 0) {
+    const newString = query.value.trim();
+    results = results.filter((job) => {
+      return (
+        job["Civil Service Title"]?.toLowerCase()?.includes(newString) ||
+        job["Job Description"]?.toLowerCase()?.includes(newString) ||
+        job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) ||
+        job["Preferred Skills"]?.toLowerCase().includes(newString)
+      );
+    });
+  }
+    const mapJobType = {
+    "Full-Time": "F",
+    "Part-Time": "P"
+  };
+  // Apply other filters (job type, category, etc.)
   if (filters.value.jobTypes.length > 0) {
     results = results.filter((job) => {
       const csvVal = job["Full-Time/Part-Time indicator"];
@@ -557,31 +604,15 @@ function applyFilters(newQueryString = "") {
       job["Work Location"]?.toLowerCase()?.includes(loc)
     );
   }
-  if (newQueryString.length > 0) {
-    const newString = newQueryString.toLowerCase();
-    results = results.filter((job) => {
-      return (
-        job["Civil Service Title"]?.toLowerCase()?.includes(newString) ||
-        job["Job Description"]?.toLowerCase()?.includes(newString) ||
-        job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) ||
-        job["Preferred Skills"]?.toLowerCase().includes(newString)
-      );
-    });
-  }
+
   filteredJobs.value = results;
   currentPage.value = 1;
 }
 
-watch(
-  () => props.query,
-  (newQueryString) => {
-    if (newQueryString) {
-      applyFilters(newQueryString);
-    } else {
-      filteredJobs.value = [...allJobs.value];
-    }
-  }
-);
+
+watch(query, (newQueryString) => {
+  applyFilters(newQueryString);
+});
 </script>
 
 

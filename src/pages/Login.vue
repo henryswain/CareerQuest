@@ -63,21 +63,23 @@
     },
     methods: {
       // Form submisstion
-    async submitForm() {
-      try {
-        const user = await signIn({ username: this.email, password: this.password });
-        console.log("Login successful:", user);
+      async submitForm() {
+        try {
+          const user = await signIn({ username: this.email, password: this.password });
+          console.log("Login successful:", user);
 
-        const { username } = await getCurrentUser();
+          localStorage.setItem('currentUserEmail', user.username); // Save email
 
-        await fetch(`https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update?id=${username}`); // Saves to DynamoDB from API call
-        alert("Logged in and registered in DB!");
-      } catch (err) {
-        console.error("Login failed:", err);
-        alert("Login failed: " + (err.message || "Unknown error"));
+          await fetch(`https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update?id=${user.username}`);
+          alert("Logged in and registered in DB!");
+
+          window.location.reload(); // Live update
+        } catch (err) {
+          console.error("Login failed:", err);
+          alert("Login failed: " + (err.message || "Unknown error"));
+        }
       }
     }
-  }
   };
 </script>
   

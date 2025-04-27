@@ -4,10 +4,13 @@ Team weekly report
     Team 3: Henry, Marcus, Ryan, Tommy, and Magnolia
 
 * Team progress/achieved things/accomplished tasks/stories completed
+Team Presentation
+Planning discussions
 
 * Team blockers/issues
 
 * Team tasks for next week
+Bug fixes and starting on new features/feedback
 
 * Meeting minutes - details of meetings
 
