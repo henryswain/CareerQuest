@@ -31,11 +31,13 @@ o Plan for next week
 
 * Team member 3: Tommy Le 
 o Stories completed
-- 
+- EmailJS implemented, Contact feature for website works
+- Premium feature implemented, paypal modal installed into website, looking to expand on features for website with this
 o Progress report
-- 
+- Profile page going through a massive revamp so that integration with AWS is easier
 o Plan for next week
-- 
+- Finish up profile page and integrate with AWS
+
 
 * Team member 4: Ryan Witcraft
 o Stories completed
