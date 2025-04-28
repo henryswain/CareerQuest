@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-
+<!-- 
     <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
@@ -61,7 +61,7 @@
           </ul>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 

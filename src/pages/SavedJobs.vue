@@ -81,7 +81,7 @@
 import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import { getCurrentUser } from 'aws-amplify/auth';
-import jobsCsv from "@/assets/Jobs_NYC_Postings.csv?raw";
+// import jobsCsv from "@/assets/Jobs_NYC_Postings.csv?raw";
 import Papa from "papaparse";
 
 const savedJobs = ref([]);

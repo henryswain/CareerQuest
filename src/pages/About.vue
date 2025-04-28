@@ -11,7 +11,7 @@
 
   </div>
 
-  <footer class="footer">
+  <!-- <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
           <p class="copyright">&copy; 2025 CareerQuest, Inc</p>
@@ -30,7 +30,7 @@
           </ul>
         </div>
       </div>
-    </footer>
+    </footer> -->
 
 </template>
 

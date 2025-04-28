@@ -28,7 +28,7 @@ const routes = [
     path: '/find-jobs',
     name: 'FindJobs',
     component: FindJobs,
-    props: route => ({ query: route.query.q })
+    props: (route) => ({ query: route.query.q })
   },
   {
     path: '/profile',

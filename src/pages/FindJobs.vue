@@ -336,6 +336,9 @@ onMounted(() => {
   applyDarkMode();
 });
 
+const props = defineProps({
+  query: String
+})
 
 // --- Language & CSV Source Helper ---
 // Get initial language from localStorage "userSettings", default to "en"
@@ -423,160 +426,8 @@ function goToApplyLink(jobId) {
 // loads csv by selected option in hopes to reduce load times
 async function loadJobs() {
 
-  // if (currentLanguage.value === "en") {
-  //   // Load English CSV
-  //   Papa.parse(jobsCsvEnglish, {
-  //     header: true,
-  //     skipEmptyLines: true,
-  //     complete: (results) => {
-  //       allJobs.value = results.data;
-  //       filteredJobs.value = results.data;
-  //     },
-  //   });
-  // } else if (currentLanguage.value === "es") {
-  //   // Load Spanish CSV only if the language is Spanish
-  //   Papa.parse(jobsCsvSpanish, {
-  //     header: true,
-  //     skipEmptyLines: true,
-  //     complete: (results) => {
-  //       allJobs.value = results.data;
-  //       filteredJobs.value = results.data;
-  //     },
-  //   });
-  // }
-
-
-
-
-//   loadingJobs.value = false
-
-// console.log("direction: ", direction)
-// console.log("pagination: ", pagination)
-// console.log("loadJobs called")
-// console.log("cPage: ", cPage)
-// console.log("currentPage: ", currentPage.value)
-// // if the page has been rendered once already
-// if (cPage) {
-//   console.log("cPage: ", cPage)
-//   // if the user just clicked the next pagination button
-//   if (direction == "next") {
-//     console.log("direction: ", direction)
-//     // if the user had selected filters
-//     // if (filters != {}) {
-//       console.log("filters != {}")
-//       const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//           pageToken: pagination[cPage + 1],
-//           filters: filters
-//         })
-//       })
-//       if (response.ok) {
-//         const data = await response.json()
-//         console.log("data: ", data)
-//         filteredJobs.value = data.items
-//         if (data.nextPageToken) {
-//           if (!pagination[cPage + 2]) {
-//             pagination[cPage + 2] = data.nextPageToken
-//           }
-//         }
-//         currentPage.value += 1
-//         console.log("currentPage.value: ", currentPage.value)
-//       }
-//   }
-//   // if the user just clicked the prev pagination button
-//   else {
-//     // if the user is on at least the third page when they click the prev pagination button
-//     if (cPage != 2) {
-//         const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify({
-//             pageToken: pagination[cPage - 1],
-//             "filters": filters
-//           })
-//         })
-//         if (response.ok) {
-//           const data = await response.json()
-//           console.log("data: ", data)
-//           filteredJobs.value = data.items
-//           currentPage.value -= 1
-//           console.log("currentPage.value: ", currentPage.value)
-//         }
-//     }
-//     // if the user was on the second page when they clicked the prev pagination button
-//     else {
-//       console.log("the user had applied filters")
-//       console.log("filters: ", filters)
-
-//       // if the user had applied any filters
-//         const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify({
-//             "filters": filters
-//           })
-//         })
-//         if (response.ok) {
-//           const data = await response.json()
-//           console.log("data: ", data)
-//           filteredJobs.value = data.items
-//           currentPage.value -= 1
-//           console.log("currentPage.value: ", currentPage.value)
-//         }
-//     }
-//   }
-// }
-
-// else {
-
-//   console.log("page hasn't been loaded once yet")
-//   console.log("filters: ", filters)
-//   console.log("JSON.stringify(filters): ", JSON.stringify({filters: filters}))
-//   console.log("cPage: ", cPage)
-//   const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       "filters": filters
-//     })
-//   })
-//   if (response.ok) {
-//     const data = await response.json()
-//     console.log("data: ", data)
-//     filteredJobs.value = data.items
-//     pagination[2] = data.nextPageToken
-//     currentPage.value = 1
-//     console.log("currentPage.value: ", currentPage.value)
-//   }
-// }
-
-// loadingJobs.value = true
-
-  // If a previous request exists, abort it
-  // if (controller) controller.abort();
-
-  // // Create a fresh new controller for this request
-  // const controller = new AbortController();
-  // const { signal } = controller;
 
   loadingJobs.value = true
-  // filters.value = {
-  //   jobTypes: [],
-  //   industries: [],
-  //   careerLevels: ["Manager"],
-  //   location: "",
-  //   searchText: "python",
-  // }
   console.log("loadJobs called")
   console.log("filters.value: ", filters.value)
   const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
@@ -595,32 +446,8 @@ async function loadJobs() {
 
     console.log("data: ", data)
     filteredJobs.value = [...data.items]
-    // // console.log(filteredJobs.value)
-    // // console.log("tempItems: ", tempItems)
-    // // console.log("filters.value: ", filters.value)
-    // console.log("data.pageToken: ", data.pageToken)
-    // console.log("filters.value: ", filters.value)
-    // const response3 = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     "filters": filters.value,
-    //     "pageToken": data.NexToken
-    //   })
-    // })
-  
-
-    // console.log("second fetch call is valid")
-    // console.log("data: ", data)
-
-    // data = await response3.json()
-    // filteredJobs.value = [...filteredJobs.value, ...data.items]
     
     while (data.pageToken) {
-      // console.log("data.pageToken: ", data.pageToken)
-      // console.log("filters.value: ", filters.value)
       const response2 = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
         method: 'POST',
         headers: {
@@ -776,64 +603,14 @@ function toggleFilter(filterCategory, option) {
   console.log("typeof filters.value[filterCategory]: ", typeof filters.value[filterCategory])
 }
 
-function applyFilters(newQueryString = "") {
-  loadJobs()
-  let results = [...allJobs.value];
-  // const mapJobType = { "Full-Time": "F", "Part-Time": "P" };
-
-  // if (filters.value.jobTypes.length > 0) {
-  //   results = results.filter((job) => {
-  //     const csvVal = job["Full-Time/Part-Time indicator"];
-  //     return filters.value.jobTypes.some((selected) => csvVal === mapJobType[selected]);
-  //   });
-  // }
-  // if (filters.value.industries.length > 0) {
-  //   results = results.filter((job) => {
-  //     const catStr = job["Job Category"] || "";
-  //     return filters.value.industries.some((selectedCat) =>
-  //       catStr.includes(selectedCat)
-  //     );
-  //   });
-  // }
-  // if (filters.value.careerLevels.length > 0) {
-  //   results = results.filter((job) =>
-  //     filters.value.careerLevels.includes(job["Career Level"])
-  //   );
-  // }
-  // if (filters.value.location.trim()) {
-  //   const loc = filters.value.location.toLowerCase();
-  //   results = results.filter((job) =>
-  //     job["Work Location"]?.toLowerCase()?.includes(loc)
-  //   );
-  // }
-  // if (newQueryString.length > 0) {
-  //   const newString = newQueryString.toLowerCase();
-  //   results = results.filter((job) => {
-  //     return (
-  //       job["Civil Service Title"]?.toLowerCase()?.includes(newString) ||
-  //       job["Job Description"]?.toLowerCase()?.includes(newString) ||
-  //       job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) ||
-  //       job["Preferred Skills"]?.toLowerCase().includes(newString)
-  //     );
-  //   });
-  // }
-  // filteredJobs.value = results;
-  // currentPage.value = 1;
-}
-
 watch(
   () => props.query,
   async (newQueryString) => {
-    // if (newQueryString) {
     console.log("watch called")
     console.log("newQueryString: ", newQueryString)
       filters.value.searchText = newQueryString
       loadJobs()
       await nextTick()
-      // applyFilters(newQueryString);
-    // } else {
-    //   filteredJobs.value = [...allJobs.value];
-    // }
   }
 );
 </script>

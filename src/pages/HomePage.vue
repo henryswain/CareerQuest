@@ -98,16 +98,14 @@
       </div>
     </div>
 
-    <footer class="footer">
+    <!-- <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
           <p class="copyright">&copy; 2025 CareerQuest, Inc</p>
         </div>
-        <!-- logo in footer -->
         <div class="footer-section">
           <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
         </div>
-        <!-- footer links section-->
         <div class="footer-section">
           <ul class="footer-links">
             <li><a href="/about">About</a></li>
@@ -117,7 +115,7 @@
           </ul>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
