@@ -21,11 +21,12 @@ o Plan for next week
 
 * Team member 2: Marcus Bodnar
 o Stories completed
-- 
+- Worked with the csv to try and stop it from loading all data on page load
 o Progress report
-- 
+- I was able to trim it down but had no luck with the functions to make it load x amount. 
+Henry is working on bringing it back to aws and using lambda functions to try and have it load on 100 at a time.
 o Plan for next week
-- 
+- Take another 1/2 days to work on load times with Henry.
 
 * Team member 3: Tommy Le 
 o Stories completed
