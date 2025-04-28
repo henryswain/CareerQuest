@@ -7,7 +7,7 @@
       <!-- Filter Section -->
       <div class="filter-section">
         <div class="card filter-card mb-4">
-          <div class="card-body">
+          <div class="card-body" style="height: 70vh; overflow: auto;">
             <h5 class="card-title">Filter Your Search</h5>
             <!-- Job Type Filter -->
             <div class="filter-group">
@@ -62,7 +62,7 @@
               />
             </div>
             <!-- Apply Filters -->
-            <button class="btn btn-primary w-100 mt-3" @click="applyFilters(props.query)">
+            <button class="btn btn-primary w-100 mt-3" @click="loadJobs()">
               Apply Filters
             </button>
           </div>
@@ -71,164 +71,169 @@
 
       <!-- Jobs Section -->
       <div class="jobs-section">
+        <!-- <div v-if="!filter"> -->
         <!-- Check if there are no results and changes rendering -->
-        <div class="no-jobs-block" v-if="paginatedItems.length === 0">
-          <p class="no-jobs-text">No matching jobs found.</p>
-        </div>
-        <div v-else>
-          <!-- Loop through paginated jobs and display them -->
-          <div v-for="(item, index) in paginatedItems" :key="item['Job ID']" class="card mb-3">
-            <h5 class="card-header d-flex justify-content-between align-items-center">
-              <!-- Use getField() for the title; this helper always fetches the right field -->
-              <span>{{ toTitleCase(getField(item, "Civil Service Title")) }}</span>
-              <button
-                class="icon-button"
-                @click="toggleJob(item)"
-                :aria-label="isJobSaved(item['Job ID']) ? 'Remove bookmark' : 'Save bookmark'"
-              >
-                <img
-                  :src="isJobSaved(item['Job ID']) ? bookmarkFilled : bookmarkBlank"
-                  alt="Bookmark Icon"
-                  class="bookmark-icon"
-                />
-              </button>
-            </h5>
-            <div class="card-body">
-              <!-- Salary and Location (unchanged) -->
-              <div v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'>
-                <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Full-time
-                </p>
-              </div>
-              <div v-else-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "P"'>
-                <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Part-time
-                </p>
-              </div>
-              <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "F"'>
-                <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Full-time
-                </p>
-              </div>
-              <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "P"'>
-                <p class="card-text">
-                  {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Part-time
-                </p>
-              </div>
-              <p class="card-text">Location: {{ item["Work Location"] }}</p>
-
-              <!-- Action Buttons -->
-              <div class="btn-group">
+          <div class="no-jobs-block" v-if="paginatedItems.length === 0">
+            <p class="no-jobs-text">No matching jobs found.</p>
+          </div>
+          <div v-else>
+            <!-- Loop through paginated jobs and display them -->
+            <div v-for="(item, index) in paginatedItems" :key="item['Job ID']" class="card mb-3">
+              <h5 class="card-header d-flex justify-content-between align-items-center">
+                <!-- Use getField() for the title; this helper always fetches the right field -->
+                <span>{{ toTitleCase(getField(item, "Civil Service Title")) }}</span>
                 <button
-                  type="button"
-                  class="btn btn-primary"
-                  data-bs-toggle="modal"
-                  :id="`button_${item['Job ID']}`"
-                  :data-bs-target="`#modal_${item['Job ID']}`"
+                  class="icon-button"
+                  @click="toggleJob(item)"
+                  :aria-label="isJobSaved(item['Job ID']) ? 'Remove bookmark' : 'Save bookmark'"
                 >
-                  Learn More
+                  <img
+                    :src="isJobSaved(item['Job ID']) ? bookmarkFilled : bookmarkBlank"
+                    alt="Bookmark Icon"
+                    class="bookmark-icon"
+                  />
                 </button>
-              </div>
+              </h5>
+              <div class="card-body">
+                <!-- Salary and Location (unchanged) -->
+                <div v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'>
+                  <p class="card-text">
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Full-time
+                  </p>
+                </div>
+                <div v-else-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "P"'>
+                  <p class="card-text">
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Part-time
+                  </p>
+                </div>
+                <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "F"'>
+                  <p class="card-text">
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Full-time
+                  </p>
+                </div>
+                <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "P"'>
+                  <p class="card-text">
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Part-time
+                  </p>
+                </div>
+                <p class="card-text">Location: {{ item["Work Location"] }}</p>
 
-              <!-- Modal for Job Details -->
-              <div class="modal fade" :id="`modal_${item['Job ID']}`" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5">
-                        {{ toTitleCase(getField(item, "Civil Service Title")) }}
-                      </h1>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      <h5>Job Description</h5>
-                      <p v-if="getField(item, 'Job Description')">
-                        {{ isExpanded(item['Job ID'], 'description') ? cleanText(getField(item, "Job Description")) : shortenText(cleanText(getField(item, "Job Description"))) }}
-                      </p>
-                      <button
-                        v-if="getField(item, 'Job Description')"
-                        class="btn btn-link"
-                        @click="toggleExpand(item['Job ID'], 'description')"
-                      >
-                        {{ isExpanded(item['Job ID'], 'description') ? "Show Less" : "Show More" }}
-                      </button>
+                <!-- Action Buttons -->
+                <div class="btn-group">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    :id="`button_${item['Job ID']}`"
+                    :data-bs-target="`#modal_${item['Job ID']}`"
+                  >
+                    Learn More
+                  </button>
+                </div>
 
-                      <h5>Minimum Qualifications</h5>
-                      <p v-if="getField(item, 'Minimum Qual Requirements')">
-                        {{ isExpanded(item['Job ID'], 'requirements') ? cleanText(getField(item, "Minimum Qual Requirements")) : shortenText(cleanText(getField(item, "Minimum Qual Requirements"))) }}
-                      </p>
-                      <button
-                        v-if="getField(item, 'Minimum Qual Requirements')"
-                        class="btn btn-link"
-                        @click="toggleExpand(item['Job ID'], 'requirements')"
-                      >
-                        {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
-                      </button>
-
-                      <h5 v-if="getField(item, 'Preferred Skills')">Preferred Skills</h5>
-                      <p v-if="getField(item, 'Preferred Skills')">
-                        {{ isExpanded(item['Job ID'], 'skills') ? cleanText(getField(item, "Preferred Skills")) : shortenText(cleanText(getField(item, "Preferred Skills"))) }}
-                      </p>
-                      <button
-                        v-if="getField(item, 'Preferred Skills')"
-                        class="btn btn-link"
-                        @click="toggleExpand(item['Job ID'], 'skills')"
-                      >
-                        {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
-                      </button>
-
-                      <h5 v-if="item['To Apply']">To Apply</h5>
-                      <p v-if="item['To Apply']">
-                        {{ isExpanded(item['Job ID'], 'apply') ? cleanText(item['To Apply']) : shortenText(cleanText(item['To Apply'])) }}
-                      </p>
-                      <button
-                        v-if="item['To Apply']"
-                        class="btn btn-link"
-                        @click="toggleExpand(item['Job ID'], 'apply')"
-                      >
-                        {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
-                      </button>
-
-                      <div class="modal-footer">
+                <!-- Modal for Job Details -->
+                <div class="modal fade" :id="`modal_${item['Job ID']}`" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5">
+                          {{ toTitleCase(getField(item, "Civil Service Title")) }}
+                        </h1>
                         <button
-                          class="btn btn-primary"
-                          @click="goToApplyLink(item['Job ID'])"
-                          >
-                          View Original Listing
-                      </button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                          Close
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <h5>Job Description</h5>
+                        <p v-if="getField(item, 'Job Description')">
+                          {{ isExpanded(item['Job ID'], 'description') ? cleanText(getField(item, "Job Description")) : shortenText(cleanText(getField(item, "Job Description"))) }}
+                        </p>
+                        <button
+                          v-if="getField(item, 'Job Description')"
+                          class="btn btn-link"
+                          @click="toggleExpand(item['Job ID'], 'description')"
+                        >
+                          {{ isExpanded(item['Job ID'], 'description') ? "Show Less" : "Show More" }}
                         </button>
+
+                        <h5>Minimum Qualifications</h5>
+                        <p v-if="getField(item, 'Minimum Qual Requirements')">
+                          {{ isExpanded(item['Job ID'], 'requirements') ? cleanText(getField(item, "Minimum Qual Requirements")) : shortenText(cleanText(getField(item, "Minimum Qual Requirements"))) }}
+                        </p>
+                        <button
+                          v-if="getField(item, 'Minimum Qual Requirements')"
+                          class="btn btn-link"
+                          @click="toggleExpand(item['Job ID'], 'requirements')"
+                        >
+                          {{ isExpanded(item['Job ID'], 'requirements') ? "Show Less" : "Show More" }}
+                        </button>
+
+                        <h5 v-if="getField(item, 'Preferred Skills')">Preferred Skills</h5>
+                        <p v-if="getField(item, 'Preferred Skills')">
+                          {{ isExpanded(item['Job ID'], 'skills') ? cleanText(getField(item, "Preferred Skills")) : shortenText(cleanText(getField(item, "Preferred Skills"))) }}
+                        </p>
+                        <button
+                          v-if="getField(item, 'Preferred Skills')"
+                          class="btn btn-link"
+                          @click="toggleExpand(item['Job ID'], 'skills')"
+                        >
+                          {{ isExpanded(item['Job ID'], 'skills') ? "Show Less" : "Show More" }}
+                        </button>
+
+                        <h5 v-if="item['To Apply']">To Apply</h5>
+                        <p v-if="item['To Apply']">
+                          {{ isExpanded(item['Job ID'], 'apply') ? cleanText(item['To Apply']) : shortenText(cleanText(item['To Apply'])) }}
+                        </p>
+                        <button
+                          v-if="item['To Apply']"
+                          class="btn btn-link"
+                          @click="toggleExpand(item['Job ID'], 'apply')"
+                        >
+                          {{ isExpanded(item['Job ID'], 'apply') ? "Show Less" : "Show More" }}
+                        </button>
+
+                        <div class="modal-footer">
+                          <button
+                            class="btn btn-primary"
+                            @click="goToApplyLink(item['Job ID'])"
+                            >
+                            View Original Listing
+                        </button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- End Modal -->
               </div>
-              <!-- End Modal -->
             </div>
           </div>
-        </div>
       
-        <!-- Pagination Controls -->
-        <div class="pagination-controls" v-if="paginatedItems.length != 0">
-          <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
-            Previous
-          </button>
-          <span class="current-page-num">Page {{ currentPage }}</span>
-          <button
-            class="btn btn-secondary"
-            @click="nextPage"
-            :disabled="currentPage * itemsPerPage >= filteredJobs.length"
-          >
-            Next
-          </button>
-        </div>
-      </div>
+          <!-- Pagination Controls -->
+          <div class="pagination-controls" v-if="paginatedItems.length != 0">
+            <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
+              Previous
+            </button>
+            <span class="current-page-num">Page {{ currentPage }}</span>
+            <button
+              class="btn btn-secondary"
+              @click="nextPage"
+              :disabled="currentPage * itemsPerPage >= filteredJobs.length"
+            >
+              Next
+            </button>
+          </div>
+          </div>
+        <!-- <div v-else>
+          <h2>Please be patient! Loading Jobs</h2>
+        </div> -->
+      <!-- </div> -->
     </div>
   </div>
 
@@ -259,13 +264,14 @@ import { ref, onMounted, defineProps, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Papa from "papaparse";
 // Import both CSV sources:
-import jobsCsvEnglish from "@/assets/Jobs_NYC_Postings.csv?raw";
-import jobsCsvSpanish from "@/assets/Jobs_NYC_Postings_translated.csv?raw";
+// import jobsCsvEnglish from "@/assets/Jobs_NYC_Postings.csv?raw";
+// import jobsCsvSpanish from "@/assets/Jobs_NYC_Postings_translated.csv?raw";
 import { getCurrentUser } from "aws-amplify/auth";
 
 // Import bookmark images
 import bookmarkFilled from "@/assets/bookmark_filled.png";
 import bookmarkBlank from "@/assets/bookmark_blank.png";
+import { nextTick } from "vue";
 
 const API_URL = "https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update";
 const userId = ref("");
@@ -273,10 +279,14 @@ const props = defineProps({ query: String });
 const route = useRoute();
 const router = useRouter();
 
+
+// Create an instance.
+let controller = null
+const loadingJobs = ref(null)
 const allJobs = ref([]);
 const filteredJobs = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = ref(JSON.parse(localStorage.getItem("userSettings"))?.itemsPerPage || 10);
+const itemsPerPage = ref(JSON.parse(localStorage.getItem("userSettings"))?.itemsPerPage || 25);
 const savedJobs = ref([]);
 
 // Look at local storage settings and render in darkmode if necessary
@@ -383,28 +393,229 @@ function goToApplyLink(jobId) {
   console.log("https://cityjobs.nyc.gov/job/" + jobId);
 }
 // loads csv by selected option in hopes to reduce load times
-function loadJobs() {
-  if (currentLanguage.value === "en") {
-    // Load English CSV
-    Papa.parse(jobsCsvEnglish, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        allJobs.value = results.data;
-        filteredJobs.value = results.data;
-      },
-    });
-  } else if (currentLanguage.value === "es") {
-    // Load Spanish CSV only if the language is Spanish
-    Papa.parse(jobsCsvSpanish, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        allJobs.value = results.data;
-        filteredJobs.value = results.data;
-      },
-    });
+async function loadJobs() {
+
+  // if (currentLanguage.value === "en") {
+  //   // Load English CSV
+  //   Papa.parse(jobsCsvEnglish, {
+  //     header: true,
+  //     skipEmptyLines: true,
+  //     complete: (results) => {
+  //       allJobs.value = results.data;
+  //       filteredJobs.value = results.data;
+  //     },
+  //   });
+  // } else if (currentLanguage.value === "es") {
+  //   // Load Spanish CSV only if the language is Spanish
+  //   Papa.parse(jobsCsvSpanish, {
+  //     header: true,
+  //     skipEmptyLines: true,
+  //     complete: (results) => {
+  //       allJobs.value = results.data;
+  //       filteredJobs.value = results.data;
+  //     },
+  //   });
+  // }
+
+
+
+
+//   loadingJobs.value = false
+
+// console.log("direction: ", direction)
+// console.log("pagination: ", pagination)
+// console.log("loadJobs called")
+// console.log("cPage: ", cPage)
+// console.log("currentPage: ", currentPage.value)
+// // if the page has been rendered once already
+// if (cPage) {
+//   console.log("cPage: ", cPage)
+//   // if the user just clicked the next pagination button
+//   if (direction == "next") {
+//     console.log("direction: ", direction)
+//     // if the user had selected filters
+//     // if (filters != {}) {
+//       console.log("filters != {}")
+//       const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           pageToken: pagination[cPage + 1],
+//           filters: filters
+//         })
+//       })
+//       if (response.ok) {
+//         const data = await response.json()
+//         console.log("data: ", data)
+//         filteredJobs.value = data.items
+//         if (data.nextPageToken) {
+//           if (!pagination[cPage + 2]) {
+//             pagination[cPage + 2] = data.nextPageToken
+//           }
+//         }
+//         currentPage.value += 1
+//         console.log("currentPage.value: ", currentPage.value)
+//       }
+//   }
+//   // if the user just clicked the prev pagination button
+//   else {
+//     // if the user is on at least the third page when they click the prev pagination button
+//     if (cPage != 2) {
+//         const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify({
+//             pageToken: pagination[cPage - 1],
+//             "filters": filters
+//           })
+//         })
+//         if (response.ok) {
+//           const data = await response.json()
+//           console.log("data: ", data)
+//           filteredJobs.value = data.items
+//           currentPage.value -= 1
+//           console.log("currentPage.value: ", currentPage.value)
+//         }
+//     }
+//     // if the user was on the second page when they clicked the prev pagination button
+//     else {
+//       console.log("the user had applied filters")
+//       console.log("filters: ", filters)
+
+//       // if the user had applied any filters
+//         const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify({
+//             "filters": filters
+//           })
+//         })
+//         if (response.ok) {
+//           const data = await response.json()
+//           console.log("data: ", data)
+//           filteredJobs.value = data.items
+//           currentPage.value -= 1
+//           console.log("currentPage.value: ", currentPage.value)
+//         }
+//     }
+//   }
+// }
+
+// else {
+
+//   console.log("page hasn't been loaded once yet")
+//   console.log("filters: ", filters)
+//   console.log("JSON.stringify(filters): ", JSON.stringify({filters: filters}))
+//   console.log("cPage: ", cPage)
+//   const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       "filters": filters
+//     })
+//   })
+//   if (response.ok) {
+//     const data = await response.json()
+//     console.log("data: ", data)
+//     filteredJobs.value = data.items
+//     pagination[2] = data.nextPageToken
+//     currentPage.value = 1
+//     console.log("currentPage.value: ", currentPage.value)
+//   }
+// }
+
+// loadingJobs.value = true
+
+  // If a previous request exists, abort it
+  // if (controller) controller.abort();
+
+  // // Create a fresh new controller for this request
+  // const controller = new AbortController();
+  // const { signal } = controller;
+
+  loadingJobs.value = true
+  // filters.value = {
+  //   jobTypes: [],
+  //   industries: [],
+  //   careerLevels: ["Manager"],
+  //   location: "",
+  //   searchText: "python",
+  // }
+  console.log("loadJobs called")
+  console.log("filters.value: ", filters.value)
+  const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "filters": filters.value
+    })
+  })
+  if (response.ok) {
+    console.log("first fetch call is valid")
+    // let tempItems = []
+    let data = await response.json()
+
+    console.log("data: ", data)
+    filteredJobs.value = [...data.items]
+    // // console.log(filteredJobs.value)
+    // // console.log("tempItems: ", tempItems)
+    // // console.log("filters.value: ", filters.value)
+    // console.log("data.pageToken: ", data.pageToken)
+    // console.log("filters.value: ", filters.value)
+    // const response3 = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     "filters": filters.value,
+    //     "pageToken": data.NexToken
+    //   })
+    // })
+  
+
+    // console.log("second fetch call is valid")
+    // console.log("data: ", data)
+
+    // data = await response3.json()
+    // filteredJobs.value = [...filteredJobs.value, ...data.items]
+    
+    while (data.pageToken) {
+      // console.log("data.pageToken: ", data.pageToken)
+      // console.log("filters.value: ", filters.value)
+      const response2 = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "filters": filters.value,
+          "pageToken": data.pageToken
+        })
+      })
+      if (response2.ok) {
+
+        //  console.log("next fetch call is valid")
+        data = await response2.json()
+        filteredJobs.value = [...filteredJobs.value, ...data.items]
+      }
+    }
+    // filteredJobs.value = [...tempItems]
+    currentPage.value = 1
+    // console.log("currentPage.value: ", currentPage.value)
   }
+  loadingJobs.value = false
+
 }
 
 onMounted(async () => {
@@ -520,66 +731,80 @@ const filters = ref({
 });
 
 function toggleFilter(filterCategory, option) {
+  console.log("toggleFilter called")
+  console.log("filterCategory: ", filterCategory)
+  console.log("option: ", option)
   const index = filters.value[filterCategory].indexOf(option);
   if (index === -1) {
     filters.value[filterCategory].push(option);
   } else {
     filters.value[filterCategory].splice(index, 1);
   }
+  console.log("filters.value: ", filters.value)
+  console.log("typeof filters.value: ", typeof filters.value)
+
+  console.log("filters.value[filterCategory]: ", filters.value[filterCategory])
+  console.log("typeof filters.value[filterCategory]: ", typeof filters.value[filterCategory])
 }
 
 function applyFilters(newQueryString = "") {
+  loadJobs()
   let results = [...allJobs.value];
-  const mapJobType = { "Full-Time": "F", "Part-Time": "P" };
+  // const mapJobType = { "Full-Time": "F", "Part-Time": "P" };
 
-  if (filters.value.jobTypes.length > 0) {
-    results = results.filter((job) => {
-      const csvVal = job["Full-Time/Part-Time indicator"];
-      return filters.value.jobTypes.some((selected) => csvVal === mapJobType[selected]);
-    });
-  }
-  if (filters.value.industries.length > 0) {
-    results = results.filter((job) => {
-      const catStr = job["Job Category"] || "";
-      return filters.value.industries.some((selectedCat) =>
-        catStr.includes(selectedCat)
-      );
-    });
-  }
-  if (filters.value.careerLevels.length > 0) {
-    results = results.filter((job) =>
-      filters.value.careerLevels.includes(job["Career Level"])
-    );
-  }
-  if (filters.value.location.trim()) {
-    const loc = filters.value.location.toLowerCase();
-    results = results.filter((job) =>
-      job["Work Location"]?.toLowerCase()?.includes(loc)
-    );
-  }
-  if (newQueryString.length > 0) {
-    const newString = newQueryString.toLowerCase();
-    results = results.filter((job) => {
-      return (
-        job["Civil Service Title"]?.toLowerCase()?.includes(newString) ||
-        job["Job Description"]?.toLowerCase()?.includes(newString) ||
-        job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) ||
-        job["Preferred Skills"]?.toLowerCase().includes(newString)
-      );
-    });
-  }
-  filteredJobs.value = results;
-  currentPage.value = 1;
+  // if (filters.value.jobTypes.length > 0) {
+  //   results = results.filter((job) => {
+  //     const csvVal = job["Full-Time/Part-Time indicator"];
+  //     return filters.value.jobTypes.some((selected) => csvVal === mapJobType[selected]);
+  //   });
+  // }
+  // if (filters.value.industries.length > 0) {
+  //   results = results.filter((job) => {
+  //     const catStr = job["Job Category"] || "";
+  //     return filters.value.industries.some((selectedCat) =>
+  //       catStr.includes(selectedCat)
+  //     );
+  //   });
+  // }
+  // if (filters.value.careerLevels.length > 0) {
+  //   results = results.filter((job) =>
+  //     filters.value.careerLevels.includes(job["Career Level"])
+  //   );
+  // }
+  // if (filters.value.location.trim()) {
+  //   const loc = filters.value.location.toLowerCase();
+  //   results = results.filter((job) =>
+  //     job["Work Location"]?.toLowerCase()?.includes(loc)
+  //   );
+  // }
+  // if (newQueryString.length > 0) {
+  //   const newString = newQueryString.toLowerCase();
+  //   results = results.filter((job) => {
+  //     return (
+  //       job["Civil Service Title"]?.toLowerCase()?.includes(newString) ||
+  //       job["Job Description"]?.toLowerCase()?.includes(newString) ||
+  //       job["Minimum Qual Requirements"]?.toLowerCase()?.includes(newString) ||
+  //       job["Preferred Skills"]?.toLowerCase().includes(newString)
+  //     );
+  //   });
+  // }
+  // filteredJobs.value = results;
+  // currentPage.value = 1;
 }
 
 watch(
   () => props.query,
-  (newQueryString) => {
-    if (newQueryString) {
-      applyFilters(newQueryString);
-    } else {
-      filteredJobs.value = [...allJobs.value];
-    }
+  async (newQueryString) => {
+    // if (newQueryString) {
+    console.log("watch called")
+    console.log("newQueryString: ", newQueryString)
+      filters.value.searchText = newQueryString
+      loadJobs()
+      await nextTick()
+      // applyFilters(newQueryString);
+    // } else {
+    //   filteredJobs.value = [...allJobs.value];
+    // }
   }
 );
 </script>
@@ -603,6 +828,8 @@ watch(
 }
 .jobs-section {
   padding: 1rem;
+  height: 890vh;
+  /* overflow: auto; */
 }
 
 .no-jobs-block {
