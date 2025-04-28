@@ -13,11 +13,12 @@ Team weekly report
 
 * Team member 1: Henry Swain
 o Stories completed
-- 
+- improved load time
+- attemped reworking filtering with aws
 o Progress report
-- 
+- it has really been a struggle. I've gotten parts of it working, but some of the filtering is still not working
 o Plan for next week
--
+- continue working on filtering
 
 * Team member 2: Marcus Bodnar
 o Stories completed
