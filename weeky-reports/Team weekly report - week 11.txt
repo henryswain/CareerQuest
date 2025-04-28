@@ -21,11 +21,12 @@ o Plan for next week
 
 * Team member 2: Marcus Bodnar
 o Stories completed
-- 
+- Worked with the csv to try and stop it from loading all data on page load
 o Progress report
-- 
+- I was able to trim it down but had no luck with the functions to make it load x amount. 
+Henry is working on bringing it back to aws and using lambda functions to try and have it load on 100 at a time.
 o Plan for next week
-- 
+- Take another 1/2 days to work on load times with Henry.
 
 * Team member 3: Tommy Le 
 o Stories completed
@@ -37,11 +38,17 @@ o Plan for next week
 
 * Team member 4: Ryan Witcraft
 o Stories completed
-- 
+- Sign in/out improvements
+- Restrict non-signed in users from saving jobs
 o Progress report
-- 
+- Sign in button now displays Hello, "user email" instead of the sign in button
+- Added sign out/in to dropdown 
+- Does not allow unsigned in user to add saved jobs and displays a modal prompting them to sign in
+- Small UI changes (account dropdown style and $ infront of pay)
 o Plan for next week
-- 
+- Do not allow non signed in users to access the saved jobs page and prompt them to sign in
+- Map variables to AWS
+- Reduce loading time
 
 * Team member 5: Magnolia Wallerich
 o Stories completed

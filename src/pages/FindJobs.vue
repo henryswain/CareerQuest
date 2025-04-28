@@ -257,6 +257,26 @@
         </div>
       </div>
   </footer>
+  <!-- Modal: Prompt to sign in -->
+<div class="modal fade" id="signInRequiredModal" tabindex="-1" aria-labelledby="signInRequiredModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signInRequiredModalLabel">Sign In Required</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        You must be signed in to save jobs.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#authenticationModal">
+          Sign In
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -267,7 +287,7 @@ import Papa from "papaparse";
 // import jobsCsvEnglish from "@/assets/Jobs_NYC_Postings.csv?raw";
 // import jobsCsvSpanish from "@/assets/Jobs_NYC_Postings_translated.csv?raw";
 import { getCurrentUser } from "aws-amplify/auth";
-
+import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // Import bookmark images
 import bookmarkFilled from "@/assets/bookmark_filled.png";
 import bookmarkBlank from "@/assets/bookmark_blank.png";
@@ -275,8 +295,8 @@ import { nextTick } from "vue";
 
 const API_URL = "https://5weiq0uvn8.execute-api.us-east-2.amazonaws.com/dev/update";
 const userId = ref("");
-const props = defineProps({ query: String });
 const route = useRoute();
+const query = computed(() => route.query.q || "");
 const router = useRouter();
 
 
@@ -315,6 +335,7 @@ onMounted(() => {
   loadSettings();
   applyDarkMode();
 });
+
 
 // --- Language & CSV Source Helper ---
 // Get initial language from localStorage "userSettings", default to "en"
@@ -372,6 +393,12 @@ async function removeJob(jobId) {
 }
 
 function toggleJob(job) {
+  if (!userId.value) {
+    const signInModal = new bootstrap.Modal(document.getElementById('signInRequiredModal'));
+    signInModal.show();
+    return;
+  }
+
   const jobId = String(job["Job ID"]);
   if (isJobSaved(jobId)) {
     removeJob(jobId);
@@ -379,6 +406,7 @@ function toggleJob(job) {
     saveJob(job);
   }
 }
+
 
 function isJobSaved(jobId) {
   return savedJobs.value.some((job) => job.id === jobId);
@@ -687,6 +715,7 @@ const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredJobs.value.slice(start, start + itemsPerPage.value);
 });
+
 // Brings user to the Next page. Also scrolls the page up to the top
 function nextPage() {
   if (currentPage.value * itemsPerPage.value < filteredJobs.value.length) {
@@ -699,7 +728,6 @@ function safeTitle(job) {
   const cleaned = cleanText(rawTitle);
   return cleaned || "Untitled Position";
 }
-
 
 // Brings user to prev page and scrolls to the top on click
 function prevPage() {
@@ -727,8 +755,9 @@ const filters = ref({
   industries: [],
   careerLevels: [],
   location: "",
-  searchText: props.query || "",
+  searchText: query.value || "",
 });
+
 
 function toggleFilter(filterCategory, option) {
   console.log("toggleFilter called")

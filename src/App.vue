@@ -3,73 +3,120 @@
     <!-- Desktop navbar (Hidden on mobile)-->
     <!-- Desktop navbar -->
     <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
-      <div class="container-fluid">
-        <!-- Left justified links -->
-        <router-link class="navbar_logo_container" to="/home-page">
-          <img class="navbar_logo_img" alt="CareerQuest logo"/>
-        </router-link>
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
-          </li>
-        </ul>
-        <button
-        class="Premium"
-        id="premium-now"
+  <div class="container-fluid">
+
+    <!-- Left side -->
+    <router-link class="navbar_logo_container" to="/home-page">
+      <img class="navbar_logo_img" alt="CareerQuest logo" />
+    </router-link>
+
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item">
+        <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
+      </li>
+    </ul>
+
+    <!-- Right side -->
+    <button
+      class="Premium"
+      id="premium-now"
+      type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#premiumModal"
+    >
+      Premium
+    </button>
+
+    <form class="d-flex me-3" @submit.prevent="handleSubmit">
+      <input
+        class="form-control me-2"
+        type="text"
+        v-model="searchText"
+        placeholder="Search jobs..."
+      />
+      <button class="searchbutton btn btn-primary" type="submit">Search</button>
+    </form>
+
+<!-- Sign in/display user email-->
+    <div class="d-flex align-items-center me-3">
+      <button
+        v-if="!currentUserEmail"
+        id="desktop-auth-state"
         type="button"
+        class="auth-button"
         data-bs-toggle="modal"
-        data-bs-target="#premiumModal"
-        >
-        Premium
-        </button> 
-        <!-- Right justified components -->
-        <form class="d-flex me-3" @submit.prevent="handleSubmit">
-          <input
-            class="form-control me-2"
-            type="text"
-            v-model="searchText"
-            placeholder="Search jobs..."
-          />
-          <button class="searchbutton btn btn-primary" type="text">Search</button>
-        </form>
-        <!-- sign in/sign out button -->
-        <button
-          id="desktop-auth-state"
-          type="button" 
-          class="auth-button me-3" 
-          data-bs-toggle="modal" 
-          data-bs-target="#authenticationModal"
-        >
+        data-bs-target="#authenticationModal"
+      >
         Sign in
-        </button>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <img
-              src="@/assets/user.png"
-              style="max-height: 30px;"
-              alt="User"
-              class="rounded-circle"
-            />
+      </button>
+      <span v-else class="navbar-text user-email">
+        Hello, {{ currentUserEmail }}
+      </span>
+    </div>
+
+<!-- Dropdown -->
+    <div class="dropdown">
+      <button
+        class="btn btn-secondary dropdown-toggle d-flex align-items-center justify-content-center"
+        type="button"
+        id="dropdownMenuButton"
+        @click="toggleDropdown"
+      >
+        <span class="me-2">Account</span>
+        <img
+          src="@/assets/user.png"
+          style="max-height: 30px;"
+          alt="User"
+          class="rounded-circle"
+        />
+      </button>
+
+      <ul v-if="!isMobile" class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+        <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
+        <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li v-if="currentUserEmail">
+          <button class="dropdown-item" @click="signOut">Sign Out</button>
+        </li>
+        <li v-else>
+          <button
+            id="desktop-auth-state"
+            type="button"
+            class="dropdown-item"
+            data-bs-toggle="modal"
+            data-bs-target="#authenticationModal"
+          >
+            Sign In
           </button>
-          <!-- Desktop navbar dropdown -->
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-            <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-            <!-- Remove the divider and auth buttons -->
-          </ul>
-          
-          <!-- Mobile navbar dropdown -->
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-            <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-            <!-- Remove the divider and auth buttons -->
-          </ul>
-        </div>
-      </div>
-    </nav>
+        </li>
+      </ul>
+
+      <ul v-else class="dropdown-menu dropdown-menu-end">
+        <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
+        <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li v-if="currentUserEmail">
+          <button class="dropdown-item" @click="signOut">Sign Out</button>
+        </li>
+        <li v-else>
+          <button
+            id="desktop-auth-state"
+            type="button"
+            class="dropdown-item"
+            data-bs-toggle="modal"
+            data-bs-target="#authenticationModal"
+          >
+            Sign In
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 
     <!-- Mobile navbar -->
         <!-- New navbar for mobile. Is not white and adopts new logo-->
@@ -102,7 +149,7 @@
               v-model="searchText"
               placeholder="Search jobs..."
             />
-            <button class="btn btn-outline-light" type="text">Search</button>
+            <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
           <div class="dropdown w-100 d-flex justify-content-end">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -117,19 +164,20 @@
               <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
               <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
               <li><hr class="dropdown-divider" /></li>
-              <!-- login and signup button links -->
-              <li>
-                <div>
-                  <button
-                    id="mobile-auth-state"
-                    type="button"
-                    class="btn btn-link"
-                    data-bs-toggle="modal"
-                    data-bs-target="#authenticationModal"
-                  >
-                    sign in
-                  </button>
-                </div>
+              
+              <li v-if="currentUserEmail">
+                <button class="dropdown-item" @click="signOut">Sign Out</button>
+              </li>
+              <li v-else>
+                <button
+                  id="desktop-auth-state"
+                  type="button"
+                  class="dropdown-item"
+                  data-bs-toggle="modal"
+                  data-bs-target="#authenticationModal"
+                >
+                  Sign In
+                </button>
               </li>
             </ul>
           </div>
@@ -218,9 +266,16 @@
 <script setup>
 import { ref, nextTick, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { Authenticator } from "@aws-amplify/ui-vue";
+import "@aws-amplify/ui-vue/styles.css";
 import { Amplify } from 'aws-amplify';
+import { Hub } from 'aws-amplify/utils';
 import originalConfig from '../amplify_outputs.json';
+import { fetchUserAttributes, getCurrentUser, signOut as amplifySignOut } from 'aws-amplify/auth';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { Dropdown } from 'bootstrap';
+
+
 
 // Function to replace env variable placeholders
 const resolveConfig = (config) => {
@@ -239,39 +294,50 @@ const amplifyConfig = resolveConfig(originalConfig);
 
 Amplify.configure(amplifyConfig)
 
-import { Authenticator } from "@aws-amplify/ui-vue";
-import "@aws-amplify/ui-vue/styles.css";
+// Save user email locally
+const currentUserEmail = ref(localStorage.getItem('currentUserEmail'));
 
-import { Hub } from 'aws-amplify/utils';
-import { getCurrentUser } from 'aws-amplify/auth';
-
-// detect authentication events
 Hub.listen('auth', async ({ payload }) => {
-  // if the user is signed in
-  try {
-    const { username, userId, signInDetails } = await getCurrentUser();
-    switch (payload.event) {
-      case 'signedIn':
-        console.log("signed in")
-        fetch(`https://gm4pbbszg2.execute-api.us-east-2.amazonaws.com/dev/add_user_id_to_user-data?id=${userId}`)
-        document.getElementById("close-modal").click()
-        document.getElementById("desktop-auth-state").textContent = "Sign Out"
-        document.getElementById("mobile-auth-state").textContent = "Sign Out"
-        break;
-    }
-  }
-  // otherwise
-  catch {
-    switch (payload.event) {
-      case 'signedOut':
-        console.log("signed out")
-        document.getElementById("close-modal").click()
-        document.getElementById("desktop-auth-state").textContent = "Sign in"
-        document.getElementById("mobile-auth-state").textContent = "Sign in"
-        break;
-    }
+  switch (payload.event) {
+    case 'signedIn':
+      console.log("signed in");
+      try {
+        const attributes = await fetchUserAttributes();
+        const email = attributes.email;
+        localStorage.setItem('currentUserEmail', email); // Save email
+        currentUserEmail.value = email;
+      } catch (error) {
+        console.error("Error getting current user after sign in:", error);
+      }
+      document.getElementById("close-modal").click();
+      break;
+
+    case 'signedOut':
+      console.log("signed out");
+      localStorage.removeItem('currentUserEmail'); // Get rid of it when signed out
+      currentUserEmail.value = null;
+      document.getElementById("close-modal").click();
+      break;
   }
 });
+
+function toggleDropdown() {
+  const dropdownElement = document.getElementById('dropdownMenuButton');
+  if (dropdownElement) {
+    const dropdown = Dropdown.getOrCreateInstance(dropdownElement);
+    dropdown.toggle();
+  }
+}
+
+
+async function signOut() {
+  try {
+    await amplifySignOut();
+    console.log("Signed out successfully");
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+}
 
 // Router and search handling
 const router = useRouter();
@@ -281,6 +347,7 @@ async function handleSubmit() {
   router.replace({ path: '/find-jobs', query: { q: searchText.value } });
   await nextTick();
 }
+
 
 // Modify PayPal SDK loading function
 function loadPayPalScript() {
@@ -326,9 +393,34 @@ function loadPayPalScript() {
   document.body.appendChild(script);
 }
 
-onMounted(() => {
+const isMobile = ref(false);
+
+onMounted(async () => {
+  try {
+    // Check for user sign in
+    const attributes = await fetchUserAttributes();
+    const email = attributes.email;
+    console.log('Fetched email on page load:', email);
+    if (email) {
+      currentUserEmail.value = email;
+      localStorage.setItem('currentUserEmail', email);
+    }
+  } catch (error) {
+    console.error("Error fetching user on mount:", error);
+  }
+  
   loadPayPalScript();
-});
+
+  isMobile.value = window.innerWidth < 992;
+  window.addEventListener('resize', () => {
+    isMobile.value = window.innerWidth < 992;
+  });
+  // Mobile dropdown
+  const dropdownElement = document.getElementById('dropdownMenuButton');
+  if (dropdownElement) {
+    new Dropdown(dropdownElement);
+  }
+  });
 
 </script>
 
@@ -477,6 +569,16 @@ onMounted(() => {
 .modal-dialog {
   margin-top: 80px;
 }
+
+.user-email {
+  font-weight: 500;
+  color: black;
+}
+
+.dark-mode .user-email {
+  color: white;
+}
+
 </style>
 
 <!-- Darkmode overrides -->
