@@ -1,603 +1,1012 @@
 <template>
-  <div class="profile-container">
-    <div class="profile-header-banner">
-      <div class="profile-header-content">
-        <div class="profile-picture-section">
-          <label class="profile-upload">
-            <input type="file" @change="handleFileUpload" hidden />
-            <img :src="user.profilePicture || '/user.png'" alt="Profile Picture" class="profile-picture" />
-          </label>
-        </div>
 
-        <div class="profile-info">
-           <!-- User Name, Headline, and Location -->
-          <h1 class="user-name">{{ user.name }}</h1>
-          <p class="headline">{{ user.headline }}</p>
-          <p class="location">{{ user.location }}</p>
-        </div>
-
-      </div>
-    </div>
-    
-    <!-- Profile Layout: Main Content and Sidebar -->
-    <div class="profile-layout">
-      <!-- Main Profile Content -->
-      <div class="profile-main">
-        <div class="card">
-          <h2>About</h2>
-          <p class="about-text">{{ user.about }}</p>
-        </div>
-        <!-- Experience section -->
-        <div class="card">
-          <h2>Experience</h2>
-          <div class="timeline">
-            <!-- Loop through experience and display each job -->
-            <div v-for="(job, index) in user.experience" :key="index" class="timeline-item">
-              <div class="timeline-content">
-                <h3>{{ job.position }}</h3>
-                <p class="company">{{ job.company }}</p>
-                <p class="duration">{{ job.duration }}</p>
-                <!-- Delete button only viewable in editing mode -->
-                <button v-if="isEditing" @click="deleteItem(user.experience, index)" class="btn-icon">×</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <!-- Education section -->
-        <div class="card">
-          <h2>Education</h2>
-          <div class="education-list">
-            <!-- Loop through education list and displays entries -->
-            <div v-for="(edu, index) in user.education" :key="index" class="education-item">
-              <h3>{{ edu.degree }}</h3>
-              <p class="institution">{{ edu.institution }}</p>
-              <p class="year">{{ edu.year }}</p>
-              <button v-if="isEditing" @click="deleteItem(user.education, index)" class="btn-icon">×</button>
-            </div>
-          </div>
+  <div class="container">
+    <div class="profile">
+      <div class="profile__left">
+        <div class="profile__image">
+          <img :src="user.image || '/user.png'" alt="Profile Image">
         </div>
       </div>
-
-      <!-- Sidebar (Skills & Socials-->
-      <div class="profile-sidebar">
-        <div class="card">
-          <h2>Skills</h2>
-          <div class="skills-grid">
-            <!-- Loop through skills and displays skills -->
-            <div v-for="(skill, index) in user.skills" :key="index" class="skill-tag">
-              {{ skill }}
-            </div>
-          </div>
+      <div class="profile__info">
+        <div class="name-container">
+          <h2 class="full-name">{{ user.firstName }} {{ user.lastName }}</h2>
+          <p class="username">{{ user.username }}</p>
+          <button class="change-profile-btn" data-bs-toggle="modal" data-bs-target="#profileModal">
+            Change Profile
+          </button>
         </div>
-
-        <!-- Update the social links section with proper checks -->
-        <div class="card">
-          <h2>Connect</h2>
-          <div class="social-links">
-            <a v-if="user?.socialLinks?.linkedin" :href="user.socialLinks.linkedin" target="_blank" class="social-link">
-              LinkedIn
-            </a>
-            <a v-if="user?.socialLinks?.github" :href="user.socialLinks.github" target="_blank" class="social-link">
-              GitHub
-            </a>
-            <a v-if="user?.socialLinks?.twitter" :href="user.socialLinks.twitter" target="_blank" class="social-link">
-              Twitter
-            </a>
-            <a v-if="user?.socialLinks?.website" :href="user.socialLinks.website" target="_blank" class="social-link">
-              Portfolio
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Profile Button -->
-    <div class="profile-actions">
-      <button v-if="!isEditing" class="btn-primary" @click="isEditing = true">Edit Profile</button>
-    </div>
-
-    <!-- Edit Modal remains the same -->
-    <div v-if="isEditing" class="profile-edit">
-      <div class="profile-edit-header">
-        <div class="profile-picture-container">
-          <label class="profile-upload">
-            <input type="file" @change="handleFileUpload" hidden />
-            <img :src="user.profilePicture || '/user.png'" alt="Profile Picture" class="profile-picture" />
-          </label>
-        </div>
-        <input v-model="user.name" class="input-field" placeholder="Enter Name" />
-        <input v-model="user.headline" class="input-field" placeholder="Enter Headline" />
-      </div>
-      <!-- About Edit Section -->
-      <div class="profile-edit-section">
-        <h3>About</h3>
-        <textarea v-model="user.about" class="input-field" placeholder="Enter About"></textarea>
-      </div>
-
-      <div class="profile-edit-section">
-        <!-- Experience Edit Section -->
-        <h3>Experience</h3>
-        <ul>
-          <!-- Loop through experience list and show delete button -->
-          <li v-for="(job, index) in user.experience" :key="index">
-            <strong>{{ job.position }}</strong> at {{ job.company }} ({{ job.duration }})
-            <button @click="deleteItem(user.experience, index)" class="btn btn-delete">Delete</button>
-          </li>
-        </ul>
-        <!--User inputs for adding new experience -->
-        <input v-model="newExperience.position" class="input-field" placeholder="Position" />
-        <input v-model="newExperience.company" class="input-field" placeholder="Company" />
-        <input v-model="newExperience.duration" class="input-field" placeholder="Duration" />
-        <button class="btn btn-secondary" @click="addExperience">Add Experience</button>
-      </div>
-      <!-- Education Edit Section -->
-      <div class="profile-edit-section">
-        <h3>Education</h3>
-        <ul>
-          <!-- Loop through education list and show delete button -->
-          <li v-for="(edu, index) in user.education" :key="index">
-            <strong>{{ edu.degree }}</strong> - {{ edu.institution }} ({{ edu.year }})
-            <button @click="deleteItem(user.education, index)" class="btn btn-delete">Delete</button>
-          </li>
-        </ul>
-        <!-- Input fields for adding new education -->
-        <input v-model="newEducation.degree" class="input-field" placeholder="Degree" />
-        <input v-model="newEducation.institution" class="input-field" placeholder="Institution" />
-        <input v-model="newEducation.year" class="input-field" placeholder="Year" />
-        <button class="btn btn-secondary" @click="addEducation">Add Education</button>
-      </div>
-      <!-- Skills edit section -->
-      <div class="profile-edit-section">
-        <h3>Skills</h3>
-        <ul>
-          <li v-for="(skill, index) in user.skills" :key="index">
-            <input type="checkbox" :checked="true" /> {{ skill }}
-          </li>
-        </ul>
-        <input v-model="newSkill" class="input-field" placeholder="Enter Skill" />
-        <button class="btn btn-secondary" @click="addSkill">Add Skill</button>
-      </div>
-
-      <div class="profile-edit-section">
-        <h3>Social Links</h3>
-        <input v-model="user.socialLinks.twitter" class="input-field" placeholder="Enter Twitter URL" />
-        <input v-model="user.socialLinks.linkedin" class="input-field" placeholder="Enter LinkedIn URL" />
-        <input v-model="user.socialLinks.github" class="input-field" placeholder="Enter GitHub URL" />
-        <input v-model="user.socialLinks.website" class="input-field" placeholder="Enter Website URL" />
-      </div>
-      <! Save & cancel buttons for editing profile -->
-      <div class="profile-actions">
-        <button class="btn btn-success" @click="saveProfile">Save</button>
-        <button class="btn btn-secondary" @click="isEditing = false">Cancel</button>
       </div>
     </div>
   </div>
+
+  <!-- Profile Modal -->
+  <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="profileModalLabel">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="profile-edit-form">
+            <div class="profile-photo-upload">
+              <img :src="previewImage || user.image || '/user.png'" class="preview-image" alt="Profile preview">
+              <label class="upload-button">
+                <input type="file" @change="handleFileUpload" accept="image/*" hidden>
+                Change Photo
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" v-model="user.firstName" class="form-control" placeholder="Enter first name">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" v-model="user.lastName" class="form-control" placeholder="Enter last name">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-modal btn-modal-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn-modal btn-modal-primary" @click="saveProfile">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Education Section -->
+  <div class="container">
+    <div class="education">
+      <div class="education__info">
+        <div class="education-container">
+          <h2 class="education-title">Education</h2>
+          <button class="add-education-btn" data-bs-toggle="modal" data-bs-target="#educationModal">
+            Add Education
+          </button>
+        </div>
+        <!-- Add this section to display education entries -->
+        <div class="education-list">
+          <div v-for="(edu, index) in user.education" :key="index" class="education-item">
+            <h3>{{ edu.schoolName }}</h3>
+            <p>{{ edu.degree }} in {{ edu.fieldOfStudy }}</p>
+            <p>{{ edu.startDate }} - {{ edu.endDate }}</p>
+            <button @click="deleteEducation(index)" class="btn-delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Education Modal -->
+  <div class="modal fade" id="educationModal" tabindex="-1" aria-labelledby="educationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="educationModalLabel">Add Education</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="schoolName">School Name</label>
+            <input type="text" id="schoolName" v-model="newEducation.schoolName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="degree">Degree</label>
+            <input type="text" id="degree" v-model="newEducation.degree" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="fieldOfStudy">Field of Study</label>
+            <input type="text" id="fieldOfStudy" v-model="newEducation.fieldOfStudy" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" v-model="newEducation.startDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" v-model="newEducation.endDate" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" @click="addEducation">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Experience Section -->
+  <div class="container">
+    <div class="experience">
+      <div class="experience__info">
+        <div class="experience-container">
+          <h2 class="experience-title">Experience</h2>
+          <button class="add-experience-btn" data-bs-toggle="modal" data-bs-target="#experienceModal">
+            Add Experience
+          </button>
+        </div>
+        <!-- Add this section to display experience entries -->
+        <div class="experience-list">
+          <div v-for="(exp, index) in user.experience" :key="index" class="experience-item">
+            <h3>{{ exp.companyName }}</h3>
+            <p>{{ exp.position }}</p>
+            <p>{{ exp.startDate }} - {{ exp.endDate }}</p>
+            <button @click="deleteExperience(index)" class="btn-delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Experience Modal -->
+  <div class="modal fade" id="experienceModal" tabindex="-1" aria-labelledby="experienceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="experienceModalLabel">Add Experience</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" v-model="newExperience.companyName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="position">Position</label>
+            <input type="text" id="position" v-model="newExperience.position" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="expStartDate">Start Date</label>
+            <input type="date" id="expStartDate" v-model="newExperience.startDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="expEndDate">End Date</label>
+            <input type="date" id="expEndDate" v-model="newExperience.endDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" v-model="newExperience.description" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" @click="addExperience">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills Section -->
+  <div class="container">
+    <div class="skills">
+      <div class="skills__info">
+        <div class="skills-container">
+          <h2 class="skills-title">Skills</h2>
+          <button class="add-skills-btn" data-bs-toggle="modal" data-bs-target="#skillsModal">
+            Add Skills
+          </button>
+        </div>
+        <!-- Updated skills display section -->
+        <div class="skills-list">
+          <div class="skills-tags">
+            <span v-for="(skill, index) in user.skills" :key="index" class="skill-tag">
+              {{ skill }}
+              <button class="remove-tag" @click="deleteSkill(index)">&times;</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Add Skills Modal -->
+    <div class="modal fade" id="skillsModal" tabindex="-1" aria-labelledby="skillsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="skillsModalLabel">Add Skills</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="skillInput">Add Skills</label>
+            <div class="skill-tags">
+              <span v-for="(skill, index) in newSkills" :key="index" class="skill-tag">
+                {{ skill }}
+                <button class="remove-tag" @click="removeSkill(index)">&times;</button>
+              </span>
+            </div>
+            <input 
+              type="text" 
+              id="skillInput" 
+              v-model="skillInput" 
+              class="form-control"
+              placeholder="Type a skill and press Enter"
+              @keyup.enter="addSkillTag"
+            >
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" @click="saveSkills">Save Skills</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { getCurrentUser } from 'aws-amplify/auth';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { Modal } from 'bootstrap';
 
-const router = useRouter();
-// Load profile data from localStorage
-const loadProfile = () => {
-  const savedProfile = localStorage.getItem('userProfile');
-  const defaultProfile = {
-    name: "Your Name",
-    headline: "Your Professional Headline",
-    email: "youremail@example.com",
-    location: "Your Location",
-    profilePicture: "", 
-    about: "A short summary about your professional background.",
-    experience: [],
-    education: [],
-    skills: [],
-    qualifications: [],
-    socialLinks: {
-      twitter: "",
-      linkedin: "",
-      github: "",
-      website: ""
+const previewImage = ref(null);
+
+
+const handleFileUpload = async (event) => {
+  try {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImage.value = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
-  };
-
-  if (!savedProfile) {
-    return defaultProfile;
-  }
-
-  const parsedProfile = JSON.parse(savedProfile);
-  // Ensure socialLinks exists
-  if (!parsedProfile.socialLinks) {
-    parsedProfile.socialLinks = defaultProfile.socialLinks;
-  }
-  
-  return parsedProfile;
-};
-
-const user = ref(loadProfile());
-const isEditing = ref(false);
-const newSkill = ref("");
-const newQualification = ref("");
-const newExperience = ref({ position: "", company: "", duration: "" });
-const newEducation = ref({ degree: "", institution: "", year: "" });
-
-// Watch and save changes to localStorage
-watch(user, (newVal) => {
-  localStorage.setItem('userProfile', JSON.stringify(newVal));
-}, { deep: true });
-
-// Save the profile and stop editing
-const saveProfile = () => {
-  isEditing.value = false;
-  console.log("Profile updated:", user.value);
-};
-
-// Add skill, qualification, experience, and education
-const addSkill = () => {
-  if (newSkill.value.trim()) {
-    user.value.skills.push(newSkill.value.trim());
-    newSkill.value = "";
+  } catch (error) {
+    console.error('Error handling file upload:', error);
   }
 };
 
-const addQualification = () => {
-  if (newQualification.value.trim()) {
-    user.value.qualifications.push(newQualification.value.trim());
-    newQualification.value = "";
+const saveProfile = async () => {
+  try {
+    if (previewImage.value) {
+      user.value.image = previewImage.value;
+    }
+    // Here you would typically save the profile data to your backend
+    console.log('Saving profile:', user.value);
+    // Close modal after save
+    document.getElementById('profileModal').querySelector('[data-bs-dismiss="modal"]').click();
+  } catch (error) {
+    console.error('Error saving profile:', error);
   }
 };
 
-const addExperience = () => {
-  if (newExperience.value.position && newExperience.value.company && newExperience.value.duration) {
-    user.value.experience.push({ ...newExperience.value });
-    newExperience.value = { position: "", company: "", duration: "" };
-  }
-};
-
-const addEducation = () => {
-  if (newEducation.value.degree && newEducation.value.institution && newEducation.value.year) {
-    user.value.education.push({ ...newEducation.value });
-    newEducation.value = { degree: "", institution: "", year: "" };
-  }
-};
-
-// Handle profile picture upload
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      user.value.profilePicture = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-};
-
-const currentUserInfo = ref({});
-onMounted(async () => {
-  getUserInformation();
+// User data with all necessary fields
+const userProfile = ref({
+  image: '',
+  username: '',
+  firstName: '',
+  lastName: '',
+  education: [],
+  socialLinks: {
+    twitter: '',
+    linkedin: '',
+    github: '',
+    website: ''
+  },
+  experience: [],
+  about: '',
+  headline: '',
+  profilePicture: ''
 });
 
-const getUserInformation = async () => {
-  try {
-    const { username, userId, signInDetails } = await getCurrentUser();
-    currentUserInfo.value = { username, userId, signInDetails };
-  } catch (e) {
-    console.log(e.message);
-    currentUserInfo.value = { username: undefined, userId: undefined, signInDetails: undefined };
-  }
-}
+// Form data for education entries
+const newEducation = ref({
+  schoolName: '',
+  degree: '',
+  fieldOfStudy: '',
+  startDate: '',
+  endDate: ''
+});
 
-// Delete experience, education, or qualification
-const deleteItem = (array, index) => {
-  array.splice(index, 1);
+// Add education function
+const addEducation = () => {
+  if (!user.value.education) {
+    user.value.education = [];
+  }
+  user.value.education.push({...newEducation.value});
+  // Reset form
+  newEducation.value = {
+    schoolName: '',
+    degree: '',
+    fieldOfStudy: '',
+    startDate: '',
+    endDate: ''
+  };
+  
+  // Close modal using Bootstrap
+  const modalElement = document.getElementById('educationModal');
+  if (modalElement) {
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+      modal.hide();
+    }
+  }
+};
+
+// Add new experience form data
+const newExperience = ref({
+  companyName: '',
+  position: '',
+  startDate: '',
+  endDate: '',
+  description: ''
+});
+
+// Update the addExperience function
+const addExperience = () => {
+  if (!user.value.experience) {
+    user.value.experience = [];
+  }
+  user.value.experience.push({...newExperience.value});
+  // Reset form
+  newExperience.value = {
+    companyName: '',
+    position: '',
+    startDate: '',
+    endDate: '',
+    description: ''
+  };
+
+  // Close modal using Bootstrap
+  const modalElement = document.getElementById('experienceModal');
+  if (modalElement) {
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+      modal.hide();
+    }
+  }
+};
+
+// Delete education function
+const deleteEducation = (index) => {
+  user.value.education.splice(index, 1);
+};
+
+// Add this function in the script setup section
+const deleteExperience = (index) => {
+  user.value.experience.splice(index, 1);
+};
+
+// Add to your user ref object
+const user = ref({
+  image: '',
+  banner: '',
+  username: '',
+  firstName: '',
+  lastName: '',
+  education: [],
+  socialLinks: {
+    twitter: '',
+    linkedin: '',
+    github: '',
+    website: ''
+  },
+  experience: [],
+  about: '',
+  headline: '',
+  profilePicture: ''
+});
+
+// Add these new refs and functions to your script section:
+const skillInput = ref('');
+const newSkills = ref([]);
+
+const addSkillTag = () => {
+  if (skillInput.value.trim()) {
+    newSkills.value.push(skillInput.value.trim());
+    skillInput.value = '';
+  }
+};
+
+const removeSkill = (index) => {
+  newSkills.value.splice(index, 1);
+};
+
+const saveSkills = () => {
+  user.value.skills = [...newSkills.value];
+  newSkills.value = [];
+  // Close modal using Bootstrap
+  const modalElement = document.getElementById('skillsModal');
+  if (modalElement) {
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+      modal.hide();
+    }
+  }
 };
 </script>
 
 <style scoped>
-.profile-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: #f8f9fa;
-  min-height: 100vh;
+.profile-page {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  min-height: calc(100vh - 160px);
+  position: relative;
+  z-index: 0; /* Lower z-index to stay behind navbar/footer */
 }
 
-.profile-header-banner {
-  background: linear-gradient(135deg, #0073b1 0%, #0093e9 100%);
-  padding: 40px 20px;
-  color: white;
-}
-
-.profile-header-content {
+.container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+  margin-bottom: 80px; /* Increased margin to prevent footer overlap */
+}
+
+.profile, .education, .experience, .skills {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+/* Remove duplicate styles and fixed heights */
+.profile {
+  min-height: auto;
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 2rem;
 }
 
-.profile-picture {
-  width: 180px;
-  height: 180px;
+.education, .experience {
+  min-height: auto;
+  margin-top: 2rem;
+}
+
+.skills {
+  margin-bottom: 80px; /* Add space above footer */
+}
+
+.profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 200px;
+}
+
+
+
+.profile__left {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile__image {
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  border: 4px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 3px solid #0073b1;
+  position: relative;
+}
+
+.profile__image img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.profile-info {
-  flex: 1;
+.profile__image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease;
 }
 
-.user-name {
-  font-size: 2.5rem;
-  margin: 0;
-  font-weight: 600;
-}
-
-.headline {
-  font-size: 1.2rem;
-  margin: 8px 0;
-  opacity: 0.9;
-}
-
-.location {
-  font-size: 1rem;
-  opacity: 0.8;
-}
-
-.profile-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 24px;
-  padding: 24px;
-  margin-top: -40px;
-}
-
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-.card h2 {
-  margin: 0 0 20px 0;
-  color: #2c3e50;
-  font-size: 1.5rem;
-}
-
-.timeline-item {
-  padding: 20px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.timeline-item:last-child {
-  border-bottom: none;
-}
-
-.timeline-content h3 {
-  margin: 0;
-  color: #2c3e50;
-}
-
-.company, .duration {
-  color: #666;
-  margin: 5px 0;
-}
-
-.skills-grid {
+.profile__image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
 }
 
-.skill-tag {
-  background: #e1f0ff;
-  color: #0073b1;
-  padding: 6px 12px;
-  border-radius: 20px;
+.profile__image-overlay span {
+  color: white;
   font-size: 0.9rem;
 }
 
-.social-links {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.profile__image:hover .profile__image-overlay {
+  opacity: 1;
 }
 
-.social-link {
-  color: #0073b1;
-  text-decoration: none;
-  padding: 8px 0;
+.change-profile-btn {
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.change-profile-btn:hover {
+  background-color: #005582;
+}
+
+.profile__info {
+  margin-top: 0;
+  text-align: left;
+  padding-left: 1rem;
+}
+
+.name-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: flex-start;
+}
+
+.full-name {
+  color: #1a1a1a;
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.username {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Dark mode additions */
+.dark-mode .full-name {
+  color: #ffffff;
+}
+
+.dark-mode .username {
+  color: #aaa;
+}
+
+/* Modal Styles */
+.profile-edit-form {
+  padding: 1rem;
+}
+
+.profile-photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.preview-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #0073b1;
+}
+
+.upload-button {
+  background-color: #0073b1;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.upload-button:hover {
+  background-color: #005582;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
-.social-link:hover {
-  color: #005582;
-}
-
-.btn-primary {
-  background: #0073b1;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background: #005582;
-}
-
-.btn-icon {
-  background: none;
-  border: none;
-  color: #dc3545;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.btn-icon:hover {
-  background: #fff5f5;
-}
-
-@media (max-width: 768px) {
-  .profile-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-header-content {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-</style>
-
-<style>
-.profile-edit {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  margin: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.profile-edit-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 32px;
-}
-
-.profile-picture-container {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.profile-edit-section {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-}
-
-.profile-edit-section h3 {
-  color: #2c3e50;
-  margin: 0 0 20px 0;
-  font-size: 1.3rem;
-}
-
-.input-field {
+.form-control {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e1e4e8;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  margin-bottom: 16px;
   font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.input-field:focus {
-  border-color: #0073b1;
-  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.1);
-  outline: none;
-}
-
-textarea.input-field {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-}
-
-.btn-success {
-  background: #0073b1;
+/* Dark mode additions */
+.dark-mode .modal-content {
+  background-color: #333;
   color: white;
 }
 
-.btn-success:hover {
-  background: #005582;
+.dark-mode .form-control {
+  background-color: #444;
+  border-color: #555;
+  color: white;
 }
 
-.btn-secondary {
-  background: #e1e4e8;
-  color: #2c3e50;
+.dark-mode .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
 }
 
-.btn-secondary:hover {
-  background: #d1d5da;
+/* Modal Button Styles */
+.btn-modal {
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 1rem;
+  min-width: 120px;
 }
 
-.btn-delete {
-  background: #fff5f5;
-  color: #dc3545;
-  padding: 6px 12px;
-  margin-left: 10px;
+.btn-modal-primary {
+  background-color: #0073b1;
+  color: white;
 }
 
-.btn-delete:hover {
-  background: #ffe3e3;
+.btn-modal-primary:hover {
+  background-color: #005582;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.profile-actions {
+.btn-modal-secondary {
+  background-color: #f0f2f5;
+  color: #666;
+}
+
+.btn-modal-secondary:hover {
+  background-color: #e4e6e9;
+  color: #444;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode additions */
+.dark-mode .btn-modal-secondary {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .btn-modal-secondary:hover {
+  background-color: #555;
+}
+.education {
   display: flex;
-  gap: 16px;
-  justify-content: flex-end;
-  margin-top: 32px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 250px;
+  margin-top: 2rem;
 }
 
-.profile-edit-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 20px 0;
+.education__info {
+  flex-grow: 1;
 }
 
-.profile-edit-section li {
-  background: white;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 8px;
+.education-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+}
+
+.education-title {
+  color: #1a1a1a;
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.add-education-btn {
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.add-education-btn:hover {
+  background-color: #005582;
+}
+
+/* Dark mode additions */
+.dark-mode .education {
+  background: #333;
+}
+
+.dark-mode .education-title {
+  color: #ffffff;
+}
+
+.dark-mode .education__icon {
+  background: #444;
+}
+.education-list {
+  margin-top: 20px;
+}
+
+.education-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .profile-edit {
-    margin: 16px;
-    padding: 20px;
-  }
+.education-item h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 1.2rem;
+}
 
-  .profile-edit-section {
-    padding: 16px;
-  }
+.education-item p {
+  margin: 5px 0;
+  color: #666;
+}
 
-  .profile-actions {
-    flex-direction: column;
-  }
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
 
-  .btn {
-    width: 100%;
-  }
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* Dark mode additions */
+.dark-mode .btn-modal-secondary {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .btn-modal-secondary:hover {
+  background-color: #555;
+}
+.experience {
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 250px;
+  margin-top: 2rem;
+}
+
+.experience__info {
+  flex-grow: 1;
+}
+
+.experience-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.experience-title {
+  color: #1a1a1a;
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.add-experience-btn {
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.add-experience-btn:hover {
+  background-color: #005582;
+}
+
+.experience-list {
+  margin-top: 20px;
+}
+
+.experience-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.experience-item h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.experience-item p {
+  margin: 5px 0;
+  color: #666;
+}
+
+/* Dark mode additions */
+.dark-mode .experience {
+  background: #333;
+}
+
+.dark-mode .experience-title {
+  color: #ffffff;
+}
+
+.dark-mode .experience-item {
+  background: #444;
+  color: #fff;
+}
+
+.dark-mode .experience-item h3 {
+  color: #fff;
+}
+
+.dark-mode .experience-item p {
+  color: #aaa;
+}
+
+.skills {
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.skills__info {
+  flex-grow: 1;
+}
+
+.skills-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.skills-title {
+  color: #1a1a1a;
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.add-skills-btn {
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.add-skills-btn:hover {
+  background-color: #005582;
+}
+
+.skills-list {
+  margin-top: 20px;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-tag {
+  background-color: #e3f2fd;
+  color: #0073b1;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.remove-tag {
+  background: none;
+  border: none;
+  color: #0073b1;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.remove-tag:hover {
+  color: #005582;
+}
+
+/* Dark mode additions */
+.dark-mode .skills {
+  background: #333;
+}
+
+.dark-mode .skills-title {
+  color: #ffffff;
+}
+
+.dark-mode .skill-tag {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode .remove-tag {
+  color: #fff;
+}
+
+.dark-mode .remove-tag:hover {
+  color: #ddd;
+}
+
+/* Container adjustments for page height */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Adjust the profile sections to fit content */
+.profile, .education, .experience, .skills {
+  min-height: auto;
+  height: fit-content;
 }
 </style>
