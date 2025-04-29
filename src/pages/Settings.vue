@@ -145,17 +145,24 @@ const resetSettings = () => {
   max-width: 800px;
   margin: auto;
   padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 80px;
 }
 
 .settings-section {
   margin-bottom: 2rem;
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
+  border: 1px solid rgba(0, 115, 177, 0.2);
+  border-radius: 15px;
+  background: rgba(249, 249, 249, 0.8);
+  transition: all 0.3s ease;
+}
+
+.settings-section:hover {
+  border-color: #0073b1;
+  box-shadow: 0 2px 4px rgba(0, 115, 177, 0.1);
 }
 
 .setting-group {
@@ -163,32 +170,91 @@ const resetSettings = () => {
   justify-content: space-between;
   align-items: center;
   margin: 15px 0;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+/* Add styles for checkbox container */
+.setting-group:has(input[type="checkbox"]) {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+}
+
+/* Style for the checkbox and its label */
+input[type="checkbox"] {
+  margin-left: auto;
+  order: 2;
+}
+
+.setting-group span {
+  order: 3;
+  min-width: 70px;
+  text-align: right;
+}
+
+.setting-group:hover {
+  background-color: rgba(0, 115, 177, 0.05);
 }
 
 label {
   font-size: 1.1em;
   margin-right: 10px;
+  color: #333;
+  font-weight: 500;
 }
 
 select,
 input[type="checkbox"],
 input[type="range"] {
   font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+select:hover,
+input[type="checkbox"]:hover,
+input[type="range"]:hover {
+  border-color: #0073b1;
 }
 
 .btn-danger {
   background-color: #dc3545;
   color: white;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 12px 20px;
+  border-radius: 25px;
   border: none;
   cursor: pointer;
   width: 100%;
   margin-top: 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+h1 {
+  color: #1a1a1a;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  color: #0073b1;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }
 </style>
 
-<!-- Global dark mode overrides -->
 <style>
 .dark-mode {
   background-color: #121212;
@@ -196,13 +262,22 @@ input[type="range"] {
 }
 
 .dark-mode .settings-page {
-  background: #333333;
+  background: rgba(51, 51, 51, 0.95);
   color: #ffffff;
 }
 
 .dark-mode .settings-section {
-  background: #444444;
-  border-color: #555555;
+  background: rgba(68, 68, 68, 0.8);
+  border-color: rgba(0, 115, 177, 0.3);
+}
+
+.dark-mode .settings-section:hover {
+  border-color: #0073b1;
+  box-shadow: 0 2px 4px rgba(0, 115, 177, 0.2);
+}
+
+.dark-mode .setting-group:hover {
+  background-color: rgba(0, 115, 177, 0.1);
 }
 
 .dark-mode label,
@@ -210,9 +285,35 @@ input[type="range"] {
 .dark-mode input,
 .dark-mode button,
 .dark-mode span {
-  color: #ffffff !important;
+  color: #ffffff;
 }
+
+.dark-mode h1 {
+  color: #ffffff;
+}
+
+.dark-mode h2 {
+  color: #0073b1;
+}
+
+.dark-mode select,
+.dark-mode input[type="checkbox"],
+.dark-mode input[type="range"] {
+  background-color: #333;
+  border-color: #444;
+}
+
+.dark-mode select:hover,
+.dark-mode input[type="checkbox"]:hover,
+.dark-mode input[type="range"]:hover {
+  border-color: #0073b1;
+}
+
 .dark-mode .btn-danger {
   background-color: #b02a37;
+}
+
+.dark-mode .btn-danger:hover {
+  background-color: #92222d;
 }
 </style>
