@@ -216,19 +216,19 @@
           </div>
       
           <!-- Pagination Controls -->
-          <div class="pagination-controls" v-if="paginatedItems.length != 0">
-            <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
-              Previous
-            </button>
-            <span class="current-page-num">Page {{ currentPage }}</span>
-            <button
-              class="btn btn-secondary"
-              @click="nextPage"
-              :disabled="currentPage * itemsPerPage >= filteredJobs.length"
-            >
-              Next
-            </button>
-          </div>
+            <div class="pagination-controls" v-if="paginatedItems.length != 0">
+              <button class="btn btn-secondary" @click="prevPage" :disabled="currentPage === 1">
+                Previous
+              </button>
+              <span class="current-page-num">Page {{ currentPage }}</span>
+              <button
+                class="btn btn-secondary"
+                @click="nextPage"
+                :disabled="currentPage * itemsPerPage >= filteredJobs.length"
+              >
+                Next
+              </button>
+            </div>
           </div>
         <!-- <div v-else>
           <h2>Please be patient! Loading Jobs</h2>
@@ -614,14 +614,13 @@ watch(
 }
 .jobs-section {
   padding: 1rem;
-  height: 890vh;
-  /* overflow: auto; */
+  height: 100vh;
+  overflow: scroll;
+  
 }
-
 .no-jobs-block {
   height:100vh;
 }
-
 .no-jobs-text{
   font-size: 2rem;
   font-weight: 500;
@@ -635,6 +634,7 @@ watch(
   gap: 10px;
   margin-top: 20px;
   padding: 20px;
+  margin-bottom: 50px;
 }
 
 .current-page-num{
