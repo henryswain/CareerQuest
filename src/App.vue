@@ -758,12 +758,17 @@ onMounted(async () => {
 .footer-links a {
   color: #666;
   text-decoration: none;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
+  font-size: 1rem;
+  font-weight: 500;
   font-size: 0.9rem;  /* Slightly smaller font size */
-  transition: color 0.2s ease;
+  transition: background-color .15s ease-in-out;
+  border-radius: 50px;
 }
 
 .footer-links a:hover {
   color: #0073b1;
+  background: rgba(0, 115, 177, 0.1);
 }
 
 .copyright {
