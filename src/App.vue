@@ -40,15 +40,14 @@
       <button class="searchbutton btn btn-primary" type="submit">Search</button>
     </form>
 
-<!-- Sign in/display user email-->
+    <!-- Sign in/display user email-->
     <div class="d-flex align-items-center me-3">
       <button
         v-if="!currentUserEmail"
         id="desktop-auth-state"
         type="button"
         class="auth-button"
-        data-bs-toggle="modal"
-        data-bs-target="#authenticationModal"
+        @click="goToAuthPage"
       >
         Sign in
       </button>
@@ -57,7 +56,7 @@
       </span>
     </div>
 
-<!-- Dropdown -->
+    <!-- Dropdown -->
     <div class="dropdown">
       <button
         class="btn btn-secondary dropdown-toggle d-flex align-items-center justify-content-center"
@@ -118,8 +117,8 @@
 </nav>
 
 
-    <!-- Mobile navbar -->
-        <!-- New navbar for mobile. Is not white and adopts new logo-->
+      <!-- Mobile navbar -->
+      <!-- New navbar for mobile. Is not white and adopts new logo-->
       <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
       <div class="container-fluid">
         <router-link class="navbar_logo_container" to="/home-page">
@@ -185,30 +184,8 @@
       </div>
     </nav>
 
-      <!-- authentication modal -->
-  <div class="modal fade" id="authenticationModal" tabindex="-1" aria-labelledby="authenticationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <authenticator style="margin-left: auto; margin-right: auto; display: block;">
-            <template v-slot="{ user, signOut }">
-              <h1>Hello {{ user.username }}!</h1>
-              <button class="btn btn-primary" @click="signOut">Sign Out</button>
-            </template>
-          </authenticator>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="close-modal" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Premium Modal -->
-<div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+  <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -276,7 +253,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Dropdown } from 'bootstrap';
 
 
-
 // Function to replace env variable placeholders
 const resolveConfig = (config) => {
   const replacer = (_, value) => {
@@ -320,6 +296,11 @@ Hub.listen('auth', async ({ payload }) => {
       break;
   }
 });
+
+function goToAuthPage() {
+  router.push({ path: '/auth' });
+}
+
 
 function toggleDropdown() {
   const dropdownElement = document.getElementById('dropdownMenuButton');

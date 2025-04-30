@@ -3,13 +3,12 @@ import HomePage from './pages/HomePage.vue';
 import FindJobs from './pages/FindJobs.vue'; 
 import ProfilePage from './pages/ProfilePage.vue';
 import SavedJobs from './pages/SavedJobs.vue';
-import LoginPage from './pages/Login.vue';
-import RegisterPage from './pages/Register.vue';
 import Settings from './pages/Settings.vue';
 import AboutPage from './pages/About.vue';
 import ContactPage from './pages/Contact.vue';
 import PrivacyPage from './pages/Privacy.vue';
-import TermsPage from './pages/Terms.vue'
+import TermsPage from './pages/Terms.vue';
+import AuthPage from './pages/Auth.vue';
 
 // eventually will add imports like a PostJob that link to './pages.Postjob.vue'
 // Will also add one for companies and career advice. But we will talk more about that 
@@ -41,16 +40,6 @@ const routes = [
     component: SavedJobs,
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: LoginPage,
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: RegisterPage,
-  },
-  {
     path: '/settings',
     name: 'Settings',
     component: Settings,
@@ -74,6 +63,11 @@ const routes = [
     path: '/terms',
     name: 'Terms',
     component: TermsPage,
+  },
+  {
+    path: '/auth',
+    name: 'Auth',
+    component: AuthPage,
   }
   // we can add our future routes here for the post job and comapnies
 ];
