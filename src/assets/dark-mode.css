@@ -1,0 +1,956 @@
+:root {
+  /* Main colors */
+  --dark-bg: #121212;
+  --dark-surface: #1e1e1e;
+  --dark-surface-2: #2d2d2d;
+  --dark-text-primary: #ffffff;
+  --dark-text-secondary: #b3b3b3;
+  --dark-accent: #bb86fc;
+  --dark-error: #cf6679;
+
+  /* Additional colors */
+  --dark-border: #333333;
+  --dark-hover: #3d3d3d;
+  --dark-active: #4d4d4d;
+  --dark-button: #2196f3;      /* Default blue */
+  --dark-button-hover: #1976d2; /* Darker blue for hover */
+}
+
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--dark-text-primary);
+}
+
+/* Text elements */
+.dark-mode h1, 
+.dark-mode h2, 
+.dark-mode h3, 
+.dark-mode h4, 
+.dark-mode h5, 
+.dark-mode h6 {
+  color: var(--dark-text-primary);
+}
+
+.dark-mode p, 
+.dark-mode span, 
+.dark-mode li {
+  color: var(--dark-text-secondary);
+}
+
+/* Links */
+.dark-mode a {
+  color: var(--dark-accent);
+}
+
+.dark-mode a:hover {
+  color: var(--dark-text-primary);
+}
+
+/* Cards and containers */
+.dark-mode .card,
+.dark-mode .container {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+}
+
+/* Form elements */
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select {
+  background-color: var(--dark-surface-2);
+  border: 1px solid var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+.dark-mode input:focus,
+.dark-mode textarea:focus,
+.dark-mode select:focus {
+  border-color: var(--dark-accent);
+  outline: none;
+}
+
+/* Remove all previous button style sections and replace with this organized version */
+
+/* Default button styles */
+.dark-mode button,
+.dark-mode .btn {
+  background-color: var(--dark-surface-2);
+  color: var(--dark-text-primary);
+  border: 1px solid var(--dark-border);
+}
+
+/* Account and Nav button styles - these must come first */
+.dark-mode .account-btn,
+.dark-mode .nav-btn,
+.dark-mode .account-btn.btn-primary,
+.dark-mode .nav-btn.btn-primary {
+  background-color: var(--dark-surface-2) !important;
+  color: var(--dark-text-primary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+.dark-mode .account-btn:hover,
+.dark-mode .nav-btn:hover,
+.dark-mode .account-btn.btn-primary:hover,
+.dark-mode .nav-btn.btn-primary:hover {
+  background-color: var(--dark-hover) !important;
+  border-color: var(--dark-border) !important;
+}
+
+/* Action button styles (Learn More, Submit, etc.) */
+.dark-mode .btn-primary:not(.account-btn):not(.nav-btn),
+.dark-mode .btn-secondary:not(.account-btn):not(.nav-btn),
+.dark-mode .learn-more-btn {
+  background-color: #2196f3 !important;
+  color: #ffffff !important;
+  border-color: #2196f3 !important;
+}
+
+.dark-mode .btn-primary:not(.account-btn):not(.nav-btn):hover,
+.dark-mode .btn-secondary:not(.account-btn):not(.nav-btn):hover,
+.dark-mode .learn-more-btn:hover {
+  background-color: #1976d2 !important;
+  border-color: #1976d2 !important;
+}
+
+/* Override any other button styles */
+.dark-mode .btn-primary:not(.account-btn):not(.nav-btn) {
+  background-color: #2196f3 !important;
+  color: #ffffff !important;
+  border-color: #2196f3 !important;
+}
+
+.dark-mode .btn-primary:not(.account-btn):not(.nav-btn):hover {
+  background-color: #1976d2 !important;
+  border-color: #1976d2 !important;
+}
+
+/* Tables */
+.dark-mode table {
+  border-color: var(--dark-border);
+}
+
+.dark-mode th,
+.dark-mode td {
+  border-color: var (--dark-border);
+}
+
+.dark-mode tr:nth-child(even) {
+  background-color: var(--dark-surface);
+}
+
+/* Navigation */
+.dark-mode nav {
+  background-color: var(--dark-surface);
+  border-bottom: 1px solid var(--dark-border);
+}
+
+/* Error messages */
+.dark-mode .error {
+  color: var(--dark-error);
+}
+
+/* Scrollbar */
+.dark-mode ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: var(--dark-surface);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--dark-border);
+  border-radius: 5px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-hover);
+}
+
+.dark-mode .contact-page {
+  background-color: var(--dark-bg);
+}
+
+.dark-mode .contact-container {
+  background-color: var(--dark-surface);
+  border-color: var(--dark-border);
+}
+
+.dark-mode .contact-container h1,
+.dark-mode .contact-info h2,
+.dark-mode .contact-form h2 {
+  color: var(--dark-text-primary);
+}
+
+.dark-mode .contact-info p,
+.dark-mode .form-group label {
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group textarea {
+  background-color: var(--dark-surface-2);
+  border-color: var(--dark-border);
+  color: var (--dark-text-primary);
+}
+
+.dark-mode .form-group input:focus,
+.dark-mode .form-group textarea:focus {
+  border-color: var(--dark-accent);
+}
+
+.dark-mode .submit-button {
+  background-color: var(--dark-button);
+  color: var(--dark-text-primary);
+  border: none;
+}
+
+.dark-mode .submit-button:hover {
+  background-color: var(--dark-button-hover);
+}
+
+.dark-mode .footer {
+  background-color: var(--dark-surface);
+  border-top: 1px solid var(--dark-border);
+}
+
+.dark-mode .footer-links a {
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .footer-links a:hover {
+  color: var(--dark-accent);
+  background: rgba(187, 134, 252, 0.1);
+}
+
+/* About page dark mode styles */
+.dark-mode .about-page {
+  background-color: var(--dark-bg);
+}
+
+.dark-mode .about-container {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .about-container h1 {
+  color: var(--dark-text-primary);
+}
+
+.dark-mode .about-container p {
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .about-container p strong {
+  color: var(--dark-accent);
+}
+
+/* FindJobs page dark mode styles */
+.dark-mode .find-jobs-page {
+  background-color: var(--dark-bg);
+}
+
+.dark-mode .filter-section {
+  background-color: var(--dark-surface);
+  border-right: 1px solid var(--dark-border);
+}
+
+.dark-mode .card {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+}
+
+.dark-mode .filter-card {
+  background-color: var(--dark-surface-2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .filter-group h6 {
+  color: var(--dark-text-primary);
+}
+
+/* Filter box styles for dark mode */
+.dark-mode .filter-box {
+  background-color: var(--dark-surface-2);
+  border: 1px solid var(--dark-border);
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .filter-box:hover {
+  background-color: #2196f3;  /* Material Blue */
+  color: #ffffff;
+  border-color: #2196f3;
+}
+
+.dark-mode .filter-box.active {
+  background-color: #2196f3 !important;  /* Material Blue */
+  color: #ffffff !important;
+  border-color: #2196f3 !important;
+}
+
+.dark-mode .filter-box.active:hover {
+  background-color: #1976d2 !important;  /* Darker Blue */
+  border-color: #1976d2 !important;
+}
+
+.dark-mode .filter-box {
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .filter-box:hover {
+  background-color: var(--dark-hover);
+}
+
+.dark-mode .filter-box.active {
+  background-color: var(--dark-button);
+  color: var(--dark-text-primary);
+  border-color: var(--dark-button);
+}
+
+.dark-mode .filter-box.active:hover {
+  background-color: var(--dark-button-hover);
+}
+
+.dark-mode .jobs-section .card {
+  background-color: var(--dark-surface);
+}
+
+.dark-mode .card-header {
+  background-color: var(--dark-surface-2);
+  color: var(--dark-text-primary);
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.dark-mode .card-body {
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .modal-content {
+  background-color: var(--dark-surface);
+  color: var(--dark-text-primary);
+}
+
+.dark-mode .modal-header {
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.dark-mode .modal-footer {
+  border-top: 1px solid var(--dark-border);
+}
+
+.dark-mode .btn-secondary {
+  background-color: var(--dark-surface-2);
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+.dark-mode .btn-primary {
+  background-color: var(--dark-button);
+  border-color: var(--dark-border);
+  color: var(--dark-text-primary);
+}
+
+.dark-mode .btn-primary:hover {
+  background-color: var(--dark-button-hover);
+}
+
+/* Auth page dark mode styles */
+.dark-mode .authentication-page {
+  background-color: var(--dark-bg) !important;
+  min-height: 100vh;
+}
+
+/* AWS Amplify UI dark mode overrides */
+.dark-mode .amplify-authenticator {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text-primary) !important;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .amplify-authenticator-container {
+  background-color: var(--dark-bg) !important;
+}
+
+/* Override any white backgrounds from Amplify UI */
+.dark-mode [data-amplify-authenticator] {
+  background-color: var(--dark-bg) !important;
+}
+
+.dark-mode .amplify-authenticator-main {
+  background-color: var(--dark-surface) !important;
+}
+
+/* AWS Amplify UI dark mode overrides - expanded */
+.dark-mode .amplify-button[data-variation='primary'] {
+  background-color: var(--dark-button) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .amplify-button[data-variation='primary']:hover {
+  background-color: var(--dark-button-hover) !important;
+}
+
+.dark-mode .amplify-tabs {
+  background-color: var(--dark-surface) !important;
+}
+
+.dark-mode .amplify-tabs-item {
+  color: var(--dark-text-secondary) !important;
+}
+
+.dark-mode .amplify-tabs-item[data-state='active'] {
+  color: var(--dark-button) !important;
+  border-color: var(--dark-button) !important;
+}
+
+.dark-mode .amplify-field__show-password {
+  color: var(--dark-text-secondary) !important;
+}
+
+.dark-mode .amplify-field-group input {
+  background-color: var(--dark-surface-2) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .amplify-field-group input:focus {
+  border-color: var(--dark-button) !important;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3) !important;
+}
+
+.dark-mode .amplify-label {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .amplify-text {
+  color: var(--dark-text-secondary) !important;
+}
+
+.dark-mode .amplify-divider {
+  border-color: var(--dark-border) !important;
+}
+
+.dark-mode .amplify-divider-label {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text-secondary) !important;
+}
+
+/* Override all possible white backgrounds */
+.dark-mode [data-amplify-authenticator] * {
+  background-color: transparent;
+}
+
+.dark-mode [data-amplify-container] {
+  background-color: var(--dark-surface) !important;
+}
+
+.dark-mode [data-amplify-form] {
+  background-color: var(--dark-surface) !important;
+}
+
+/* AWS Amplify UI dark mode overrides - expanded */
+.dark-mode .amplify-tabs {
+  background-color: var(--dark-surface) !important;
+  border-color: var(--dark-border) !important;
+}
+
+.dark-mode .amplify-tabs-item {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text-secondary) !important;
+}
+
+.dark-mode .amplify-tabs-item[data-state='active'] {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-button) !important;
+  border-color: var(--dark-button) !important;
+}
+
+.dark-mode .amplify-button {
+  background-color: var(--dark-button) !important;
+  color: #ffffff !important;
+  border-color: var(--dark-button) !important;
+}
+
+.dark-mode .amplify-button:hover {
+  background-color: var(--dark-button-hover) !important;
+  border-color: var(--dark-button-hover) !important;
+}
+
+.dark-mode .amplify-button--link {
+  background-color: transparent !important;
+  color: var(--dark-button) !important;
+}
+
+.dark-mode .amplify-button--link:hover {
+  color: var(--dark-button-hover) !important;
+}
+
+.dark-mode .amplify-field {
+  background-color: var(--dark-surface) !important;
+}
+
+/* Additional AWS Amplify UI overrides for complete dark mode */
+.dark-mode [data-amplify-router] {
+  background-color: var(--dark-bg) !important;
+}
+
+.dark-mode [data-amplify-footer] {
+  background-color: var(--dark-surface) !important;
+}
+
+.dark-mode [data-amplify-header] {
+  background-color: var(--dark-surface) !important;
+}
+
+.dark-mode .amplify-flex {
+  background-color: var(--dark-surface) !important;
+}
+
+.dark-mode .amplify-heading {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .amplify-card {
+  background-color: var(--dark-surface) !important;
+  border-color: var(--dark-border) !important;
+}
+
+/* Override any remaining white sections */
+.dark-mode [class*="amplify-"] {
+  background-color: var(--dark-surface) !important;
+}
+
+.dark-mode [class*="amplify-"]::before,
+.dark-mode [class*="amplify-"]::after {
+  background-color: var(--dark-surface) !important;
+}
+
+/* Settings page dark mode styles */
+.dark-mode .settings-page {
+  background-color: var(--dark-bg) !important;
+}
+
+.dark-mode .settings-container {
+  background-color: var(--dark-surface) !important;
+  border: 1px solid var(--dark-border);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Add these new styles for individual settings sections */
+.dark-mode .settings-section {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1.5rem;
+}
+
+.dark-mode .settings-section:last-child {
+  margin-bottom: 0;
+}
+
+.dark-mode .settings-section h2 {
+  color: var(--dark-text-primary);
+}
+
+.dark-mode .settings-section p,
+.dark-mode .settings-section span {
+  color: var(--dark-text-secondary);
+}
+
+.dark-mode .form-control {
+  background-color: var(--dark-surface) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .form-control:focus {
+  border-color: var(--dark-button) !important;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3) !important;
+}
+
+/* Settings page text colors */
+.dark-mode .settings-section h2,
+.dark-mode .settings-section h3,
+.dark-mode .settings-section label,
+.dark-mode .settings-section .setting-title {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .settings-section p,
+.dark-mode .settings-section .setting-description,
+.dark-mode .settings-section .setting-option {
+  color: var(--dark-text-secondary) !important;
+}
+
+.dark-mode .settings-section select,
+.dark-mode .settings-section input {
+  color: var(--dark-text-primary) !important;
+}
+
+/* Settings page title */
+.dark-mode .settings-container h1 {
+  color: var(--dark-text-primary) !important;
+}
+
+/* If the title uses a different class, you can also add: */
+.dark-mode .settings-title {
+  color: var(--dark-text-primary) !important;
+}
+
+/* More specific selectors for settings page title */
+.dark-mode .settings-page h1,
+.dark-mode .settings-container h1,
+.dark-mode h1.settings-title,
+.dark-mode .settings-header h1 {
+  color: var(--dark-text-primary) !important;
+  margin-bottom: 2rem;
+}
+
+/* Ensure all settings text is visible */
+.dark-mode .settings-page,
+.dark-mode .settings-container {
+  color: var(--dark-text-primary) !important;
+}
+
+/* Profile page dark mode styles */
+.dark-mode .profile-page {
+  background-color: var(--dark-bg) !important;
+}
+
+.dark-mode .profile-container {
+  background-color: var(--dark-surface) !important;
+  border: 1px solid var(--dark-border);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .profile-section {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.dark-mode .profile-header {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .profile-info h2,
+.dark-mode .profile-info h3 {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .profile-info p,
+.dark-mode .profile-details span {
+  color: var(--dark-text-secondary) !important;
+}
+
+.dark-mode .profile-section label {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .profile-section input,
+.dark-mode .profile-section textarea {
+  background-color: var(--dark-surface) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .profile-section input:focus,
+.dark-mode .profile-section textarea:focus {
+  border-color: var(--dark-button) !important;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3) !important;
+}
+
+/* Profile page dark mode styles - more specific selectors */
+.dark-mode .profile-page {
+  background-color: var(--dark-bg) !important;
+  min-height: 100vh;
+}
+
+.dark-mode .profile-page .container {
+  background-color: var(--dark-bg) !important;
+}
+
+.dark-mode .profile-page .card {
+  background-color: var(--dark-surface) !important;
+  border: 1px solid var(--dark-border) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .profile-page .card-body {
+  background-color: var(--dark-surface-2) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .profile-page .card-header {
+  background-color: var(--dark-surface-2) !important;
+  border-bottom: 1px solid var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .profile-page .list-group-item {
+  background-color: var(--dark-surface-2) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-secondary) !important;
+}
+
+/* Make sure all text is visible */
+.dark-mode .profile-page h1,
+.dark-mode .profile-page h2,
+.dark-mode .profile-page h3,
+.dark-mode .profile-page h4,
+.dark-mode .profile-page h5,
+.dark-mode .profile-page h6 {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .profile-page p,
+.dark-mode .profile-page span,
+.dark-mode .profile-page label {
+  color: var(--dark-text-secondary) !important;
+}
+
+/* Profile sections dark mode styles */
+.dark-mode .profile-section,
+.dark-mode .education-section,
+.dark-mode .experience-section,
+.dark-mode .skills-section {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+/* Individual container styles */
+.dark-mode .profile-info,
+.dark-mode .education-info,
+.dark-mode .experience-info,
+.dark-mode .skills-info {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border) !important;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Override Bootstrap card styles */
+.dark-mode .card.profile-card,
+.dark-mode .card.education-card,
+.dark-mode .card.experience-card,
+.dark-mode .card.skills-card {
+  background-color: var(--dark-surface-2) !important;
+  border-color: var(--dark-border) !important;
+}
+
+.dark-mode .card-body {
+  background-color: var(--dark-surface-2) !important;
+}
+
+/* Profile page specific overrides */
+.dark-mode .card[class*="profile"],
+.dark-mode .card[class*="education"],
+.dark-mode .card[class*="experience"],
+.dark-mode .card[class*="skills"] {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+/* Target Bootstrap card components */
+.dark-mode .card-header {
+  background-color: var(--dark-surface-2) !important;
+  border-bottom: 1px solid var(--dark-border) !important;
+}
+
+.dark-mode .card .card-body {
+  background-color: var(--dark-surface-2) !important;
+}
+
+.dark-mode .card .list-group-item {
+  background-color: var(--dark-surface-2) !important;
+  border-color: var(--dark-border) !important;
+}
+
+/* Force dark background on all card components */
+.dark-mode .card * {
+  background-color: var(--dark-surface-2) !important;
+}
+
+/* Profile page container overrides */
+.dark-mode .container .profile-container,
+.dark-mode .container .education-container,
+.dark-mode .container .experience-container,
+.dark-mode .container .skills-container {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Override any nested elements */
+.dark-mode .container [class*="container"] > * {
+  background-color: var(--dark-surface-2) !important;
+}
+
+/* Card specific overrides */
+.dark-mode .profile-card,
+.dark-mode .education-card,
+.dark-mode .experience-card,
+.dark-mode .skills-card {
+  background-color: var(--dark-surface-2) !important;
+  border-color: var(--dark-border) !important;
+}
+
+/* Content areas */
+.dark-mode .profile-content,
+.dark-mode .education-content,
+.dark-mode .experience-content,
+.dark-mode .skills-content {
+  background-color: var(--dark-surface-2) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+/* Target all possible profile containers and cards */
+.dark-mode .profile-page .container > div,
+.dark-mode .profile-page .row > div > div,
+.dark-mode .profile-page .col > div,
+.dark-mode .profile-info-container,
+.dark-mode .education-info-container,
+.dark-mode .experience-info-container,
+.dark-mode .skills-info-container {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border) !important;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Target inner content */
+.dark-mode .profile-page .container > div *,
+.dark-mode .profile-info-container *,
+.dark-mode .education-info-container *,
+.dark-mode .experience-info-container *,
+.dark-mode .skills-info-container * {
+  background-color: var(--dark-surface-2) !important;
+}
+
+/* Override Bootstrap specific containers */
+.dark-mode .profile-page .container-fluid,
+.dark-mode .profile-page .container {
+  background-color: var(--dark-bg) !important;
+}
+
+/* Target any remaining white backgrounds */
+.dark-mode [class*="-container"],
+.dark-mode [class*="-section"] {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+/* Profile page containers dark mode styles */
+.dark-mode .profile,
+.dark-mode .education,
+.dark-mode .experience,
+.dark-mode .skills {
+  background-color: var(--dark-surface-2) !important;
+  border: 1px solid var(--dark-border) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Profile items dark mode */
+.dark-mode .education-item,
+.dark-mode .experience-item {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .education-item h3,
+.dark-mode .experience-item h3 {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .education-item p,
+.dark-mode .experience-item p {
+  color: var(--dark-text-secondary) !important;
+}
+
+/* Skills tags dark mode */
+.dark-mode .skill-tag {
+  background-color: var(--dark-surface) !important;
+  color: var (--dark-button) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+.dark-mode .remove-tag {
+  color: var(--dark-button) !important;
+}
+
+.dark-mode .remove-tag:hover {
+  color: var(--dark-button-hover) !important;
+}
+
+/* Section titles */
+.dark-mode .education-title,
+.dark-mode .experience-title,
+.dark-mode .skills-title,
+.dark-mode .full-name {
+  color: var(--dark-text-primary) !important;
+}
+
+.dark-mode .username {
+  color: var(--dark-text-secondary) !important;
+}
+
+/* Profile action buttons dark mode styles */
+.dark-mode .add-education-btn,
+.dark-mode .add-experience-btn,
+.dark-mode .add-skills-btn,
+.dark-mode .change-profile-btn,
+.dark-mode .profile-page .btn-primary,
+.dark-mode button.btn-primary {
+  background-color: #2196f3 !important; /* Material Blue */
+  color: #ffffff !important;
+  border-color: #2196f3 !important;
+}
+
+.dark-mode .add-education-btn:hover,
+.dark-mode .add-experience-btn:hover,
+.dark-mode .add-skills-btn:hover,
+.dark-mode .change-profile-btn:hover,
+.dark-mode .profile-page .btn-primary:hover,
+.dark-mode button.btn-primary:hover {
+  background-color: #1976d2 !important; /* Darker Blue */
+  border-color: #1976d2 !important;
+}
+
+/* Profile action buttons - with high specificity */
+.dark-mode .profile-page .btn-primary,
+.dark-mode .profile-page button[class*="add-"],
+.dark-mode .profile-page .change-profile-btn,
+.dark-mode .profile .btn-primary,
+.dark-mode .education .btn-primary,
+.dark-mode .experience .btn-primary,
+.dark-mode .skills .btn-primary {
+  background-color: #2196f3 !important; /* Material Blue */
+  color: #ffffff !important;
+  border-color: #2196f3 !important;
+}
+
+.dark-mode .profile-page .btn-primary:hover,
+.dark-mode .profile-page button[class*="add-"]:hover,
+.dark-mode .profile-page .change-profile-btn:hover,
+.dark-mode .profile .btn-primary:hover,
+.dark-mode .education .btn-primary:hover,
+.dark-mode .experience .btn-primary:hover,
+.dark-mode .skills .btn-primary:hover {
+  background-color: #1976d2 !important; /* Darker Blue */
+  border-color: #1976d2 !important;
+}

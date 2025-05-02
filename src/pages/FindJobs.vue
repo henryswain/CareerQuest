@@ -599,7 +599,9 @@ watch(
 <style scoped>
 .find-jobs-page {
   padding: 0rem;
+  background-color: var(--light-bg);
 }
+
 .grid-container {
   display: grid;
   grid-template-columns: 250px 1fr;
@@ -607,25 +609,29 @@ watch(
   padding-left: 1rem;
   padding-right: 1rem;
 }
+
 .filter-section {
   padding: 1rem;
-  background-color: #f5f7fa;
-  border-right: 1px solid #ddd;
+  background-color: var(--light-surface);
+  border-right: 1px solid var(--light-border);
 }
+
 .jobs-section {
   padding: 1rem;
   height: 100vh;
   overflow: scroll;
-  
 }
+
 .no-jobs-block {
-  height:100vh;
+  height: 100vh;
 }
-.no-jobs-text{
+
+.no-jobs-text {
   font-size: 2rem;
   font-weight: 500;
   text-align: center;
   padding-top: 25vh;
+  color: var(--light-text-primary);
 }
 
 .pagination-controls {
@@ -637,63 +643,75 @@ watch(
   margin-bottom: 50px;
 }
 
-.current-page-num{
+.current-page-num {
   padding-top: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
+  color: var(--light-text-primary);
 }
+
 .card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--light-border);
   border-radius: 0.5rem;
+  background-color: var(--light-surface);
 }
+
 .filter-card {
   position: fixed;
   width: 200px;
-  background-color: #fff;
+  background-color: var(--light-surface);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
 .filter-group h6 {
   margin-bottom: 0.5rem;
-  color: #343a40;
+  color: var(--light-text-primary);
 }
+
 .filter-options {
   justify-content: center;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
 .filter-box {
-  border: 1px solid #ccc;
+  border: 1px solid var(--light-border);
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: var(--light-surface);
+  color: var(--light-text-primary);
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
-.filter-box:hover {
-  background-color: #e9ecef;
-}
+
 .filter-box.active {
-  background-color: #007bff;
-  color: #fff;
-  border-color: #007bff;
+  background-color: #2196f3; /* Material blue */
+  color: #ffffff;
+  border-color: #2196f3;
 }
-@media (max-width: 768px) {
-  .grid-container {
-    grid-template-columns: 1fr;
-  }
+
+.filter-box:hover {
+  background-color: var(--light-hover);
 }
+
+.filter-box.active:hover {
+  background-color: #1976d2; /* Darker blue on hover */
+}
+
 .bookmark-icon {
   width: 24px;
   height: 24px;
 }
+
 .icon-button {
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
 }
+
 .icon-button:focus {
   outline: none;
   box-shadow: none;
@@ -702,15 +720,18 @@ watch(
 .modal {
   z-index: 2100 !important;
 }
+
 .modal-backdrop {
   z-index: 2050 !important;
 }
+
 .modal-dialog {
   margin-top: 80px;
 }
 
-/* Dark Mode */
-.dark-mode .filter-section{
-  background-color: #ec1b1b;
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

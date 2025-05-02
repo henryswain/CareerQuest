@@ -238,7 +238,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import '@/assets/dark-mode.css';
 import { Modal } from 'bootstrap';
 
 const previewImage = ref(null);
@@ -421,6 +422,89 @@ const saveSkills = () => {
 
 <style scoped>
 .profile-page {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+}
+
+.profile-header {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+
+.profile-cover {
+  height: 200px;
+  background-color: var(--dark-surface-2);
+}
+
+.profile-info {
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--dark-surface);
+}
+
+.profile-details h1 {
+  margin-bottom: 0.5rem;
+}
+
+.profile-location {
+  color: var(--dark-text-secondary);
+}
+
+.experience-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.experience-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  padding: 0.5rem 1rem;
+  background-color: var(--dark-surface-2);
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .profile-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+.profile-page {
   padding-top: 80px;
   padding-bottom: 80px;
   min-height: calc(100vh - 160px);
@@ -577,15 +661,6 @@ const saveSkills = () => {
   font-weight: 400;
 }
 
-/* Dark mode additions */
-.dark-mode .full-name {
-  color: #ffffff;
-}
-
-.dark-mode .username {
-  color: #aaa;
-}
-
 /* Modal Styles */
 .profile-edit-form {
   padding: 1rem;
@@ -639,22 +714,6 @@ const saveSkills = () => {
   font-size: 1rem;
 }
 
-/* Dark mode additions */
-.dark-mode .modal-content {
-  background-color: #333;
-  color: white;
-}
-
-.dark-mode .form-control {
-  background-color: #444;
-  border-color: #555;
-  color: white;
-}
-
-.dark-mode .btn-close {
-  filter: invert(1) grayscale(100%) brightness(200%);
-}
-
 /* Modal Button Styles */
 .btn-modal {
   padding: 0.75rem 1.5rem;
@@ -689,15 +748,6 @@ const saveSkills = () => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark mode additions */
-.dark-mode .btn-modal-secondary {
-  background-color: #444;
-  color: #fff;
-}
-
-.dark-mode .btn-modal-secondary:hover {
-  background-color: #555;
-}
 .education {
   display: flex;
   background: rgba(255, 255, 255, 0.95);
@@ -742,18 +792,6 @@ const saveSkills = () => {
   background-color: #005582;
 }
 
-/* Dark mode additions */
-.dark-mode .education {
-  background: #333;
-}
-
-.dark-mode .education-title {
-  color: #ffffff;
-}
-
-.dark-mode .education__icon {
-  background: #444;
-}
 .education-list {
   margin-top: 20px;
 }
@@ -793,15 +831,6 @@ const saveSkills = () => {
   background-color: #c82333;
 }
 
-/* Dark mode additions */
-.dark-mode .btn-modal-secondary {
-  background-color: #444;
-  color: #fff;
-}
-
-.dark-mode .btn-modal-secondary:hover {
-  background-color: #555;
-}
 .experience {
   display: flex;
   background: rgba(255, 255, 255, 0.95);
@@ -867,28 +896,6 @@ const saveSkills = () => {
 .experience-item p {
   margin: 5px 0;
   color: #666;
-}
-
-/* Dark mode additions */
-.dark-mode .experience {
-  background: #333;
-}
-
-.dark-mode .experience-title {
-  color: #ffffff;
-}
-
-.dark-mode .experience-item {
-  background: #444;
-  color: #fff;
-}
-
-.dark-mode .experience-item h3 {
-  color: #fff;
-}
-
-.dark-mode .experience-item p {
-  color: #aaa;
 }
 
 .skills {
@@ -973,28 +980,6 @@ const saveSkills = () => {
 
 .remove-tag:hover {
   color: #005582;
-}
-
-/* Dark mode additions */
-.dark-mode .skills {
-  background: #333;
-}
-
-.dark-mode .skills-title {
-  color: #ffffff;
-}
-
-.dark-mode .skill-tag {
-  background-color: #444;
-  color: #fff;
-}
-
-.dark-mode .remove-tag {
-  color: #fff;
-}
-
-.dark-mode .remove-tag:hover {
-  color: #ddd;
 }
 
 /* Container adjustments for page height */

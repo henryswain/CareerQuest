@@ -678,6 +678,24 @@ onMounted(async () => {
 .dark-mode .btn-link {
   color: #ffffff !important;
 }
+
+/* Add this to your dark mode overrides section */
+.dark-mode .btn-secondary.dropdown-toggle {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  border-color: #555555 !important;
+}
+
+.dark-mode .btn-secondary.dropdown-toggle:hover {
+  background-color: #444444 !important;
+  border-color: #666666 !important;
+}
+
+.dark-mode .btn-secondary.dropdown-toggle:active,
+.dark-mode .btn-secondary.dropdown-toggle.show {
+  background-color: #444444 !important;
+  border-color: #666666 !important;
+}
 </style>
 
 

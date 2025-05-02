@@ -25,75 +25,97 @@
         <!-- ... Additional sections ... -->
       </div>
     </div>
-
-    <!-- <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <p class="copyright">&copy; 2025 CareerQuest, Inc</p>
-        </div>
-    
-        <div class="footer-section">
-          <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
-        </div>
-    
-        <div class="footer-section">
-          <ul class="footer-links">
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/privacy">Privacy</a></li>
-            <li><a href="/terms">Terms</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer> -->
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted, defineProps, watch, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import '@/assets/dark-mode.css';
+import '@/assets/light-mode.css';
+
+// Ensure dark mode styles are applied on component mount
+onMounted(() => {
+  // Check if dark mode is enabled in localStorage
+  const userSettings = localStorage.getItem('userSettings');
+  if (userSettings) {
+    const settings = JSON.parse(userSettings);
+    if (settings.darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.add('light-mode');
+    }
+  }
+});
+</script>
 
 <style scoped>
 .privacy-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url("@/assets/bg_lightmode.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
   padding-top: 50px;
+  /* Use theme variables for background */
+  background-color: var(--light-bg);
+}
+
+.dark-mode .privacy-page {
+  background-color: var(--dark-bg);
 }
 
 .privacy-container {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+}
+
+.privacy-container .card {
+  padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+}
+
+.dark-mode .privacy-container .card {
+  background-color: var(--dark-surface);
+  border-color: var(--dark-border);
 }
 
 .privacy-container h1 {
-  color: #1a1a1a;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   font-weight: 700;
+  color: var(--light-text-primary);
+}
+
+.dark-mode .privacy-container h1 {
+  color: var(--dark-text-primary);
 }
 
 .privacy-container h2 {
-  color: #1a1a1a;
   margin: 2rem 0 1rem;
   font-size: 1.8rem;
   font-weight: 600;
+  color: var(--light-text-primary);
+}
+
+.dark-mode .privacy-container h2 {
+  color: var(--dark-text-primary);
 }
 
 .privacy-content p {
-  color: #444;
   line-height: 1.8;
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
+  color: var(--light-text-secondary);
+}
+
+.dark-mode .privacy-content p {
+  color: var(--dark-text-secondary);
 }
 
 .privacy-content ul {
-  color: #444;
   margin-bottom: 1.5rem;
   padding-left: 2rem;
 }
@@ -101,42 +123,11 @@
 .privacy-content li {
   margin-bottom: 0.5rem;
   line-height: 1.6;
+  color: var(--light-text-secondary);
 }
 
-/* Footer styles */
-.footer {
-  margin-top: auto;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(157, 179, 221, 0.5);
-  padding: 2rem 0;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* ... rest of footer styles ... */
-</style>
-
-<style>
-/* Dark mode styles */
-.dark-mode .privacy-page {
-  background-image: url("@/assets/bg_darkmode.png");
-}
-
-.dark-mode .privacy-container {
-  background: rgba(51, 51, 51, 0.95);
-}
-
-.dark-mode .privacy-container h1,
-.dark-mode .privacy-container h2 {
-  color: #ffffff;
-}
-
-.dark-mode .privacy-content p,
-.dark-mode .privacy-content ul,
 .dark-mode .privacy-content li {
-  color: #e0e0e0;
+  color: var(--dark-text-secondary);
 }
 
-/* ... rest of dark mode styles ... */
 </style>

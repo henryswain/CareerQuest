@@ -1,0 +1,131 @@
+:root {
+  /* Main colors */
+  --light-bg: #ffffff;
+  --light-surface: #f5f5f5;
+  --light-surface-2: #e0e0e0;
+  --light-text-primary: #212121;
+  --light-text-secondary: #757575;
+  --light-accent: #6200ee;
+  --light-error: #b00020;
+
+  /* Additional colors */
+  --light-border: #dddddd;
+  --light-hover: #eeeeee;
+  --light-active: #e1e1e1;
+}
+
+body.light-mode {
+  background-color: var(--light-bg);
+  color: var(--light-text-primary);
+}
+
+/* Text elements */
+.light-mode h1, 
+.light-mode h2, 
+.light-mode h3, 
+.light-mode h4, 
+.light-mode h5, 
+.light-mode h6 {
+  color: var(--light-text-primary);
+}
+
+.light-mode p, 
+.light-mode span, 
+.light-mode li {
+  color: var(--light-text-secondary);
+}
+
+/* Links */
+.light-mode a {
+  color: var(--light-accent);
+}
+
+.light-mode a:hover {
+  color: var(--light-text-primary);
+}
+
+/* Cards and containers */
+.light-mode .card,
+.light-mode .container {
+  background-color: var(--light-surface);
+  border: 1px solid var(--light-border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form elements */
+.light-mode input,
+.light-mode textarea,
+.light-mode select {
+  background-color: var(--light-bg);
+  border: 1px solid var(--light-border);
+  color: var(--light-text-primary);
+}
+
+.light-mode input:focus,
+.light-mode textarea:focus,
+.light-mode select:focus {
+  border-color: var(--light-accent);
+  outline: none;
+}
+
+/* Buttons */
+.light-mode button,
+.light-mode .btn {
+  background-color: var(--light-surface-2);
+  color: var(--light-text-primary);
+  border: 1px solid var(--light-border);
+}
+
+.light-mode button:hover,
+.light-mode .btn:hover {
+  background-color: var(--light-hover);
+}
+
+.light-mode button:active,
+.light-mode .btn:active {
+  background-color: var(--light-active);
+}
+
+/* Tables */
+.light-mode table {
+  border-color: var(--light-border);
+}
+
+.light-mode th,
+.light-mode td {
+  border-color: var(--light-border);
+}
+
+.light-mode tr:nth-child(even) {
+  background-color: var(--light-surface);
+}
+
+/* Navigation */
+.light-mode nav {
+  background-color: var(--light-bg);
+  border-bottom: 1px solid var(--light-border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Error messages */
+.light-mode .error {
+  color: var(--light-error);
+}
+
+/* Scrollbar */
+.light-mode ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.light-mode ::-webkit-scrollbar-track {
+  background: var(--light-surface);
+}
+
+.light-mode ::-webkit-scrollbar-thumb {
+  background: var(--light-border);
+  border-radius: 5px;
+}
+
+.light-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--light-hover);
+}

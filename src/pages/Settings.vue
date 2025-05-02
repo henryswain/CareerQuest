@@ -77,6 +77,8 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
+import '@/assets/dark-mode.css';  // Add this import
+import '@/assets/light-mode.css'; // Add this import for light mode
 
 // Define default settings
 const defaultSettings = {
@@ -107,12 +109,14 @@ watch(() => settings.value.language, (newLang) => {
    window.dispatchEvent(new CustomEvent('language-changed', { detail: newLang }));
 });
 
-// Apply dark mode by toggling a class on document body
+// Apply dark mode by toggling classes on document body
 const applyDarkMode = () => {
   if (settings.value.darkMode) {
+    document.body.classList.remove('light-mode');
     document.body.classList.add('dark-mode');
   } else {
     document.body.classList.remove('dark-mode');
+    document.body.classList.add('light-mode');
   }
 };
 
@@ -255,65 +259,4 @@ h2 {
 }
 </style>
 
-<style>
-.dark-mode {
-  background-color: #121212;
-  color: #ffffff;
-}
 
-.dark-mode .settings-page {
-  background: rgba(51, 51, 51, 0.95);
-  color: #ffffff;
-}
-
-.dark-mode .settings-section {
-  background: rgba(68, 68, 68, 0.8);
-  border-color: rgba(0, 115, 177, 0.3);
-}
-
-.dark-mode .settings-section:hover {
-  border-color: #0073b1;
-  box-shadow: 0 2px 4px rgba(0, 115, 177, 0.2);
-}
-
-.dark-mode .setting-group:hover {
-  background-color: rgba(0, 115, 177, 0.1);
-}
-
-.dark-mode label,
-.dark-mode select,
-.dark-mode input,
-.dark-mode button,
-.dark-mode span {
-  color: #ffffff;
-}
-
-.dark-mode h1 {
-  color: #ffffff;
-}
-
-.dark-mode h2 {
-  color: #0073b1;
-}
-
-.dark-mode select,
-.dark-mode input[type="checkbox"],
-.dark-mode input[type="range"] {
-  background-color: #333;
-  border-color: #444;
-}
-
-.dark-mode select:hover,
-.dark-mode input[type="checkbox"]:hover,
-.dark-mode input[type="range"]:hover {
-  border-color: #0073b1;
-}
-
-.dark-mode .btn-danger {
-  background-color: #b02a37;
-}
-
-.dark-mode .btn-danger:hover {
-  background-color: #92222d;
-}
-</style>

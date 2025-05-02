@@ -29,39 +29,34 @@
         <p>For student users, your CareerQuest student profile is your first impression for employers around the country. As a rule of thumb, keep your content and communications on CareerQuest professional. Specifically, you are not allowed to post any violent, nude, discriminatory, hateful, or sexually suggestive photos or other similar content via the Service.</p>
       </div>
     </div>
-
-    <!-- <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <p class="copyright">&copy; 2025 CareerQuest, Inc</p>
-        </div>
-
-        <div class="footer-section">
-          <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
-        </div>
-
-        <div class="footer-section">
-          <ul class="footer-links">
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/privacy">Privacy</a></li>
-            <li><a href="/terms">Terms</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer> -->
   </div>
 </template>
+
+<script setup>
+import { onMounted } from 'vue';
+import '@/assets/dark-mode.css';
+import '@/assets/light-mode.css';
+
+// Ensure dark mode styles are applied on component mount
+onMounted(() => {
+  // Check if dark mode is enabled in localStorage
+  const userSettings = localStorage.getItem('userSettings');
+  if (userSettings) {
+    const settings = JSON.parse(userSettings);
+    if (settings.darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.add('light-mode');
+    }
+  }
+});
+</script>
 
 <style scoped>
 .terms-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url("@/assets/bg_lightmode.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
   padding-top: 50px;
 }
 
@@ -69,35 +64,28 @@
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
   border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .terms-container h1 {
-  color: #1a1a1a;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   font-weight: 700;
 }
 
 .terms-container h2 {
-  color: #1a1a1a;
   margin: 2rem 0 1rem;
   font-size: 1.8rem;
   font-weight: 600;
 }
 
 .terms-content p {
-  color: #444;
   line-height: 1.8;
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
 }
 
 .terms-content ul {
-  color: #444;
   margin-bottom: 1.5rem;
   padding-left: 2rem;
 }
@@ -108,59 +96,20 @@
 }
 
 .alert-box {
-  background: rgba(0, 115, 177, 0.1);
-  border-left: 4px solid #0073b1;
   padding: 1.5rem;
   margin: 2rem 0;
   border-radius: 4px;
 }
 
 .alert-box p {
-  color: #0073b1;
   margin: 0;
   font-weight: 500;
 }
 
-.footer {
-  margin-top: auto;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(157, 179, 221, 0.5);
-  padding: 2rem 0;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+@media (max-width: 768px) {
+  .terms-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
 }
-
-</style>
-
-<style>
-/* Dark mode styles */
-.dark-mode .terms-page {
-  background-image: url("@/assets/bg_darkmode.png");
-}
-
-.dark-mode .terms-container {
-  background: rgba(51, 51, 51, 0.95);
-}
-
-.dark-mode .terms-container h1,
-.dark-mode .terms-container h2 {
-  color: #ffffff;
-}
-
-.dark-mode .terms-content p,
-.dark-mode .terms-content ul,
-.dark-mode .terms-content li {
-  color: #e0e0e0;
-}
-
-.dark-mode .alert-box {
-  background: rgba(77, 181, 255, 0.1);
-  border-left-color: #4db5ff;
-}
-
-.dark-mode .alert-box p {
-  color: #4db5ff;
-}
-
 </style>
