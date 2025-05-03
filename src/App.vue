@@ -76,6 +76,8 @@
       <ul v-if="!isMobile" class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
         <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
         <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+          <!-- ↓↓↓ This all doesn't work anymore since we've moved the log-in so I'm commenting it out for now ↓↓↓ -->
+        <!--
         <li><hr class="dropdown-divider" /></li>
         <li v-if="currentUserEmail">
           <button class="dropdown-item" @click="signOut">Sign Out</button>
@@ -91,6 +93,7 @@
             Sign In
           </button>
         </li>
+        -->
       </ul>
 
       <ul v-else class="dropdown-menu dropdown-menu-end">

@@ -37,11 +37,11 @@ body.light-mode {
 
 /* Links */
 .light-mode a {
-  color: var(--light-accent);
+  color: var(--light-text-primary);
 }
 
 .light-mode a:hover {
-  color: var(--light-text-primary);
+  color: var(--light-text-secondary);
 }
 
 /* Cards and containers */
