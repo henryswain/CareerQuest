@@ -265,14 +265,30 @@ const saveProfile = async () => {
     if (previewImage.value) {
       user.value.image = previewImage.value;
     }
-    // Here you would typically save the profile data to your backend
-    console.log('Saving profile:', user.value);
-    // Close modal after save
-    document.getElementById('profileModal').querySelector('[data-bs-dismiss="modal"]').click();
+
+    const { userId } = await getCurrentUser(); // Get ID
+
+    const encodedProfile = encodeURIComponent(JSON.stringify(user.value));
+
+    const url = `https://z2orizbc4b.execute-api.us-east-2.amazonaws.com/dev?crud_type=profile-create&user_id=${userId}&profile=${encodedProfile}`;
+
+    const response = await fetch(url);
+    const result = await response.json();
+    console.log('Profile saved:', result);
+
+    // Close after save
+    const modalElement = document.getElementById('profileModal');
+    if (modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
   } catch (error) {
     console.error('Error saving profile:', error);
   }
 };
+
 
 // User data with all necessary fields
 const userProfile = ref({
@@ -366,12 +382,10 @@ const deleteEducation = (index) => {
   user.value.education.splice(index, 1);
 };
 
-// Add this function in the script setup section
 const deleteExperience = (index) => {
   user.value.experience.splice(index, 1);
 };
 
-// Add to your user ref object
 const user = ref({
   image: '',
   banner: '',
@@ -391,7 +405,6 @@ const user = ref({
   profilePicture: ''
 });
 
-// Add these new refs and functions to your script section:
 const skillInput = ref('');
 const newSkills = ref([]);
 
