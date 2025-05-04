@@ -238,7 +238,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import '@/assets/dark-mode.css';
 import { Modal } from 'bootstrap';
 
@@ -418,6 +418,95 @@ const saveSkills = () => {
     }
   }
 };
+
+
+import { Hub } from 'aws-amplify/utils';
+const darkMode = ref(false);
+const fontSize = ref()// Apply dark mode 
+const currentLanguage = ref("en");
+const itemsPerPage = ref("25")
+
+const applyDarkMode = () => {
+  if (darkMode.value) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+};
+// Watch for changes to darkmode and apply accordingly
+watch(darkMode, applyDarkMode);
+import { getCurrentUser } from "aws-amplify/auth";
+
+
+
+const loadSettings = async () => {
+  console.log("loadSettings called")
+    const { userId } = await getCurrentUser();
+    console.log("userId: ", userId)
+    const response = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+      method: "POST",
+      body: JSON.stringify({id: userId})
+    })
+    const result = await response.json()
+    console.log("result: ", result)
+    if (result.body == '[{}]') {
+      console.log("result.body == '[{}]'")
+      const response2 = await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: userId,
+          reset_settings: true
+        })
+      })
+      const result2 = await response2.json()
+      console.log("result2: ", result2)
+      await nextTick()
+      const response3 = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+        method: "POST",
+        body: JSON.stringify({id: userId})
+      })
+      const result3 = await response3.json()
+      console.log("result3: ", result3)
+      console.log("result3.body: ", result3.body)
+      let body = result3.body
+      body = JSON.parse(body.slice(1, -1))
+      console.log("body: ", body, " typeof body", typeof body)
+      const resultAsJSON = body
+      currentLanguage.value = resultAsJSON.language
+      darkMode.value = resultAsJSON.dark_mode
+      fontSize.value = resultAsJSON.font_size
+      itemsPerPage.value = resultAsJSON.ipp
+    }
+    else {
+      console.log("result.body != '[{}]'")
+      const resultAsJSON = JSON.parse(result.body.slice(1, -1))
+      console.log("resultAsJSON: ", resultAsJSON)
+      currentLanguage.value = resultAsJSON.language
+      darkMode.value = resultAsJSON.dark_mode
+      itemsPerPage.value = resultAsJSON.ipp
+
+    }
+};
+
+
+Hub.listen('auth', ({ payload }) => {
+  switch (payload.event) {
+    case 'signedIn':
+      console.log('user have been signedIn successfully.');
+      loadSettings()
+      break;
+    case 'signedOut':
+      console.log('user have been signedOut successfully.');
+      currentLanguage.value = "en"
+      darkMode.value = false
+      itemsPerPage.value = 25
+      break;
+  }
+})
+
+onMounted(() => {
+  loadSettings()
+})
 </script>
 
 <style scoped>

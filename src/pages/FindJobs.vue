@@ -279,6 +279,22 @@ const route = useRoute();
 const query = computed(() => route.query.q || "");
 const router = useRouter();
 
+import { Hub } from 'aws-amplify/utils';
+
+Hub.listen('auth', ({ payload }) => {
+  switch (payload.event) {
+    case 'signedIn':
+      console.log('user have been signedIn successfully.');
+      loadSettings()
+      break;
+    case 'signedOut':
+      console.log('user have been signedOut successfully.');
+      currentLanguage.value = "en"
+      darkMode.value = false
+      itemsPerPage.value = 25
+      break;
+  }
+})
 
 // Create an instance.
 let controller = null
@@ -286,18 +302,62 @@ const loadingJobs = ref(null)
 const allJobs = ref([]);
 const filteredJobs = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = ref(JSON.parse(localStorage.getItem("userSettings"))?.itemsPerPage || 25);
+const itemsPerPage = ref("25")
+// const itemsPerPage = ref(JSON.parse(localStorage.getItem("userSettings"))?.itemsPerPage || 25);
 const savedJobs = ref([]);
 
 // Look at local storage settings and render in darkmode if necessary
 const darkMode = ref(false);
+const fontSize = ref()
 // loads user settings from localStorage
-const loadSettings = () => {
-  const savedSettings = localStorage.getItem('userSettings');
-  if (savedSettings) {
-    const settings = JSON.parse(savedSettings);
-    darkMode.value = settings.darkMode || false;
-  }
+
+const loadSettings = async () => {
+  console.log("loadSettings called")
+    const { userId } = await getCurrentUser();
+    console.log("userId: ", userId)
+    const response = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+      method: "POST",
+      body: JSON.stringify({id: userId})
+    })
+    const result = await response.json()
+    console.log("result: ", result)
+    if (result.body == '[{}]') {
+      console.log("result.body == '[{}]'")
+      const response2 = await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: userId,
+          reset_settings: true
+        })
+      })
+      const result2 = await response2.json()
+      console.log("result2: ", result2)
+      await nextTick()
+      const response3 = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+        method: "POST",
+        body: JSON.stringify({id: userId})
+      })
+      const result3 = await response3.json()
+      console.log("result3: ", result3)
+      console.log("result3.body: ", result3.body)
+      let body = result3.body
+      body = JSON.parse(body.slice(1, -1))
+      console.log("body: ", body, " typeof body", typeof body)
+      const resultAsJSON = body
+      currentLanguage.value = resultAsJSON.language
+      darkMode.value = resultAsJSON.dark_mode
+      fontSize.value = resultAsJSON.font_size
+      itemsPerPage.value = resultAsJSON.ipp
+    }
+    else {
+      console.log("result.body != '[{}]'")
+      const resultAsJSON = JSON.parse(result.body.slice(1, -1))
+      console.log("resultAsJSON: ", resultAsJSON)
+      currentLanguage.value = resultAsJSON.language
+      darkMode.value = resultAsJSON.dark_mode
+      itemsPerPage.value = resultAsJSON.ipp
+
+    }
 };
 
 // Apply dark mode 
@@ -310,11 +370,6 @@ const applyDarkMode = () => {
 };
 // Watch for changes to darkmode and apply accordingly
 watch(darkMode, applyDarkMode);
-// On component mount, load user settings and apply dark mode
-onMounted(() => {
-  loadSettings();
-  applyDarkMode();
-});
 
 const props = defineProps({
   query: String
@@ -322,22 +377,14 @@ const props = defineProps({
 
 // --- Language & CSV Source Helper ---
 // Get initial language from localStorage "userSettings", default to "en"
-const getInitialLanguage = () => {
-  try {
-    return (JSON.parse(localStorage.getItem("userSettings")) || {}).language || "en";
-  } catch (error) {
-    return "en";
-  }
-};
-const currentLanguage = ref(getInitialLanguage());
-
-// Listen for custom "language-changed" events from Settings.vue
-window.addEventListener("language-changed", (event) => {
-  currentLanguage.value = event.detail;
-  console.log("Language changed to:", currentLanguage.value);
-  // Reload jobs when language changes:
-  loadJobs();
-});
+// const getInitialLanguage = () => {
+//   try {
+//     return (JSON.parse(localStorage.getItem("userSettings")) || {}).language || "en";
+//   } catch (error) {
+//     return "en";
+//   }
+// };
+const currentLanguage = ref("en");
 
 // Compute the appropriate CSV source based on language
 const selectedCsv = computed(() =>
@@ -464,6 +511,9 @@ onMounted(async () => {
   } catch (err) {
     console.error("Auth or DB error:", err);
   }
+
+  loadSettings()
+  console.log("finished loading settings")
   loadJobs();
 });
 

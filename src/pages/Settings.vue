@@ -7,20 +7,21 @@
       <h2>Appearance</h2>
       <div class="setting-group">
         <label for="darkModeToggle">Dark Mode:</label>
-        <input id="darkModeToggle" type="checkbox" v-model="settings.darkMode" />
-        <span>{{ settings.darkMode ? 'Enabled' : 'Disabled' }}</span>
+        <input id="darkModeToggle" type="checkbox" v-model="darkMode" @change="updateSettings()"/>
+        <span>{{ darkMode ? 'Enabled' : 'Disabled' }}</span>
       </div>
       <div class="setting-group">
-        <label for="fontSizeRange">Font Size: {{ settings.fontSize }}%</label>
+        <label for="fontSizeRange">Font Size: {{ fontSize }}%</label>
         <input
           id="fontSizeRange"
           type="range"
           min="80"
           max="150"
           step="5"
-          v-model="settings.fontSize"
-          @input="updateFontSize"
+          v-model="fontSize"
+          @input="updateSettings()"
         />
+        <!-- @input="updateFontSize" -->
       </div>
     </section>
     
@@ -29,7 +30,7 @@
       <h2>Job Settings</h2>
       <div class="setting-group">
         <label for="itemsPerPage">Jobs Per Page:</label>
-        <select id="itemsPerPage" v-model="settings.itemsPerPage">
+        <select id="itemsPerPage" v-model="itemsPerPage" @change="updateSettings()">
           <option v-for="num in [5, 10, 20, 50]" :key="num" :value="num">
             {{ num }}
           </option>
@@ -38,7 +39,7 @@
     </section>
     
     <!-- Notifications Section -->
-    <section class="settings-section">
+    <!-- <section class="settings-section">
       <h2>Notifications</h2>
       <div class="setting-group">
         <label for="emailNotifications">Email Notifications:</label>
@@ -50,14 +51,14 @@
         <input id="pushNotifications" type="checkbox" v-model="settings.pushNotifications" />
         <span>{{ settings.pushNotifications ? 'Enabled' : 'Disabled' }}</span>
       </div>
-    </section>
+    </section> -->
     
     <!-- Language & Accessibility Section -->
     <section class="settings-section">
       <h2>Language & Accessibility</h2>
       <div class="setting-group">
         <label for="languageSelect">Language:</label>
-        <select id="languageSelect" v-model="settings.language">
+        <select id="languageSelect" v-model="language" @change="updateSettings()">
           <option value="en">English</option>
           <option value="es">Español</option>
           <!-- Add more languages if needed -->
@@ -68,7 +69,7 @@
     <!-- Reset Section -->
     <section class="settings-section">
       <h2>Reset</h2>
-      <button class="btn btn-danger" @click="resetSettings">
+      <button class="btn btn-danger" @click="updateSettings(true)">
         Reset to Defaults
       </button>
     </section>
@@ -76,42 +77,130 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, nextTick, onMounted } from 'vue';
 import '@/assets/dark-mode.css';  // Add this import
 import '@/assets/light-mode.css'; // Add this import for light mode
 
+const currentLanguage = ref()
+const fontSize = ref()
+const darkMode = ref()
+const itemsPerPage = ref()
 // Define default settings
-const defaultSettings = {
-  darkMode: false,
-  fontSize: 100,
-  itemsPerPage: 10,
-  emailNotifications: false,
-  pushNotifications: false,
-  language: 'en'
+// const defaultSettings = {
+//   darkMode: false,
+//   fontSize: 100,
+//   itemsPerPage: 10,
+//   emailNotifications: false,
+//   pushNotifications: false,
+//   language: 'en'
+// };
+
+import { getCurrentUser } from 'aws-amplify/auth';
+
+
+
+const loadSettings = async () => {
+  console.log("loadSettings called")
+    const { userId } = await getCurrentUser();
+    console.log("userId: ", userId)
+    const response = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+      method: "POST",
+      body: JSON.stringify({id: userId})
+    })
+    const result = await response.json()
+    console.log("result: ", result)
+    if (result.body == '[{}]') {
+      console.log("result.body == '[{}]'")
+      const response2 = await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: userId,
+          reset_settings: true
+        })
+      })
+      const result2 = await response2.json()
+      console.log("result2: ", result2)
+      await nextTick()
+      const response3 = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+        method: "POST",
+        body: JSON.stringify({id: userId})
+      })
+      const result3 = await response3.json()
+      console.log("result3: ", result3)
+      console.log("result3.body: ", result3.body)
+      let body = result3.body
+      body = JSON.parse(body.slice(1, -1))
+      console.log("body: ", body, " typeof body", typeof body)
+      const resultAsJSON = body
+      currentLanguage.value = resultAsJSON.language
+      darkMode.value = resultAsJSON.dark_mode
+      fontSize.value = resultAsJSON.font_size
+      itemsPerPage.value = resultAsJSON.ipp
+    }
+    else {
+      console.log("result.body != '[{}]'")
+      const resultAsJSON = JSON.parse(result.body.slice(1, -1))
+      console.log("resultAsJSON: ", resultAsJSON)
+      currentLanguage.value = resultAsJSON.language
+      darkMode.value = resultAsJSON.dark_mode
+      fontSize.value = resultAsJSON.font_size
+      itemsPerPage.value = resultAsJSON.ipp
+
+    }
 };
+const updateSettings = async (resetSettings = false) => {
+  console.log("updateSettings called")
+  try {
+    const { userId } = await getCurrentUser();
+    console.log("userId: ", userId)
+    console.log("reset_settings: ", resetSettings)
+    console.log("dark_mode: ", darkMode.value)
+    console.log("language: ", currentLanguage.value)
+    console.log("fontSize: ", fontSize.value)
+    console.log("itemsPerPage: ", itemsPerPage.value)
+    const response = await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
+      method: "POST",
+      body: JSON.stringify({
+        user_id: userId,
+        reset_settings: resetSettings,
+        dark_mode: darkMode.value,
+        language: currentLanguage.value,
+        font_size: fontSize.value,
+        ipp: itemsPerPage.value
+      })
+    })
+    const result = await response.json()
+    console.log("result: ", result)
+  }
+  catch (error) {
+    console.log("error: ", error)
+    alert("you must be signed in to change settings")
+  }
+} 
 
-// Load settings from localStorage (or use defaults)
-const loadSettings = () => {
-  const savedSettings = localStorage.getItem('userSettings');
-  return savedSettings ? JSON.parse(savedSettings) : defaultSettings;
-};
+import { Hub } from 'aws-amplify/utils';
 
-const settings = ref(loadSettings());
+Hub.listen('auth', ({ payload }) => {
+  switch (payload.event) {
+    case 'signedIn':
+      console.log('user have been signedIn successfully.');
+      loadSettings()
+      break;
+    case 'signedOut':
+      console.log('user have been signedOut successfully.');
+      currentLanguage.value = "en"
+      darkMode.value = false
+      itemsPerPage.value = 25
+      break;
+  }
+})
+onMounted(async () => {
+  console.log("onMounted called")
+  loadSettings()
+})
 
-// Persist settings changes in localStorage
-watch(settings, (newVal) => {
-  localStorage.setItem('userSettings', JSON.stringify(newVal));
-}, { deep: true });
-
-//  Watch for language changes to notify other parts of the app
-watch(() => settings.value.language, (newLang) => {
-  console.log('Language updated:', newLang);
-   window.dispatchEvent(new CustomEvent('language-changed', { detail: newLang }));
-});
-
-// Apply dark mode by toggling classes on document body
 const applyDarkMode = () => {
-  if (settings.value.darkMode) {
+  if (darkMode.value) {
     document.body.classList.remove('light-mode');
     document.body.classList.add('dark-mode');
   } else {
@@ -120,17 +209,12 @@ const applyDarkMode = () => {
   }
 };
 
-onMounted(() => {
-  applyDarkMode();
-  updateFontSize();
-});
+watch(() => darkMode.value, applyDarkMode);
 
-// Watch dark mode setting changes
-watch(() => settings.value.darkMode, applyDarkMode);
 
 // Update the root font size for accessibility
 const updateFontSize = () => {
-  document.documentElement.style.fontSize = settings.value.fontSize + '%';
+  document.documentElement.style.fontSize = fontSize.value + '%';
 };
 
 // Reset settings to defaults and clear localStorage
