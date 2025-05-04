@@ -58,7 +58,7 @@
       <h2>Language & Accessibility</h2>
       <div class="setting-group">
         <label for="languageSelect">Language:</label>
-        <select id="languageSelect" v-model="language" @change="updateSettings()">
+        <select id="languageSelect" v-model="currentLanguage" @change="updateSettings()">
           <option value="en">English</option>
           <option value="es">Español</option>
           <!-- Add more languages if needed -->
@@ -170,6 +170,8 @@ const updateSettings = async (resetSettings = false) => {
       })
     })
     const result = await response.json()
+    await nextTick()
+    loadSettings()
     console.log("result: ", result)
   }
   catch (error) {

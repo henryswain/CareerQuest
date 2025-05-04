@@ -363,9 +363,11 @@ const loadSettings = async () => {
 // Apply dark mode 
 const applyDarkMode = () => {
   if (darkMode.value) {
+    document.body.classList.remove('light-mode');
     document.body.classList.add('dark-mode');
   } else {
     document.body.classList.remove('dark-mode');
+    document.body.classList.add('light-mode')
   }
 };
 // Watch for changes to darkmode and apply accordingly
@@ -512,7 +514,7 @@ onMounted(async () => {
     console.error("Auth or DB error:", err);
   }
 
-  loadSettings()
+  loadSettings();
   console.log("finished loading settings")
   loadJobs();
 });
@@ -704,6 +706,11 @@ watch(
   border: 1px solid var(--light-border);
   border-radius: 0.5rem;
   background-color: var(--light-surface);
+  color: var(--light-text-primary);
+}
+
+.card-body{
+  background-color: var(--light-bg);
 }
 
 .filter-card {

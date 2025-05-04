@@ -272,8 +272,12 @@ body.dark-mode {
 }
 
 .dark-mode .card {
-  background-color: var(--dark-surface);
+  background-color: var(--dark-surface-2);
   border: 1px solid var(--dark-border);
+}
+
+.dark-mode .card-text{
+  background-color: var(--dark-surface-2);
 }
 
 .dark-mode .filter-card {
@@ -282,6 +286,7 @@ body.dark-mode {
 }
 
 .dark-mode .filter-group h6 {
+  background-color: var(--dark-surface-2);
   color: var(--dark-text-primary);
 }
 
