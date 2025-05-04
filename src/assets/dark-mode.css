@@ -39,11 +39,11 @@ body.dark-mode {
 
 /* Links */
 .dark-mode a {
-  color: var(--dark-accent);
+  color: var(--dark-text-primary);
 }
 
 .dark-mode a:hover {
-  color: var(--dark-text-primary);
+  color: var(--dark-text-secondary);
 }
 
 /* Cards and containers */
@@ -400,11 +400,11 @@ body.dark-mode {
   background-color: var(--dark-surface) !important;
 }
 
-.dark-mode .amplify-tabs-item {
+.dark-mode .amplify-tabs__item {
   color: var(--dark-text-secondary) !important;
 }
 
-.dark-mode .amplify-tabs-item[data-state='active'] {
+.dark-mode .amplify-tabs__item[data-state='active'] {
   color: var(--dark-button) !important;
   border-color: var(--dark-button) !important;
 }
@@ -462,7 +462,7 @@ body.dark-mode {
 
 .dark-mode .amplify-tabs-item {
   background-color: var(--dark-surface) !important;
-  color: var(--dark-text-secondary) !important;
+  color: var(--dark-text-primary) !important;
 }
 
 .dark-mode .amplify-tabs-item[data-state='active'] {
@@ -484,7 +484,7 @@ body.dark-mode {
 
 .dark-mode .amplify-button--link {
   background-color: transparent !important;
-  color: var(--dark-button) !important;
+  color: var(--dark-text-primary) !important;
 }
 
 .dark-mode .amplify-button--link:hover {
