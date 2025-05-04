@@ -64,7 +64,7 @@
             Add Education
           </button>
         </div>
-        <!-- Add this section to display education entries -->
+        <!-- Display education entries -->
         <div class="education-list">
           <div v-for="(edu, index) in user.education" :key="index" class="education-item">
             <h3>{{ edu.schoolName }}</h3>
@@ -125,7 +125,7 @@
             Add Experience
           </button>
         </div>
-        <!-- Add this section to display experience entries -->
+        <!-- Display experience entries -->
         <div class="experience-list">
           <div v-for="(exp, index) in user.experience" :key="index" class="experience-item">
             <h3>{{ exp.companyName }}</h3>
@@ -177,74 +177,113 @@
   </div>
 
   <!-- Skills Section -->
-  <div class="container">
-    <div class="skills">
-      <div class="skills__info">
-        <div class="skills-container">
-          <h2 class="skills-title">Skills</h2>
-          <button class="add-skills-btn" data-bs-toggle="modal" data-bs-target="#skillsModal">
-            Add Skills
-          </button>
+<div class="container">
+  <div class="skills">
+    <div class="skills__info">
+      <div class="skills-container">
+        <h2 class="skills-title">Skills</h2>
+        <button
+          class="add-skills-btn"
+          data-bs-toggle="modal"
+          data-bs-target="#skillsModal"
+          @click="openSkillsModal"
+        >
+          Add Skills
+        </button>
+      </div>
+      <div class="skills-list">
+        <div class="skills-tags">
+          <!-- show saved skills -->
+          <span v-for="(skill, index) in user.skills" :key="index" class="skill-tag">
+            {{ skill }}
+            <button class="remove-tag" @click="deleteSkill(index)">&times;</button>
+          </span>
         </div>
-        <!-- Updated skills display section -->
-        <div class="skills-list">
-          <div class="skills-tags">
-            <span v-for="(skill, index) in user.skills" :key="index" class="skill-tag">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Skills Modal -->
+<div
+  class="modal fade"
+  id="skillsModal"
+  tabindex="-1"
+  aria-labelledby="skillsModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="skillsModalLabel">Add Skills</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="skillInput">Add Skills</label>
+          <div class="skill-tags">
+            <!-- show editable skill list while modal is open -->
+            <span v-for="(skill, index) in newSkills" :key="index" class="skill-tag">
               {{ skill }}
-              <button class="remove-tag" @click="deleteSkill(index)">&times;</button>
+              <button class="remove-tag" @click="removeSkill(index)">&times;</button>
             </span>
           </div>
+          <input
+            type="text"
+            id="skillInput"
+            v-model="skillInput"
+            class="form-control"
+            placeholder="Type a skill and press Enter"
+            @keyup.enter="addSkillTag"
+          />
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" @click="saveSkills">Save Skills</button>
       </div>
     </div>
   </div>
-
-    <!-- Add Skills Modal -->
-    <div class="modal fade" id="skillsModal" tabindex="-1" aria-labelledby="skillsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="skillsModalLabel">Add Skills</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="skillInput">Add Skills</label>
-            <div class="skill-tags">
-              <span v-for="(skill, index) in newSkills" :key="index" class="skill-tag">
-                {{ skill }}
-                <button class="remove-tag" @click="removeSkill(index)">&times;</button>
-              </span>
-            </div>
-            <input 
-              type="text" 
-              id="skillInput" 
-              v-model="skillInput" 
-              class="form-control"
-              placeholder="Type a skill and press Enter"
-              @keyup.enter="addSkillTag"
-            >
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="saveSkills">Save Skills</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-
+</div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 import '@/assets/dark-mode.css';
 import { Modal } from 'bootstrap';
+import { getCurrentUser } from "aws-amplify/auth";
+import { Hub } from 'aws-amplify/utils';
 
 const previewImage = ref(null);
 
+//nested json object to save profile data to DB
+const user = ref({
+  username: '',
+  firstName: '',
+  lastName: '',
+  education: [],
+  skills: [],
+  socialLinks: {
+    twitter: '',
+    linkedin: '',
+    github: '',
+    website: ''
+  },
+  experience: [],
+  about: '',
+  headline: '',
+  image: ''
+});
 
+const skillInput = ref('');
+const newSkills = ref([]);
+
+//profile picture/banner logic
 const handleFileUpload = async (event) => {
   try {
     const file = event.target.files[0];
@@ -262,54 +301,76 @@ const handleFileUpload = async (event) => {
 
 const saveProfile = async () => {
   try {
-    if (previewImage.value) {
-      user.value.image = previewImage.value;
-    }
+    user.value.skills = [...(user.value.skills || [])].map(skill => String(skill));
 
-    const { userId } = await getCurrentUser(); // Get ID
+    //shows fields that get saved to DB
+    console.log("Saving profile with:", JSON.stringify(user.value, null, 2));
 
+    const { userId } = await getCurrentUser();
     const encodedProfile = encodeURIComponent(JSON.stringify(user.value));
-
-    const url = `https://z2orizbc4b.execute-api.us-east-2.amazonaws.com/dev?crud_type=profile-create&user_id=${userId}&profile=${encodedProfile}`;
-
+    const url = `https://z2orizbc4b.execute-api.us-east-2.amazonaws.com/dev/profile?crud_type=profile-create&user_id=${userId}&profile=${encodedProfile}`;
     const response = await fetch(url);
     const result = await response.json();
     console.log('Profile saved:', result);
-
-    // Close after save
+// fix for modal backdrop remaining after closing and freezes the site
     const modalElement = document.getElementById('profileModal');
     if (modalElement) {
-      const modal = bootstrap.Modal.getInstance(modalElement);
-      if (modal) {
-        modal.hide();
-      }
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide();
     }
+    document.body.classList.remove('modal-open');
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
   } catch (error) {
     console.error('Error saving profile:', error);
   }
 };
 
+// Called when Enter key is pressed and adds skill tag
+const addSkillTag = () => {
+  if (skillInput.value.trim()) {
+    newSkills.value.push(skillInput.value.trim());
+    skillInput.value = '';
+    
+  }
+};
 
-// User data with all necessary fields
-const userProfile = ref({
-  image: '',
-  username: '',
-  firstName: '',
-  lastName: '',
-  education: [],
-  socialLinks: {
-    twitter: '',
-    linkedin: '',
-    github: '',
-    website: ''
-  },
-  experience: [],
-  about: '',
-  headline: '',
-  profilePicture: ''
-});
+// Called when X button on tag is clicked
+const removeSkill = async (index) => {
+  user.value.skills.splice(index, 1);
+  await saveProfile();
+};
 
-// Form data for education entries
+// Called when opening modal
+const openSkillsModal = () => {
+  newSkills.value = [...(user.value.skills || [])];
+
+  const modalEl = document.getElementById('skillsModal');
+  if (modalEl) {
+    const existingInstance = Modal.getInstance(modalEl);
+    if (existingInstance) {
+      existingInstance.dispose();
+    }
+    new Modal(modalEl);
+  }
+};
+
+// Called when Save button clicked
+const saveSkills = async () => {  
+  user.value.skills = [...newSkills.value];
+  newSkills.value = [];
+  skillInput.value = '';
+  const modalElement = document.getElementById('skillsModal');
+  if (modalElement) {
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide();
+  }
+  document.body.classList.remove('modal-open');
+  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+  console.log("Saving profile");
+  await saveProfile();
+};
+
+// Education fields
 const newEducation = ref({
   schoolName: '',
   degree: '',
@@ -318,32 +379,26 @@ const newEducation = ref({
   endDate: ''
 });
 
-// Add education function
-const addEducation = () => {
-  if (!user.value.education) {
-    user.value.education = [];
-  }
-  user.value.education.push({...newEducation.value});
-  // Reset form
-  newEducation.value = {
-    schoolName: '',
-    degree: '',
-    fieldOfStudy: '',
-    startDate: '',
-    endDate: ''
-  };
-  
-  // Close modal using Bootstrap
+const addEducation = async () => {
+  if (!user.value.education) user.value.education = [];
+  user.value.education.push({ ...newEducation.value });
+  newEducation.value = { schoolName: '', degree: '', fieldOfStudy: '', startDate: '', endDate: '' };
+
   const modalElement = document.getElementById('educationModal');
   if (modalElement) {
-    const modal = bootstrap.Modal.getInstance(modalElement);
-    if (modal) {
-      modal.hide();
-    }
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide();
   }
+
+  await saveProfile();
 };
 
-// Add new experience form data
+const deleteEducation = async (index) => {
+  user.value.education.splice(index, 1);
+  await saveProfile();
+};
+
+// Experience fields
 const newExperience = ref({
   companyName: '',
   position: '',
@@ -352,92 +407,35 @@ const newExperience = ref({
   description: ''
 });
 
-// Update the addExperience function
-const addExperience = () => {
-  if (!user.value.experience) {
-    user.value.experience = [];
-  }
-  user.value.experience.push({...newExperience.value});
-  // Reset form
-  newExperience.value = {
-    companyName: '',
-    position: '',
-    startDate: '',
-    endDate: '',
-    description: ''
-  };
+const addExperience = async () => {
+  if (!user.value.experience) user.value.experience = [];
+  user.value.experience.push({ ...newExperience.value });
+  newExperience.value = { companyName: '', position: '', startDate: '', endDate: '', description: '' };
 
-  // Close modal using Bootstrap
   const modalElement = document.getElementById('experienceModal');
   if (modalElement) {
-    const modal = bootstrap.Modal.getInstance(modalElement);
-    if (modal) {
-      modal.hide();
-    }
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide();
   }
+
+  await saveProfile();
 };
 
-// Delete education function
-const deleteEducation = (index) => {
-  user.value.education.splice(index, 1);
-};
-
-const deleteExperience = (index) => {
+const deleteExperience = async (index) => {
   user.value.experience.splice(index, 1);
+  await saveProfile();
 };
 
-const user = ref({
-  image: '',
-  banner: '',
-  username: '',
-  firstName: '',
-  lastName: '',
-  education: [],
-  socialLinks: {
-    twitter: '',
-    linkedin: '',
-    github: '',
-    website: ''
-  },
-  experience: [],
-  about: '',
-  headline: '',
-  profilePicture: ''
-});
-
-const skillInput = ref('');
-const newSkills = ref([]);
-
-const addSkillTag = () => {
-  if (skillInput.value.trim()) {
-    newSkills.value.push(skillInput.value.trim());
-    skillInput.value = '';
-  }
+const deleteSkill = async (index) => {
+  user.value.skills.splice(index, 1);
+  await saveProfile();
 };
 
-const removeSkill = (index) => {
-  newSkills.value.splice(index, 1);
-};
-
-const saveSkills = () => {
-  user.value.skills = [...newSkills.value];
-  newSkills.value = [];
-  // Close modal using Bootstrap
-  const modalElement = document.getElementById('skillsModal');
-  if (modalElement) {
-    const modal = bootstrap.Modal.getInstance(modalElement);
-    if (modal) {
-      modal.hide();
-    }
-  }
-};
-
-
-import { Hub } from 'aws-amplify/utils';
+// Settings
 const darkMode = ref(false);
-const fontSize = ref()// Apply dark mode 
+const fontSize = ref();
 const currentLanguage = ref("en");
-const itemsPerPage = ref("25")
+const itemsPerPage = ref("25");
 
 const applyDarkMode = () => {
   if (darkMode.value) {
@@ -446,81 +444,84 @@ const applyDarkMode = () => {
     document.body.classList.remove('dark-mode');
   }
 };
-// Watch for changes to darkmode and apply accordingly
 watch(darkMode, applyDarkMode);
-import { getCurrentUser } from "aws-amplify/auth";
-
 
 
 const loadSettings = async () => {
   console.log("loadSettings called")
-    const { userId } = await getCurrentUser();
-    console.log("userId: ", userId)
-    const response = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+  const { userId } = await getCurrentUser();
+  console.log("userId: ", userId)
+  const response = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+    method: "POST",
+    body: JSON.stringify({ id: userId })
+  });
+  const result = await response.json();
+
+  if (result.body == '[{}]') {
+    console.log("result.body == '[{}]'")
+    await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
       method: "POST",
-      body: JSON.stringify({id: userId})
-    })
-    const result = await response.json()
-    console.log("result: ", result)
-    if (result.body == '[{}]') {
-      console.log("result.body == '[{}]'")
-      const response2 = await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
-        method: "POST",
-        body: JSON.stringify({
-          user_id: userId,
-          reset_settings: true
-        })
+      body: JSON.stringify({
+        user_id: userId,
+        reset_settings: true
       })
-      const result2 = await response2.json()
-      console.log("result2: ", result2)
-      await nextTick()
-      const response3 = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
-        method: "POST",
-        body: JSON.stringify({id: userId})
-      })
-      const result3 = await response3.json()
-      console.log("result3: ", result3)
-      console.log("result3.body: ", result3.body)
-      let body = result3.body
-      body = JSON.parse(body.slice(1, -1))
-      console.log("body: ", body, " typeof body", typeof body)
-      const resultAsJSON = body
-      currentLanguage.value = resultAsJSON.language
-      darkMode.value = resultAsJSON.dark_mode
-      fontSize.value = resultAsJSON.font_size
-      itemsPerPage.value = resultAsJSON.ipp
-    }
-    else {
-      console.log("result.body != '[{}]'")
-      const resultAsJSON = JSON.parse(result.body.slice(1, -1))
-      console.log("resultAsJSON: ", resultAsJSON)
-      currentLanguage.value = resultAsJSON.language
-      darkMode.value = resultAsJSON.dark_mode
-      itemsPerPage.value = resultAsJSON.ipp
-
-    }
+    });
+    await nextTick();
+    const response3 = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
+      method: "POST",
+      body: JSON.stringify({ id: userId })
+    });
+    const result3 = await response3.json();
+    let body = JSON.parse(result3.body.slice(1, -1));
+    currentLanguage.value = body.language;
+    darkMode.value = body.dark_mode;
+    fontSize.value = body.font_size;
+    itemsPerPage.value = body.ipp;
+  } else {
+    const resultAsJSON = JSON.parse(result.body.slice(1, -1));
+    currentLanguage.value = resultAsJSON.language;
+    darkMode.value = resultAsJSON.dark_mode;
+    itemsPerPage.value = resultAsJSON.ipp;
+  }
 };
-
 
 Hub.listen('auth', ({ payload }) => {
   switch (payload.event) {
     case 'signedIn':
-      console.log('user have been signedIn successfully.');
-      loadSettings()
+      console.log('user signed in');
+      loadSettings();
       break;
     case 'signedOut':
-      console.log('user have been signedOut successfully.');
-      currentLanguage.value = "en"
-      darkMode.value = false
-      itemsPerPage.value = 25
+      console.log('user signed out');
+      currentLanguage.value = "en";
+      darkMode.value = false;
+      itemsPerPage.value = 25;
       break;
   }
-})
+});
 
-onMounted(() => {
-  loadSettings()
-})
+
+//load settings and user profile from load, if no profile then the lambda function creates one with the user ID
+onMounted(async () => {
+  loadSettings();
+  try {
+    const { userId } = await getCurrentUser();
+    const readUrl = `https://z2orizbc4b.execute-api.us-east-2.amazonaws.com/dev/profile?crud_type=profile-read&user_id=${userId}`;
+    const response = await fetch(readUrl);
+    const result = await response.json();
+    user.value = { ...user.value, ...result };
+  } catch (err) {
+    console.error("Error loading user profile:", err);
+  }
+  const modalEl = document.getElementById('skillsModal');
+  if (modalEl) {
+    modalEl.addEventListener('show.bs.modal', () => {
+      newSkills.value = [...(user.value.skills || [])];
+    });
+  }
+});
 </script>
+
 
 <style scoped>
 .profile-page {
@@ -1096,4 +1097,14 @@ onMounted(() => {
   min-height: auto;
   height: fit-content;
 }
+
+.skills {
+  margin-bottom: 120px !important; /* was 2rem, ensure it's above footer */
+  padding-bottom: 2rem; /* extra space for safety */
+}
+
+body {
+  padding-bottom: 160px; /* in case footer is fixed */
+}
+
 </style>

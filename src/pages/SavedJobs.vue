@@ -57,24 +57,30 @@
                 <button v-if="jobDetails[job.id]" class="btn btn-link" @click="toggleExpand(job.id, 'skills')">
                   {{ isExpanded(job.id, 'skills') ? "Show Less" : "Show More" }}
                 </button>
-
-                <h5>To Apply</h5>
-                <p v-if="jobDetails[job.id]">
-                  {{ cleanText(jobDetails[job.id].apply) }}
-                </p>
-
                 <p v-if="!jobDetails[job.id]" class="text-muted">Loading job details...</p>
+              <h5>Salary Range</h5>
+                <p v-if="jobDetails[job.id]">
+                  {{ jobDetails[job.id].salaryFrom ? `$${jobDetails[job.id].salaryFrom} ${jobDetails[job.id].salaryFrequency || ''}` : 'Not specified.' }}
+                </p>
                 </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                  <button
+                    class="btn btn-primary"
+                    @click="goToApplyLink(job.id)"
+                  >
+                    View Original Listing
+                  </button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                  </button>
               </div>
             </div>
           </div>
         </div>
-
       </li>
     </ul>
   </div>
+  
 </template>
 
 <script setup>
@@ -82,7 +88,6 @@ import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import { getCurrentUser } from 'aws-amplify/auth';
 // import jobsCsv from "@/assets/Jobs_NYC_Postings.csv?raw";
-import Papa from "papaparse";
 
 const savedJobs = ref([]);
 const userId = ref("");
@@ -106,6 +111,10 @@ const applyDarkMode = () => {
 watch(darkMode, applyDarkMode);
 
 
+function goToApplyLink(jobId) {
+  window.open("https://cityjobs.nyc.gov/job/" + jobId, '_blank').focus();
+  console.log("https://cityjobs.nyc.gov/job/" + jobId);
+}
 
 const loadSettings = async () => {
   console.log("loadSettings called")
@@ -174,36 +183,64 @@ Hub.listen('auth', ({ payload }) => {
 
 onMounted(async () => {
   try {
+    // Get user ID
     const { username } = await getCurrentUser();
     userId.value = username;
 
-    const res = await fetch(`${LAMBDA_URL}?crud_type=read&user_id=${userId.value}`);
-    const data = await res.json();
-    const ids = Array.isArray(data.body) ? data.body : JSON.parse(data.body);
-    const jobIdList = ids.map(id => String(id));
+    // Fetch saved jobs
+    const savedJobRes = await fetch(`${LAMBDA_URL}?crud_type=read&user_id=${userId.value}`);
+    const savedJobData = await savedJobRes.json();
+    const savedJobIds = Array.isArray(savedJobData.body)
+      ? savedJobData.body.map(String)
+      : JSON.parse(savedJobData.body).map(String);
 
-    // Parse CSV after saved job IDs are ready
-    Papa.parse(jobsCsv, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        allJobs.value = results.data;
+    console.log("Saved job IDs:", savedJobIds);
 
-        savedJobs.value = jobIdList.map(id => {
-          const match = allJobs.value.find(j => j["Job ID"] === id);
-          return {
-            id,
-            title: match?.["Civil Service Title"] || "Unknown Title",
-            company: match?.["Agency"] || "Unknown Agency",
-            location: match?.["Work Location"] || "Unknown Location"
-          };
-        });
+    // Fetch all jobs
+    const filters = ref({});
+    let data = { items: [], pageToken: null };
+
+    const fetchAllJobs = async () => {
+      const response = await fetch('https://54pullbiac.execute-api.us-east-2.amazonaws.com/dev/reading', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filters: filters.value }),
+      });
+      if (response.ok) {
+        data = await response.json();
+        return data.items;
       }
-    });
+      return [];
+    };
+
+    let allJobs = await fetchAllJobs();
+    let filtered = allJobs.filter(job => savedJobIds.includes(String(job["Job ID"])));
+
+    // SavedJobs from filtered jobs
+    for (const job of filtered) {
+      const id = String(job["Job ID"]);
+      jobDetails.value[id] = {
+        title: job["Civil Service Title"] || "Untitled",
+        location: job["Work Location"] || "Unknown Location",
+        salaryFrequency: job["Salary Frequency"] || "",
+        salaryFrom: job["Salary Range From"] || "",
+        fullPartTime: job["Full-Time/Part-Time indicator"] || "",
+        description: job["Job Description"] || "No description.",
+        requirements: job["Minimum Qual Requirements"] || "Not specified.",
+        skills: job["Preferred Skills"] || "Not specified.",
+      };
+      savedJobs.value.push({
+        id,
+        title: jobDetails.value[id].title,
+        company: jobDetails.value[id].company,
+        location: jobDetails.value[id].location,
+      });
+    }
   } catch (e) {
-    console.error("Auth or DB error:", e.message);
+    console.error("Auth or job load error:", e.message);
   }
-  loadSettings()
+
+  loadSettings();
 });
 
 
@@ -254,24 +291,31 @@ async function removeJob(id) {
 }
 
 const fetchJobDetails = async (jobId) => {
-  if (jobDetails.value[jobId]) return; // Stop duplicates
+  if (jobDetails.value[jobId]) return; // Skip if already fetched
   try {
     const response = await fetch(`https://npvdpxycgi.execute-api.us-east-2.amazonaws.com/dev2/reading?id=${jobId}`);
     const data = await response.json();
   
-    if (data.items && data.items.length > 0) { //null values
+    if (data.items && data.items.length > 0) {
       const job = data.items[0];
       jobDetails.value[jobId] = {
+        title: job["Civil Service Title"] || "Untitled",
+        company: job["Agency"] || "Unknown Agency",
+        location: job["Work Location"] || "Unknown Location",
+        salaryFrequency: job["Salary Frequency"] || "",
+        salaryFrom: job["Salary Range From"] || "",
+        fullPartTime: job["Full-Time/Part-Time indicator"] || "",
         description: job["Job Description"] || "No description.",
         requirements: job["Minimum Qual Requirements"] || "Not specified.",
         skills: job["Preferred Skills"] || "Not specified.",
-        apply: job["To Apply"] || "Work in progress"
+        apply: job["To Apply"] || "Not specified"
       };
     }
   } catch (error) {
     console.error("Error fetching job details:", error);
   }
 };
+
 </script>
 
 <style scoped>
