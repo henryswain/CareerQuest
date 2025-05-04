@@ -210,9 +210,19 @@ body.dark-mode {
   background-color: var(--dark-button-hover);
 }
 
-.dark-mode .footer {
+.dark-mode .footer{
   background-color: var(--dark-surface);
   border-top: 1px solid var(--dark-border);
+}
+
+.dark-mode .footer-logo-section{
+  border: none !important;
+  background-color: var(--dark-surface) !important;
+}
+
+.dark-mode .footer-section{
+  border: none !important;
+  background-color: var(--dark-surface) !important;
 }
 
 .dark-mode .footer-links a {
@@ -222,6 +232,10 @@ body.dark-mode {
 .dark-mode .footer-links a:hover {
   color: var(--dark-accent);
   background: rgba(187, 134, 252, 0.1);
+}
+
+.dark-mode .footer-copyright {
+  background-color: var(--dark-surface);
 }
 
 /* About page dark mode styles */
@@ -852,7 +866,7 @@ body.dark-mode {
 .dark-mode [class*="-container"],
 .dark-mode [class*="-section"] {
   background-color: var(--dark-surface-2) !important;
-  border: 1px solid var(--dark-border) !important;
+  border: 1px solid var(--dark-border);
 }
 
 /* Profile page containers dark mode styles */

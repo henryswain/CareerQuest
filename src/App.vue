@@ -76,8 +76,6 @@
       <ul v-if="!isMobile" class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
         <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
         <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-          <!-- ↓↓↓ This all doesn't work anymore since we've moved the log-in so I'm commenting it out for now ↓↓↓ -->
-        <!--
         <li><hr class="dropdown-divider" /></li>
         <li v-if="currentUserEmail">
           <button class="dropdown-item" @click="signOut">Sign Out</button>
@@ -93,7 +91,6 @@
             Sign In
           </button>
         </li>
-        -->
       </ul>
 
       <ul v-else class="dropdown-menu dropdown-menu-end">
@@ -223,11 +220,11 @@
   <footer class="footer">
         <div class="footer-content">
           <div class="footer-section">
-            <p class="copyright">&copy; 2025 CareerQuest, Inc</p>
+            <p class="footer-copyright">&copy; 2025 CareerQuest, Inc</p>
           </div>
 
-          <div class="footer-section">
-            <img class="footer-logo" src="@/assets/CQ_logo_lightmode.svg" alt="CareerQuest Logo" />
+          <div class="footer-logo-section">
+            <img class="navbar_logo_img" alt="CareerQuest logo" />
           </div>
 
           <div class="footer-section">
@@ -740,7 +737,7 @@ onMounted(async () => {
   }
 
 
-  .footer {
+.footer {
   /* margin-top: auto; */
   width: 100%;
   background: rgba(255, 255, 255, 0.95);
@@ -761,6 +758,17 @@ onMounted(async () => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+.footer-section{
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.footer-logo-section{
+  padding: 0.5rem;
+  width: 150px;
+  display: flex;
 }
 
 .footer-logo {
@@ -792,10 +800,11 @@ onMounted(async () => {
   background: rgba(0, 115, 177, 0.1);
 }
 
-.copyright {
+.footer-copyright {
   color: #666;
   font-size: 0.9rem;  /* Slightly smaller font size */
   margin: 0;
+  border: none;
 }
 
 /* Dark mode overrides for footer */
@@ -805,7 +814,7 @@ onMounted(async () => {
 }
 
 .dark-mode .footer-links a,
-.dark-mode .copyright {
+.dark-mode .footer-copyright {
   color: #aaa;
 }
 
