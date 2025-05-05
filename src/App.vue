@@ -135,10 +135,24 @@ const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
       
+      // Check if on mobile
+      const isMobileDevice = window.innerWidth < 992;
+      
+      // Check if near the bottom of the page
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollPosition = windowHeight + scrollTop;
+      const isNearBottom = documentHeight - scrollPosition < 100;
+      
       if (scrollDirection === 'down' && isFooterVisible.value) {
         isFooterVisible.value = false;
       } else if (scrollDirection === 'up' && !isFooterVisible.value) {
         isFooterVisible.value = true;
+      }
+      
+      // Don't show footer on mobile when near bottom (prevents bounce)
+      if (isMobileDevice && isNearBottom && isFooterVisible.value) {
+        isFooterVisible.value = false;
       }
       
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
