@@ -142,7 +142,7 @@ const handleScroll = () => {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const scrollPosition = windowHeight + scrollTop;
-      const isNearBottom = documentHeight - scrollPosition < 100;
+      const isNearBottom = documentHeight - scrollPosition < 500;
       
       if (scrollDirection === 'down' && isFooterVisible.value) {
         isFooterVisible.value = false;
