@@ -98,22 +98,22 @@
                 <!-- Salary and Location (unchanged) -->
                 <div v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'>
                   <p class="card-text">
-                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Full-time
+                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/hr • Full-time
                   </p>
                 </div>
                 <div v-else-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "P"'>
                   <p class="card-text">
-                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Part-time
+                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/hr • Part-time
                   </p>
                 </div>
                 <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "F"'>
                   <p class="card-text">
-                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Full-time
+                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/yr • Full-time
                   </p>
                 </div>
                 <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "P"'>
                   <p class="card-text">
-                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Part-time
+                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/yr • Part-time
                   </p>
                 </div>
                 <p class="card-text">Location: {{ item["Work Location"] }}</p>
@@ -515,6 +515,7 @@ onMounted(async () => {
   }
 
   loadSettings();
+  applyDarkMode();
   console.log("finished loading settings")
   loadJobs();
 });
@@ -565,7 +566,7 @@ const toggleExpand = (jobId, section) => {
   expanded.value[jobId][section] = !expanded.value[jobId][section];
 };
 
-const shortenText = (text, length = 150) => {
+const shortenText = (text, length = 300) => {
   if (!text) return "";
   return text.length > length ? text.slice(0, length) + "..." : text;
 };
@@ -714,6 +715,7 @@ watch(
 
 .filter-card {
   position: fixed;
+  height: 80%;
   width: 200px;
   background-color: var(--light-surface);
   border-radius: 8px;
@@ -783,6 +785,11 @@ watch(
 
 .modal-dialog {
   margin-top: 80px;
+}
+
+.modal-content{
+  width:150%;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

@@ -62,7 +62,7 @@
             <span class="arrow">&#9662;</span>
           </button>
           <div class="faq-answer" :class="{ 'show': activeIndex === 0 }">
-            CareerQuest uses advanced AI matching to connect your skills and preferences with the perfect job opportunities. Our platform analyzes your profile and suggests positions that align with your career goals.
+            CareerQuest uses advanced filtering to connect your skills and preferences with the perfect job opportunities. Our platform analyzes your profile and suggests positions that align with your career goals.
           </div>
         </div>
 
@@ -92,7 +92,7 @@
             <span class="arrow">&#9662;</span>
           </button>
           <div class="faq-answer" :class="{ 'show': activeIndex === 3 }">
-            CareerQuest stands out with its personalized approach, AI-powered job matching, and comprehensive career development tools. We focus on quality matches rather than quantity of listings.
+            CareerQuest stands out with its personalized approach and comprehensive career development tools that let you hone in on exactly what job is best for you. We focus on quality matches rather than quantity of listings.
           </div>
         </div>
       </div>
