@@ -669,9 +669,9 @@ watch(
 }
 
 .jobs-section {
+  display: table;
   padding: 1rem;
   height: 100vh;
-  overflow: scroll;
 }
 
 .no-jobs-block {
@@ -690,9 +690,8 @@ watch(
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 20px;
   padding: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 75px;
 }
 
 .current-page-num {
