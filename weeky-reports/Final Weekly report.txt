@@ -48,5 +48,8 @@ o Plan for next week
 
 * Team member 5: Magnolia Wallerich
 o Stories completed
+- Made miscellaneous bug fixes and tweaks from previous sprint feedback and our own discoveries
 o Progress report
+- Most everything that I had noticed got either fixed by myself or someone else so all seems to be good to go
 o Plan for next week
+- Create our presentation and finish things off
