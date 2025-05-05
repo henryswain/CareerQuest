@@ -1,0 +1,381 @@
+/* desktop-styles.css - All desktop styles for App.vue */
+
+/* Styles for the navbar (desktop version) */
+.navbar {
+    z-index: 2000;
+    background-color: #ffffff;
+    border-bottom: 2px solid #a1a1a1;
+    height: fit-content;
+    padding: 10px;
+  }
+  
+  /* Logo container and image styling */
+  .navbar_logo_container {
+    padding: 0.5rem;
+    transition: background-color .15s ease-in-out;
+    border-radius: 50px;
+    width: 150px;
+  }
+  
+  .navbar_logo_img {
+    content: url("@/assets/CQ_logo_lightmode.svg");
+  }
+  
+  .navbar_logo_container:hover {
+    color: #0073b1;
+    background: rgba(0, 115, 177, 0.1);
+  }
+  
+  .navbarlink {
+    display: block;
+    color: #272727;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem;
+    transition: background-color .15s ease-in-out;
+    border-radius: 50px;
+  }
+  
+  .navbarlink:hover {
+    color: #0073b1;
+    background: rgba(0, 115, 177, 0.1);
+  }
+  
+  .searchbutton {
+    border-radius: 50px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .auth-button {
+    background-color: transparent;
+    border: 2px solid #0073b1;
+    color: #0073b1;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .auth-button:hover {
+    background-color: rgba(0, 115, 177, 0.1);
+    color: #0073b1;
+  }
+  
+  .Premium {
+    background-color: transparent;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-right: 1rem;
+  }
+  
+  .Premium:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+  }
+  
+  /* Premium Modal Styles */
+  #premiumModal .modal-body {
+    padding: 2rem;
+  }
+  
+  #premiumModal .price-section {
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+  
+  #premiumModal ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  #premiumModal ul li {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  
+  #premiumModal ul li:before {
+    content: '✓';
+    color: #28a745;
+    position: absolute;
+    left: 0;
+  }
+  
+  #paypal-button-container {
+    margin-top: 1.5rem;
+  }
+  
+  .modal {
+    z-index: 2100 !important;
+  }
+  .modal-backdrop {
+    z-index: 2050 !important;
+  }
+  .modal-dialog {
+    margin-top: 80px;
+  }
+  
+  .user-email {
+    font-weight: 500;
+    color: black;
+  }
+  
+  .footer {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(157, 179, 221, 0.5);
+    padding: 1rem 0;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 1;
+  }
+  
+  .footer-hidden {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .footer-section{
+    border: none !important;
+    background-color: transparent !important;
+  }
+  
+  .footer-logo-section{
+    padding: 0.5rem;
+    width: 150px;
+    display: flex;
+  }
+  
+  .footer-logo {
+    height: 30px;
+    width: auto;
+  }
+  
+  .footer-links {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .footer-links a {
+    color: #666;
+    text-decoration: none;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
+    font-size: 1rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color .15s ease-in-out;
+    border-radius: 50px;
+  }
+  
+  .footer-links a:hover {
+    color: #0073b1;
+    background: rgba(0, 115, 177, 0.1);
+  }
+  
+  .footer-copyright {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+    border: none;
+  }
+  
+  /* Dark mode overrides for auth button */
+  .dark-mode .auth-button {
+    border-color: #ffffff;
+    color: #ffffff;
+  }
+  
+  .dark-mode .auth-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+  
+  /* Dark mode overrides for Premium button */
+  .dark-mode .Premium {
+    border-color: #FFD700;
+    color: #FFD700;
+  }
+  
+  .dark-mode .Premium:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+  }
+  
+  /* Dark mode user email */
+  .dark-mode .user-email {
+    color: white;
+  }
+  
+  /* Dark mode form controls */
+  .dark-mode .form-control,
+  .dark-mode input[type="text"],
+  .dark-mode input[type="email"],
+  .dark-mode input[type="search"],
+  .dark-mode input[type="password"],
+  .dark-mode select,
+  .dark-mode textarea,
+  .dark-mode .form-control {
+    background-color: #444444 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+  }
+  
+  .dark-mode .form-control::placeholder,
+  .dark-mode input[type="text"]::placeholder,
+  .dark-mode input[type="email"]::placeholder,
+  .dark-mode input[type="search"]::placeholder,
+  .dark-mode input[type="password"]::placeholder,
+  .dark-mode select::placeholder,
+  .dark-mode textarea::placeholder,
+  .dark-mode .form-control::placeholder {
+    color: #cccccc !important;
+  }
+  
+  .dark-mode .modal-content,
+  .dark-mode .modal-header,
+  .dark-mode .modal-body,
+  .dark-mode .modal-footer {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+  }
+  
+  .dark-mode .btn-close {
+    filter: invert(1);
+  }
+  
+  /* Dark mode navbar overrides */
+  .dark-mode .navbar {
+    background-color: #181818;
+    border-bottom: #525151;
+  }
+  
+  .dark-mode .navbar_logo_img {
+    content: url("@/assets/CQ_logo_darkmode.svg");
+  }
+  
+  .dark-mode .navbar_logo_container:hover {
+    color: #0073b1;
+    background: rgba(73, 142, 179, 0.2);
+  }
+  
+  .dark-mode .navbarlink {
+    color: #ffffff;
+  }
+  
+  .dark-mode .navbarlink:hover {
+    color: #b2dbf1;
+    background: rgba(73, 142, 179, 0.2);
+  }
+  
+  /* Dark mode dropdown */
+  .dark-mode .dropdown-menu {
+    background-color: #333333 !important; 
+    border-color: #444444 !important;     
+  }
+  
+  .dark-mode .dropdown-menu .dropdown-item {
+    background-color: #333333 !important; 
+    color: #ffffff !important;            
+  }
+  
+  .dark-mode .btn-link {
+    color: #ffffff !important;
+  }
+  
+  .dark-mode .btn-secondary.dropdown-toggle {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+  }
+  
+  .dark-mode .btn-secondary.dropdown-toggle:hover {
+    background-color: #444444 !important;
+    border-color: #666666 !important;
+  }
+  
+  .dark-mode .btn-secondary.dropdown-toggle:active,
+  .dark-mode .btn-secondary.dropdown-toggle.show {
+    background-color: #444444 !important;
+    border-color: #666666 !important;
+  }
+  
+  /* Dark mode footer */
+  .dark-mode .footer {
+    background: rgba(24, 24, 24, 0.95);
+    border-top: 1px solid rgba(85, 85, 85, 0.5);
+  }
+  
+  .dark-mode .footer-links a,
+  .dark-mode .footer-copyright {
+    color: #aaa;
+  }
+  
+  .dark-mode .footer-links a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Authentication styles overrides */
+  :root {
+    --amplify-components-authenticator-router-box-shadow: none !important;
+    --amplify-components-authenticator-router-border-width: 0 !important;
+    --amplify-components-input-focus-border-color: #0073b1d !important;
+    --amplify-components-fieldcontrol-focus-box-shadow: 0 0 0 1px #0073b1 !important
+  }
+  
+  .amplify-heading--3 {
+    color: #1a1a1a;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .amplify-label {
+    color: #444;
+  }
+  
+  .amplify-button.amplify-button--primary {
+    background-color: #0073b1;
+  }
+  
+  .amplify-button.amplify-button--primary:hover {
+    background-color: #005d92;
+  }
+  
+  .amplify-tabs__item {
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .amplify-tabs__item:hover {
+    color: #0073b1;
+  }
+  
+  .amplify-tabs__item--active {
+    color: #0073b1;
+    border-color: #0073b1;
+  }

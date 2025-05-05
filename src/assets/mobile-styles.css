@@ -1,0 +1,207 @@
+
+  @media (max-width: 991px) {
+    .navbar.d-none.d-lg-flex {
+      display: none !important;
+    }
+    
+    .navbar.d-lg-none {
+      display: flex !important;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .navbar {
+      padding: 8px;
+    }
+  
+    .navbar_logo_container {
+      width: 120px;
+    }
+  
+    .Premium {
+      padding: 0.4rem 1rem;
+      margin-right: 0.5rem;
+    }
+  
+    .searchbutton {
+      padding: 0.4rem 0.8rem;
+    }
+  
+    .auth-button {
+      padding: 0.4rem 1rem;
+    }
+  
+    #premiumModal .modal-body {
+      padding: 1rem;
+    }
+  
+    #premiumModal ul li {
+      margin: 0.3rem 0;
+      padding-left: 1rem;
+    }
+  
+    .user-email {
+      font-size: 0.9rem;
+    }
+  
+    .footer {
+      padding: 0.3rem 0;
+      height: auto;
+      min-height: fit-content;
+    }
+    
+    .footer-content {
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: center;
+      padding: 0.25rem 0.5rem;
+    }
+  
+    .footer-logo-section {
+      order: 1;
+      justify-content: center;
+      width: 80px;
+      padding: 0.15rem;
+    }
+  
+    .footer-section:first-child {
+      order: 3;
+    }
+  
+    .footer-section:last-child {
+      order: 2;
+    }
+  
+    .footer-links {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.2rem;
+      margin: 0;
+    }
+  
+    .footer-links li {
+      margin: 0;
+    }
+  
+    .footer-links a {
+      padding: 0.1rem 0.3rem;
+      font-size: 0.7rem;
+    }
+  
+    .footer-copyright {
+      font-size: 0.65rem;
+      margin: 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .navbar {
+      padding: 5px;
+    }
+  
+    .navbar_logo_container {
+      width: 100px;
+    }
+  
+    .Premium {
+      padding: 0.3rem 0.8rem;
+      margin-right: 0.25rem;
+    }
+  
+    .searchbutton {
+      padding: 0.3rem 0.6rem;
+    }
+  
+    .auth-button {
+      padding: 0.3rem 0.8rem;
+    }
+  
+    .footer {
+      padding: 0.25rem 0;
+    }
+    
+    .footer-content {
+      padding: 0.15rem 0.35rem;
+      gap: 0.15rem;
+    }
+    
+    .footer-logo-section {
+      width: 70px;
+      padding: 0.1rem;
+    }
+    
+    .footer-links a {
+      font-size: 0.65rem;
+      padding: 0.05rem 0.2rem;
+    }
+    
+    .footer-copyright {
+      font-size: 0.6rem;
+    }
+  
+    #premiumModal .modal-body {
+      padding: 0.5rem;
+    }
+  
+    #premiumModal .price-section {
+      margin: 1rem 0;
+    }
+  
+    .modal-dialog {
+      margin-top: 60px;
+    }
+  }
+  
+  /* Mobile-specific dark mode overrides */
+  @media (max-width: 767px) {
+    .searchbutton {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+    .dark-mode .navbar {
+      padding: 8px;
+    }
+  
+    .dark-mode .Premium {
+      padding: 0.4rem 1rem;
+    }
+  
+    .dark-mode .searchbutton {
+      padding: 0.4rem 0.8rem;
+    }
+  
+    .dark-mode .auth-button {
+      padding: 0.4rem 1rem;
+    }
+  
+    .dark-mode .footer {
+      padding: 0.3rem 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .searchbutton {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.85rem;
+      }
+      
+    .dark-mode .navbar {
+      padding: 5px;
+    }
+  
+    .dark-mode .Premium {
+      padding: 0.3rem 0.8rem;
+    }
+  
+    .dark-mode .searchbutton {
+      padding: 0.3rem 0.6rem;
+    }
+  
+    .dark-mode .auth-button {
+      padding: 0.3rem 0.8rem;
+    }
+  
+    .dark-mode .footer {
+      padding: 0.25rem 0;
+    }
+  }

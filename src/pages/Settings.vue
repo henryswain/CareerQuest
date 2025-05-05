@@ -19,9 +19,8 @@
           max="150"
           step="5"
           v-model="fontSize"
-          @input="updateSettings()"
+          @input="updateSettings(); updateFontSize()"
         />
-        <!-- @input="updateFontSize" -->
       </div>
     </section>
     
@@ -38,21 +37,6 @@
       </div>
     </section>
     
-    <!-- Notifications Section -->
-    <!-- <section class="settings-section">
-      <h2>Notifications</h2>
-      <div class="setting-group">
-        <label for="emailNotifications">Email Notifications:</label>
-        <input id="emailNotifications" type="checkbox" v-model="settings.emailNotifications" />
-        <span>{{ settings.emailNotifications ? 'Enabled' : 'Disabled' }}</span>
-      </div>
-      <div class="setting-group">
-        <label for="pushNotifications">Push Notifications:</label>
-        <input id="pushNotifications" type="checkbox" v-model="settings.pushNotifications" />
-        <span>{{ settings.pushNotifications ? 'Enabled' : 'Disabled' }}</span>
-      </div>
-    </section> -->
-    
     <!-- Language & Accessibility Section -->
     <section class="settings-section">
       <h2>Language & Accessibility</h2>
@@ -61,7 +45,6 @@
         <select id="languageSelect" v-model="currentLanguage" @change="updateSettings()">
           <option value="en">English</option>
           <option value="es">Español</option>
-          <!-- Add more languages if needed -->
         </select>
       </div>
     </section>
@@ -78,29 +61,38 @@
 
 <script setup>
 import { ref, watch, nextTick, onMounted } from 'vue';
-import '@/assets/dark-mode.css';  // Add this import
-import '@/assets/light-mode.css'; // Add this import for light mode
-
-const currentLanguage = ref()
-const fontSize = ref()
-const darkMode = ref()
-const itemsPerPage = ref()
-// Define default settings
-// const defaultSettings = {
-//   darkMode: false,
-//   fontSize: 100,
-//   itemsPerPage: 10,
-//   emailNotifications: false,
-//   pushNotifications: false,
-//   language: 'en'
-// };
-
+import '@/assets/dark-mode.css';
+import '@/assets/light-mode.css';
 import { getCurrentUser } from 'aws-amplify/auth';
+import { Hub } from 'aws-amplify/utils';
 
+const currentLanguage = ref('en')
+const fontSize = ref(100)
+const darkMode = ref(false)
+const itemsPerPage = ref(25)
 
+// Update the root font size for accessibility
+const updateFontSize = () => {
+  document.documentElement.style.fontSize = fontSize.value + '%';
+};
+
+const applyDarkMode = () => {
+  if (darkMode.value) {
+    document.body.classList.remove('light-mode');
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+    document.body.classList.add('light-mode');
+  }
+};
+
+// Watch for changes to apply immediately
+watch(() => darkMode.value, applyDarkMode);
+watch(() => fontSize.value, updateFontSize);
 
 const loadSettings = async () => {
   console.log("loadSettings called")
+  try {
     const { userId } = await getCurrentUser();
     console.log("userId: ", userId)
     const response = await fetch("https://7nzvzc1dd8.execute-api.us-east-2.amazonaws.com/dev/getting", {
@@ -109,6 +101,7 @@ const loadSettings = async () => {
     })
     const result = await response.json()
     console.log("result: ", result)
+    
     if (result.body == '[{}]') {
       console.log("result.body == '[{}]'")
       const response2 = await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
@@ -145,9 +138,16 @@ const loadSettings = async () => {
       darkMode.value = resultAsJSON.dark_mode
       fontSize.value = resultAsJSON.font_size
       itemsPerPage.value = resultAsJSON.ipp
-
     }
+    
+    // Apply settings after loading
+    applyDarkMode();
+    updateFontSize();
+  } catch (error) {
+    console.error("Error loading settings:", error)
+  }
 };
+
 const updateSettings = async (resetSettings = false) => {
   console.log("updateSettings called")
   try {
@@ -158,6 +158,7 @@ const updateSettings = async (resetSettings = false) => {
     console.log("language: ", currentLanguage.value)
     console.log("fontSize: ", fontSize.value)
     console.log("itemsPerPage: ", itemsPerPage.value)
+    
     const response = await fetch("https://cceysg77wa.execute-api.us-east-2.amazonaws.com/dev/updating", {
       method: "POST",
       body: JSON.stringify({
@@ -180,8 +181,6 @@ const updateSettings = async (resetSettings = false) => {
   }
 } 
 
-import { Hub } from 'aws-amplify/utils';
-
 Hub.listen('auth', ({ payload }) => {
   switch (payload.event) {
     case 'signedIn':
@@ -193,43 +192,17 @@ Hub.listen('auth', ({ payload }) => {
       currentLanguage.value = "en"
       darkMode.value = false
       itemsPerPage.value = 25
+      fontSize.value = 100
       break;
   }
 })
+
 onMounted(async () => {
   console.log("onMounted called")
   loadSettings()
 })
-
-const applyDarkMode = () => {
-  if (darkMode.value) {
-    document.body.classList.remove('light-mode');
-    document.body.classList.add('dark-mode');
-  } else {
-    document.body.classList.remove('dark-mode');
-    document.body.classList.add('light-mode');
-  }
-};
-
-watch(() => darkMode.value, applyDarkMode);
-
-
-// Update the root font size for accessibility
-const updateFontSize = () => {
-  document.documentElement.style.fontSize = fontSize.value + '%';
-};
-
-// Reset settings to defaults and clear localStorage
-const resetSettings = () => {
-  localStorage.clear();
-  alert('Settings reset to defaults.');
-  settings.value = { ...defaultSettings };
-  applyDarkMode();
-  updateFontSize();
-};
 </script>
 
-<!-- Scoped styles for the settings page layout -->
 <style scoped>
 .settings-page {
   max-width: 800px;
@@ -265,14 +238,12 @@ const resetSettings = () => {
   transition: background-color 0.2s ease;
 }
 
-/* Add styles for checkbox container */
 .setting-group:has(input[type="checkbox"]) {
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 1rem;
 }
 
-/* Style for the checkbox and its label */
 input[type="checkbox"] {
   margin-left: auto;
   order: 2;
@@ -311,6 +282,11 @@ input[type="range"]:hover {
   border-color: #0073b1;
 }
 
+input[type="range"] {
+  width: 100%;
+  max-width: 200px;
+}
+
 .btn-danger {
   background-color: #dc3545;
   color: white;
@@ -344,5 +320,3 @@ h2 {
   margin-bottom: 1rem;
 }
 </style>
-
-

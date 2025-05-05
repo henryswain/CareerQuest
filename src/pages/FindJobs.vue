@@ -1,13 +1,13 @@
 <!-- this page containes the various filters for job sorting, the list of
  jobs, pagination buttons, and the modals for the individual jobs -->
 
-<template>
+ <template>
   <div class="find-jobs-page">
     <div class="grid-container">
       <!-- Filter Section -->
       <div class="filter-section">
-        <div class="card filter-card mb-4">
-          <div class="card-body" style="height: 70vh; overflow: auto;">
+        <div class="card filter-card">
+          <div class="card-body">
             <h5 class="card-title">Filter Your Search</h5>
             <!-- Job Type Filter -->
             <div class="filter-group">
@@ -61,11 +61,13 @@
                 v-model="filters.location"
               />
             </div>
-            <!-- Apply Filters -->
-            <button class="btn btn-primary w-100 mt-3" @click="loadJobs()">
-              Apply Filters
-            </button>
           </div>
+          <!-- Sticky Footer for Apply Filters Button -->
+          <div class="filter-footer">
+    <button class="btn btn-primary apply-filter-btn" @click="loadJobs()">
+      Apply Filters
+    </button>
+  </div>
         </div>
       </div>
 
@@ -98,22 +100,22 @@
                 <!-- Salary and Location (unchanged) -->
                 <div v-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "F"'>
                   <p class="card-text">
-                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/hr • Full-time
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Full-time
                   </p>
                 </div>
                 <div v-else-if='item["Salary Frequency"] === "Hourly" && item["Full-Time/Part-Time indicator"] === "P"'>
                   <p class="card-text">
-                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/hr • Part-time
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/hr • Part-time
                   </p>
                 </div>
                 <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "F"'>
                   <p class="card-text">
-                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/yr • Full-time
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Full-time
                   </p>
                 </div>
                 <div v-else-if='item["Salary Frequency"] === "Annual" && item["Full-Time/Part-Time indicator"] === "P"'>
                   <p class="card-text">
-                    ${{ item["Salary Range From"] }} - ${{ item["Salary Range From"] }}/yr • Part-time
+                    {{ item["Salary Range From"] }} - {{ item["Salary Range From"] }}/yr • Part-time
                   </p>
                 </div>
                 <p class="card-text">Location: {{ item["Work Location"] }}</p>
@@ -515,7 +517,6 @@ onMounted(async () => {
   }
 
   loadSettings();
-  applyDarkMode();
   console.log("finished loading settings")
   loadJobs();
 });
@@ -566,7 +567,7 @@ const toggleExpand = (jobId, section) => {
   expanded.value[jobId][section] = !expanded.value[jobId][section];
 };
 
-const shortenText = (text, length = 300) => {
+const shortenText = (text, length = 150) => {
   if (!text) return "";
   return text.length > length ? text.slice(0, length) + "..." : text;
 };
@@ -657,26 +658,26 @@ watch(
 
 .grid-container {
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: 180px 1fr;  /* Reduced from 250px to 180px */
   gap: 20px;
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
 .filter-section {
-  padding: 1rem;
+  padding: 0.5rem;  /* Reduced padding */
   background-color: var(--light-surface);
   border-right: 1px solid var(--light-border);
+  min-height: 0;
+  height: auto;
 }
 
 .jobs-section {
-  display: table;
   padding: 1rem;
-  height: 100vh;
 }
 
 .no-jobs-block {
-  height: 100vh;
+  height: auto;
 }
 
 .no-jobs-text {
@@ -691,8 +692,9 @@ watch(
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-top: 20px;
   padding: 20px;
-  margin-bottom: 75px;
+  margin-bottom: 50px;
 }
 
 .current-page-num {
@@ -709,34 +711,44 @@ watch(
   color: var(--light-text-primary);
 }
 
-.card-body{
+.card-body {
   background-color: var(--light-bg);
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 0.75rem;  /* Reduced padding */
 }
 
 .filter-card {
-  position: fixed;
-  height: 80%;
-  width: 200px;
   background-color: var(--light-surface);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  width: 100%;
+}
+
+.card-title {
+  font-size: 1rem;  /* Slightly smaller title */
+  margin-bottom: 0.75rem;
 }
 
 .filter-group h6 {
   margin-bottom: 0.5rem;
   color: var(--light-text-primary);
+  font-size: 0.9rem;  /* Smaller headings */
 }
 
 .filter-options {
-  justify-content: center;
+  justify-content: flex-start;  /* Changed to left align */
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.25rem;  /* Reduced gap */
 }
 
 .filter-box {
   border: 1px solid var(--light-border);
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;  /* Reduced padding */
+  font-size: 0.85rem;  /* Smaller font */
   border-radius: 4px;
   background-color: var(--light-surface);
   color: var(--light-text-primary);
@@ -745,7 +757,7 @@ watch(
 }
 
 .filter-box.active {
-  background-color: #2196f3; /* Material blue */
+  background-color: #2196f3;
   color: #ffffff;
   border-color: #2196f3;
 }
@@ -755,7 +767,7 @@ watch(
 }
 
 .filter-box.active:hover {
-  background-color: #1976d2; /* Darker blue on hover */
+  background-color: #1976d2;
 }
 
 .bookmark-icon {
@@ -787,14 +799,90 @@ watch(
   margin-top: 80px;
 }
 
-.modal-content{
-  width:150%;
-  justify-content: center;
+/* Apply Filters button styling */
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
 }
 
+/* Specific styling for Apply Filters button */
+.apply-filter-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.filter-footer {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--light-border);
+  background-color: var(--light-surface);
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;  /* Vertically center */
+}
+
+/* Mobile responsive styles */
 @media (max-width: 768px) {
   .grid-container {
     grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .filter-section {
+    padding: 1rem;
+    border-bottom: 1px solid var(--light-border);
+    border-right: none;
+  }
+  
+  .filter-card {
+    width: 100%;
+    position: relative;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    text-align: center;  /* Center the main title */
+  }
+  
+  .filter-group h6 {
+    font-size: 1rem;
+    text-align: center;  /* Center all section headings */
+  }
+  
+  .filter-group {
+    text-align: center;  /* Center the entire filter group */
+  }
+  
+  .filter-options {
+    justify-content: center;
+  }
+  
+  .filter-box {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .form-control {
+    text-align: center;  /* Center the location input text */
+  }
+  
+  .apply-filter-btn {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .filter-footer {
+    display: block;
   }
 }
 </style>
