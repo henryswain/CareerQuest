@@ -1,11 +1,41 @@
 
-  @media (max-width: 991px) {
-    .navbar.d-none.d-lg-flex {
-      display: none !important;
+@media (max-width: 991px) {
+    /*  dropdown works in mobile navbar */
+    .navbar-collapse .dropdown {
+      position: relative;
+      width: 100%;
     }
     
-    .navbar.d-lg-none {
-      display: flex !important;
+    .navbar-collapse .dropdown-menu {
+      position: absolute;
+      right: 0;
+      left: auto;
+      top: 100%;
+      transform: none !important;
+      margin-top: 0.5rem;
+      width: 200px;
+      z-index: 1000;
+    }
+    
+    .navbar-collapse .btn-secondary.dropdown-toggle {
+      margin-right: 1rem;
+    }
+    
+    /*  dropdown works when clicked */
+    .dropdown-menu.show-on-mobile {
+      display: block;
+    }
+    
+    /* Make dropdown items more touch-friendly */
+    .dropdown-item {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+    
+    /* Prevents dropdown from being hidden by navbar collapse */
+    .navbar-collapse {
+      position: relative;
+      z-index: 999;
     }
   }
   
@@ -18,11 +48,14 @@
       width: 120px;
     }
   
-    .Premium {
-      padding: 0.4rem 1rem;
-      margin-right: 0.5rem;
-    }
-  
+    .filter-card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+}
+.filter-box, .btn {
+    border-radius: 20px;
+  }
     .searchbutton {
       padding: 0.4rem 0.8rem;
     }
@@ -43,56 +76,10 @@
     .user-email {
       font-size: 0.9rem;
     }
-  
-    .footer {
-      padding: 0.3rem 0;
-      height: auto;
-      min-height: fit-content;
+    .find-jobs-page .footer {
+      display: none;
     }
-    
-    .footer-content {
-      flex-direction: column;
-      gap: 0.25rem;
-      text-align: center;
-      padding: 0.25rem 0.5rem;
-    }
-  
-    .footer-logo-section {
-      order: 1;
-      justify-content: center;
-      width: 80px;
-      padding: 0.15rem;
-    }
-  
-    .footer-section:first-child {
-      order: 3;
-    }
-  
-    .footer-section:last-child {
-      order: 2;
-    }
-  
-    .footer-links {
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.2rem;
-      margin: 0;
-    }
-  
-    .footer-links li {
-      margin: 0;
-    }
-  
-    .footer-links a {
-      padding: 0.1rem 0.3rem;
-      font-size: 0.7rem;
-    }
-  
-    .footer-copyright {
-      font-size: 0.65rem;
-      margin: 0;
-    }
-  }
+}
   
   @media (max-width: 480px) {
     .navbar {
@@ -103,10 +90,6 @@
       width: 100px;
     }
   
-    .Premium {
-      padding: 0.3rem 0.8rem;
-      margin-right: 0.25rem;
-    }
   
     .searchbutton {
       padding: 0.3rem 0.6rem;
@@ -154,10 +137,7 @@
   
   /* Mobile-specific dark mode overrides */
   @media (max-width: 767px) {
-    .searchbutton {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-      }
+    
     .dark-mode .navbar {
       padding: 8px;
     }
@@ -180,11 +160,6 @@
   }
   
   @media (max-width: 480px) {
-    .searchbutton {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.85rem;
-      }
-      
     .dark-mode .navbar {
       padding: 5px;
     }

@@ -65,9 +65,9 @@
   }
   
   .Premium {
-    background-color: transparent;
-    border: 2px solid #FFD700;
-    color: #FFD700;
+    background-color: transparent !important;
+    border: 2px solid #FFD700 !important;
+    color: #FFD700 !important;
     padding: 0.5rem 1.5rem;
     border-radius: 50px;
     font-weight: 500;
@@ -77,7 +77,7 @@
   
   .Premium:hover {
     background-color: rgba(255, 215, 0, 0.1);
-    color: #FFD700;
+    color: #FFD700 !important;
   }
   
   /* Premium Modal Styles */
@@ -203,6 +203,54 @@
     font-size: 0.9rem;
     margin: 0;
     border: none;
+  }
+
+  .btn-secondary.dropdown-toggle {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+  }
+  
+  .btn-secondary.dropdown-toggle:hover {
+    background-color: #5c636a !important;
+    border-color: #565e64 !important;
+    color: #ffffff !important;
+  }
+  
+  .btn-secondary.dropdown-toggle:active,
+  .btn-secondary.dropdown-toggle.show {
+    background-color: #5c636a !important;
+    border-color: #565e64 !important;
+    color: #ffffff !important;
+  }
+  
+  /* Ensure text visibility in light mode */
+  .btn-secondary.dropdown-toggle .me-2 {
+    color: #ffffff !important;
+  }
+  
+  /* Dark mode overrides for account button */
+  .dark-mode .btn-secondary.dropdown-toggle {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+  }
+  
+  .dark-mode .btn-secondary.dropdown-toggle:hover {
+    background-color: #444444 !important;
+    border-color: #666666 !important;
+    color: #ffffff !important;
+  }
+  
+  .dark-mode .btn-secondary.dropdown-toggle:active,
+  .dark-mode .btn-secondary.dropdown-toggle.show {
+    background-color: #444444 !important;
+    border-color: #666666 !important;
+    color: #ffffff !important;
+  }
+  
+  .dark-mode .btn-secondary.dropdown-toggle .me-2 {
+    color: #ffffff !important;
   }
   
   /* Dark mode overrides for auth button */

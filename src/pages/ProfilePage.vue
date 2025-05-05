@@ -1099,12 +1099,28 @@ onMounted(async () => {
 }
 
 .skills {
-  margin-bottom: 120px !important; /* was 2rem, ensure it's above footer */
-  padding-bottom: 2rem; /* extra space for safety */
+  margin-bottom: 120px !important; 
+  padding-bottom: 2rem; 
 }
 
 body {
-  padding-bottom: 160px; /* in case footer is fixed */
+  padding-bottom: 160px; 
 }
 
+/* blue buttons */
+.dark-mode .change-profile-btn,
+.dark-mode .add-education-btn,
+.dark-mode .add-experience-btn,
+.dark-mode .add-skills-btn {
+  background-color: #0073b1 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.dark-mode .change-profile-btn:hover,
+.dark-mode .add-education-btn:hover,
+.dark-mode .add-experience-btn:hover,
+.dark-mode .add-skills-btn:hover {
+  background-color: #005582 !important;
+}
 </style>

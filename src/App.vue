@@ -8,11 +8,12 @@ import { Hub } from 'aws-amplify/utils';
 import originalConfig from '../amplify_outputs.json';
 import { fetchUserAttributes, getCurrentUser, signOut as amplifySignOut } from 'aws-amplify/auth';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { Dropdown } from 'bootstrap';
+import { Dropdown, Collapse } from 'bootstrap';
 
 // Import the separate CSS files
 import '@/assets/desktop-styles.css';
 import '@/assets/mobile-styles.css';
+
 // Function to replace env variable placeholders
 const resolveConfig = (config) => {
   const replacer = (_, value) => {
@@ -27,11 +28,15 @@ const resolveConfig = (config) => {
 };
 
 const amplifyConfig = resolveConfig(originalConfig);
-
 Amplify.configure(amplifyConfig)
 
 // Save user email locally
 const currentUserEmail = ref(localStorage.getItem('currentUserEmail'));
+
+// Footer visibility tracking
+const isFooterVisible = ref(true);
+let lastScrollTop = 0;
+let ticking = false;
 
 Hub.listen('auth', async ({ payload }) => {
   switch (payload.event) {
@@ -40,7 +45,7 @@ Hub.listen('auth', async ({ payload }) => {
       try {
         const attributes = await fetchUserAttributes();
         const email = attributes.email;
-        localStorage.setItem('currentUserEmail', email); // Save email
+        localStorage.setItem('currentUserEmail', email);
         currentUserEmail.value = email;
       } catch (error) {
         console.error("Error getting current user after sign in:", error);
@@ -50,7 +55,7 @@ Hub.listen('auth', async ({ payload }) => {
 
     case 'signedOut':
       console.log("signed out");
-      localStorage.removeItem('currentUserEmail'); // Get rid of it when signed out
+      localStorage.removeItem('currentUserEmail');
       currentUserEmail.value = null;
       document.getElementById("close-modal").click();
       break;
@@ -61,7 +66,6 @@ function goToAuthPage() {
   router.push({ path: '/auth' });
 }
 
-
 function toggleDropdown() {
   const dropdownElement = document.getElementById('dropdownMenuButton');
   if (dropdownElement) {
@@ -69,7 +73,6 @@ function toggleDropdown() {
     dropdown.toggle();
   }
 }
-
 
 async function signOut() {
   try {
@@ -89,6 +92,25 @@ async function handleSubmit() {
   await nextTick();
 }
 
+// Footer scroll handler
+const handleScroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
+      
+      if (scrollDirection === 'down' && isFooterVisible.value) {
+        isFooterVisible.value = false;
+      } else if (scrollDirection === 'up' && !isFooterVisible.value) {
+        isFooterVisible.value = true;
+      }
+      
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      ticking = false;
+    });
+    ticking = true;
+  }
+};
 
 // Modify PayPal SDK loading function
 function loadPayPalScript() {
@@ -96,7 +118,6 @@ function loadPayPalScript() {
   script.src = 'https://www.paypal.com/sdk/js?client-id=AfXN2AKlII2ctuOylHuBnHdkkzcPB-kqA8NIdz6Gw1c2nGOhqj-scGysrXaR_VGLrduOlACJAsU22o7K&currency=USD';
   script.async = true;
   
-  // Add event listeners for script loading
   script.addEventListener('load', () => {
     if (window.paypal) {
       window.paypal.Buttons({
@@ -164,10 +185,10 @@ const handleClickOutside = (event) => {
   const navbarCollapse = document.getElementById('navbarNavMobile');
   const navbarToggler = document.querySelector('.navbar-toggler');
   
-  if (navbarCollapse.classList.contains('show') && 
+  if (navbarCollapse?.classList.contains('show') && 
       !navbarCollapse.contains(event.target) && 
-      !navbarToggler.contains(event.target)) {
-    navbarToggler.click();
+      !navbarToggler?.contains(event.target)) {
+    navbarToggler?.click();
   }
 };
 
@@ -203,6 +224,20 @@ onMounted(async () => {
     new Dropdown(dropdownElementMobile);
   }
   
+  // Initialize mobile navbar collapse
+  const navbarToggle = document.querySelector('.navbar-toggler');
+  const navbarCollapse = document.getElementById('navbarNavMobile');
+  
+  if (navbarToggle && navbarCollapse) {
+    const collapse = new Collapse(navbarCollapse, {
+      toggle: false
+    });
+    
+    navbarToggle.addEventListener('click', () => {
+      collapse.toggle();
+    });
+  }
+  
   // Ensure Bootstrap is aware of dynamic elements
   nextTick(() => {
     const triggerTabList = document.querySelectorAll('[data-bs-toggle="dropdown"]');
@@ -214,153 +249,152 @@ onMounted(async () => {
   // Add event listeners
   document.addEventListener('click', handleClickOutside);
   window.addEventListener('scroll', handleScrollEvent, { passive: true });
+  window.addEventListener('scroll', handleScroll, { passive: true });
 });
 
 // Clean up event listeners when component unmounts
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside);
   window.removeEventListener('scroll', handleScrollEvent);
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
 <template>
   <div id="app" style="position: relative;">
-    <!-- Desktop navbar (Hidden on mobile)-->
     <!-- Desktop navbar -->
     <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
-  <div class="container-fluid">
+      <div class="container-fluid">
+        <!-- Left side -->
+        <router-link class="navbar_logo_container" to="/home-page">
+          <img class="navbar_logo_img" alt="CareerQuest logo" />
+        </router-link>
 
-    <!-- Left side -->
-    <router-link class="navbar_logo_container" to="/home-page">
-      <img class="navbar_logo_img" alt="CareerQuest logo" />
-    </router-link>
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
+          </li>
+        </ul>
 
-    <ul class="navbar-nav me-auto">
-      <li class="nav-item">
-        <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
-      </li>
-      <li class="nav-item">
-        <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
-      </li>
-    </ul>
+        <!-- Right side -->
+        <button
+          class="Premium"
+          id="premium-now"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#premiumModal"
+        >
+          Premium
+        </button>
 
-    <!-- Right side -->
-    <button
-      class="Premium"
-      id="premium-now"
-      type="button"
-      data-bs-toggle="modal"
-      data-bs-target="#premiumModal"
-    >
-      Premium
-    </button>
+        <form class="d-flex me-3" @submit.prevent="handleSubmit">
+          <input
+            class="form-control me-2"
+            type="text"
+            v-model="searchText"
+            placeholder="Search jobs..."
+          />
+          <button class="searchbutton btn btn-primary" type="submit">Search</button>
+        </form>
 
-    <form class="d-flex me-3" @submit.prevent="handleSubmit">
-      <input
-        class="form-control me-2"
-        type="text"
-        v-model="searchText"
-        placeholder="Search jobs..."
-      />
-      <button class="searchbutton btn btn-primary" type="submit">Search</button>
-    </form>
-
-    <!-- Sign in/display user email-->
-    <div class="d-flex align-items-center me-3">
-      <button
-        v-if="!currentUserEmail"
-        id="desktop-auth-state"
-        type="button"
-        class="auth-button"
-        @click="goToAuthPage"
-      >
-        Sign in
-      </button>
-      <span v-else class="navbar-text user-email">
-        Hello, {{ currentUserEmail }}
-      </span>
-    </div>
-
-    <!-- Dropdown -->
-    <div class="dropdown">
-      <button
-        class="btn btn-secondary dropdown-toggle d-flex align-items-center justify-content-center"
-        type="button"
-        id="dropdownMenuButton"
-        @click="toggleDropdown"
-      >
-        <span class="me-2">Account</span>
-        <img
-          src="@/assets/user.png"
-          style="max-height: 30px;"
-          alt="User"
-          class="rounded-circle"
-        />
-      </button>
-
-      <ul v-if="!isMobile" class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-        <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-        <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li v-if="currentUserEmail">
-          <button class="dropdown-item" @click="signOut">Sign Out</button>
-        </li>
-        <li v-else>
+        <!-- Sign in/display user email-->
+        <div class="d-flex align-items-center me-3">
           <button
+            v-if="!currentUserEmail"
             id="desktop-auth-state"
             type="button"
-            class="dropdown-item"
-            data-bs-toggle="modal"
-            data-bs-target="#authenticationModal"
+            class="auth-button"
+            @click="goToAuthPage"
           >
-            Sign In
+            Sign in
           </button>
-        </li>
-      </ul>
+          <span v-else class="navbar-text user-email">
+            Hello, {{ currentUserEmail }}
+          </span>
+        </div>
 
-      <ul v-else class="dropdown-menu dropdown-menu-end">
-        <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-        <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li v-if="currentUserEmail">
-          <button class="dropdown-item" @click="signOut">Sign Out</button>
-        </li>
-        <li v-else>
+        <!-- Dropdown -->
+        <div class="dropdown">
           <button
-            id="desktop-auth-state"
+            class="btn btn-secondary dropdown-toggle d-flex align-items-center justify-content-center"
             type="button"
-            class="dropdown-item"
-            data-bs-toggle="modal"
-            data-bs-target="#authenticationModal"
+            id="dropdownMenuButton"
+            @click="toggleDropdown"
           >
-            Sign In
+            <span class="me-2">Account</span>
+            <img
+              src="@/assets/user.png"
+              style="max-height: 30px;"
+              alt="User"
+              class="rounded-circle"
+            />
           </button>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
 
+          <ul v-if="!isMobile" class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
+            <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li v-if="currentUserEmail">
+              <button class="dropdown-item" @click="signOut">Sign Out</button>
+            </li>
+            <li v-else>
+              <button
+                id="desktop-auth-state"
+                type="button"
+                class="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#authenticationModal"
+              >
+                Sign In
+              </button>
+            </li>
+          </ul>
 
-      <!-- Mobile navbar -->
-      <!-- New navbar for mobile. Is not white and adopts new logo-->
-      <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
+          <ul v-else class="dropdown-menu dropdown-menu-end">
+            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
+            <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li v-if="currentUserEmail">
+              <button class="dropdown-item" @click="signOut">Sign Out</button>
+            </li>
+            <li v-else>
+              <button
+                id="desktop-auth-state"
+                type="button"
+                class="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#authenticationModal"
+              >
+                Sign In
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
       <div class="container-fluid">
         <router-link class="navbar_logo_container" to="/home-page">
-        <img class="navbar_logo_img" alt="CareerQuest logo"/>
+          <img class="navbar_logo_img" alt="CareerQuest logo"/>
         </router-link>
         <button
-          class="navbar-toggler bg-primary"
+          class="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNavMobile"
-          aria-expanded="false"
           aria-controls="navbarNavMobile"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse flex-column align-items-center" id="navbarNavMobile">
-          <ul class="navbar-nav mb-2 w-100 d-flex justify-content-center">
+        <div class="collapse navbar-collapse" id="navbarNavMobile">
+          <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item">
               <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
             </li>
@@ -368,7 +402,8 @@ onBeforeUnmount(() => {
               <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
             </li>
           </ul>
-          <form class="d-flex me-3" @submit.prevent="handleSubmit">
+          
+          <form class="d-flex my-2 w-100" @submit.prevent="handleSubmit">
             <input
               class="form-control me-2"
               type="text"
@@ -377,6 +412,7 @@ onBeforeUnmount(() => {
             />
             <button class="searchbutton btn btn-primary" type="submit">Search</button>
           </form>
+          
           <div class="dropdown w-100 d-flex justify-content-end">
             <button 
               id="dropdownMenuButtonMobile"
@@ -402,11 +438,10 @@ onBeforeUnmount(() => {
               </li>
               <li v-else>
                 <button
-                  id="desktop-auth-state"
                   type="button"
                   class="dropdown-item"
-                  data-bs-toggle="modal"
-                  data-bs-target="#authenticationModal"
+                  @click="goToAuthPage"
+                  data-bs-dismiss="modal"
                 >
                   Sign In
                 </button>
@@ -417,61 +452,60 @@ onBeforeUnmount(() => {
       </div>
     </nav>
 
-  <!-- Premium Modal -->
-  <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="premiumModalLabel">Upgrade to Premium</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h4>Premium Benefits:</h4>
-        <ul>
-          <li>Unlimited job applications</li>
-          <li>Priority application status</li>
-          <li>Advanced job matching</li>
-          <li>Early access to new jobs</li>
-        </ul>
-        <div class="price-section">
-          <h5>Monthly Subscription: $9.99</h5>
+    <!-- Premium Modal -->
+    <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="premiumModalLabel">Upgrade to Premium (In Beta)</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h4>Premium Benefits:</h4>
+            <ul>
+              <li>Unlimited job applications</li>
+              <li>Priority application status</li>
+              <li>Advanced job matching</li>
+              <li>Early access to new jobs</li>
+            </ul>
+            <div class="price-section">
+              <h5>Monthly Subscription: $9.99</h5>
+            </div>
+            <!-- PayPal Button Container -->
+            <div id="paypal-button-container"></div>
+          </div>
         </div>
-        <!-- PayPal Button Container -->
-        <div id="paypal-button-container"></div>
       </div>
     </div>
-  </div>
-</div>
 
-  <!-- main content  -->
+    <!-- main content  -->
     <div style="margin-top: 70px;">
       <router-view />
     </div>
   </div>
 
-<!-- footer content -->
-  <footer class="footer">
-        <div class="footer-content">
-          <div class="footer-section">
-            <p class="footer-copyright">&copy; 2025 CareerQuest, Inc</p>
-          </div>
+  <!-- footer content -->
+  <footer class="footer" :class="{ 'footer-hidden': !isFooterVisible }">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p class="footer-copyright">&copy; 2025 CareerQuest, Inc</p>
+      </div>
 
-          <div class="footer-logo-section">
-            <img class="navbar_logo_img" alt="CareerQuest logo" />
-          </div>
+      <div class="footer-logo-section">
+        <img class="navbar_logo_img" alt="CareerQuest logo" />
+      </div>
 
-          <div class="footer-section">
-            <ul class="footer-links">
-              <li><a href="/about">About</a></li>
-              <li><a href="/contact">Contact</a></li>
-              <li><a href="/privacy">Privacy</a></li>
-              <li><a href="/terms">Terms</a></li>
-            </ul>
-          </div>
-        </div>
-    </footer>
+      <div class="footer-section">
+        <ul class="footer-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style scoped>
-
 </style>

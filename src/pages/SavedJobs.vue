@@ -321,6 +321,9 @@ const fetchJobDetails = async (jobId) => {
 <style scoped>
 .saved-jobs-container {
   padding: 2rem;
+  background-color: #f8f9fa; /* Light background by default */
+  min-height: calc(100vh - 140px); /* Adjust for navbar and footer */
+  color: #333;
 }
 
 .no-jobs {
@@ -331,6 +334,7 @@ const fetchJobDetails = async (jobId) => {
 .jobs-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .job-item {
@@ -339,10 +343,128 @@ const fetchJobDetails = async (jobId) => {
   margin-bottom: 1rem;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.job-item h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.job-item p {
+  color: #666;
+  margin-bottom: 0.25rem;
 }
 
 .btn-group {
   display: flex;
   gap: 10px;
+  margin-top: 1rem;
+}
+
+/* Dark mode overrides */
+.dark-mode .saved-jobs-container {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+}
+
+.dark-mode .no-jobs {
+  color: #bbb;
+}
+
+.dark-mode .job-item {
+  border-color: #444;
+  background-color: #282828;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .job-item h3 {
+  color: #f5f5f5;
+}
+
+.dark-mode .job-item p {
+  color: #d0d0d0;
+}
+
+.dark-mode .btn-link {
+  color: #87CEEB !important;
+}
+
+.dark-mode .btn-link:hover {
+  color: #B0E0E6 !important;
+}
+
+.dark-mode .modal-content {
+  background-color: #282828;
+  color: #f5f5f5;
+  border-color: #444;
+}
+
+.dark-mode .modal-header {
+  border-bottom-color: #444;
+}
+
+.dark-mode .modal-footer {
+  border-top-color: #444;
+}
+
+.dark-mode .modal-title {
+  color: #f5f5f5;
+}
+
+.dark-mode .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.dark-mode .btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.dark-mode .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #fff;
+}
+
+.dark-mode .btn-close {
+  filter: invert(1);
+}
+
+.dark-mode .text-muted {
+  color: #aaa !important;
+}
+
+/* Style the "Saved Jobs" heading */
+h1 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.dark-mode h1 {
+  color: #f5f5f5;
+}
+
+/* modal sections */
+h5 {
+  color: #333;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.dark-mode h5 {
+  color: #f5f5f5;
+}
+
+/* spacing and layout */
+.modal-body p {
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.btn-link {
+  padding: 0.5rem 0;
 }
 </style>

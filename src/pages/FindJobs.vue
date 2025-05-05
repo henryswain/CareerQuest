@@ -725,6 +725,7 @@ watch(
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   width: 100%;
+  
 }
 
 .card-title {
@@ -739,7 +740,7 @@ watch(
 }
 
 .filter-options {
-  justify-content: flex-start;  /* Changed to left align */
+  justify-content: center;  /* Changed to center */
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;  /* Reduced gap */
