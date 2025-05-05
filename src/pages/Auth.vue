@@ -15,7 +15,35 @@
   import "@aws-amplify/ui-vue/styles.css";
   import '@/assets/dark-mode.css';
   import '@/assets/light-mode.css';
+  import { Hub } from 'aws-amplify/utils';
+  import { getCurrentUser } from "aws-amplify/auth";
 
+  Hub.listen('auth', async ({ payload }) => {
+   // if the user is signed in
+   try {
+     const { userId } = await getCurrentUser();
+     switch (payload.event) {
+       case 'signedIn':
+         console.log("signed in")
+         fetch(`https://gm4pbbszg2.execute-api.us-east-2.amazonaws.com/dev/add_user_id_to_user-data?id=${userId}`)
+         document.getElementById("close-modal").click()
+         document.getElementById("desktop-auth-state").textContent = "Sign Out"
+         document.getElementById("mobile-auth-state").textContent = "Sign Out"
+         break;
+     }
+   }
+   // otherwise
+   catch {
+     switch (payload.event) {
+       case 'signedOut':
+         console.log("signed out")
+         document.getElementById("close-modal").click()
+         document.getElementById("desktop-auth-state").textContent = "Sign in"
+         document.getElementById("mobile-auth-state").textContent = "Sign in"
+         break;
+     }
+   }
+ });
   // Ensure dark mode styles are applied on component mount
   onMounted(() => {
     // Check if dark mode is enabled in localStorage
