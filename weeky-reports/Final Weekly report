@@ -13,8 +13,14 @@ Team weekly report
 
 * Team member 1: Henry Swain
 o Stories Completed
+- integrated settings page with database.
 o Progress report
+- it took me a bit but it went well.
+- Now all the settings are saved with the signed in user in the database
+- there are still defaults for when the user is signed out along with the reset to defaults button
 o Plan for next week
+- work on slides
+- final presentation.
 
 * Team member 2: Marcus Bodnar
 o Stories completed
