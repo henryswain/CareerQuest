@@ -24,8 +24,15 @@ o Plan for next week
 
 * Team member 2: Marcus Bodnar
 o Stories completed
+-Got the authenticator to store get users into db again
+-Worked on simple bugs/functionality
+-Attempted to get spanish incorporated
 o Progress report
+-It was better with papaparse but thats what cause the load times for the spanish. I kept trying to make another lambda functions with seperate api for the translated one. Then tried to combine them and add them to one api. No luck so we took it out.
+-Users were not being added to the database due to the hub being taken out. Reimplemented that.
+- Added to the dark mode since their was alot of bugs with the two seperate css files.
 o Plan for next week
+Presentations
 
 * Team member 3: Tommy Le 
 o Stories completed
@@ -42,8 +49,17 @@ Present and semester is over
 
 * Team member 4: Ryan Witcraft
 o Stories completed
+-  Made savedJobs functional again
+- Profile page styling fixes
+- Profile page saves non-locally
 o Progress report
+- savedJobs now uses the AWS fetch call used in findJobs to find job details
+- Profile page modals were having issues where they did not close/left the dim backdrop after which froze the site. Manually closing with bootstrap fixed this issue.
+- Profile page modals save user data to a Dynamo DB from an API call to a lambda function
+- If user is not in the DB already, when the page loads it checks and populates an empty profile with the new user ID
+- When page loads it populates the modals with saved user data
 o Plan for next week
+- Presentations
 
 
 * Team member 5: Magnolia Wallerich
