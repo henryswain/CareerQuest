@@ -629,6 +629,45 @@ onMounted(async () => {
   </footer>
 </template>
 
+
 <style scoped>
+/* Footer styling for mobile devices */
+@media (max-width: 768px) {
+  .footer-logo-section .navbar_logo_img {
+    max-height: 30px !important; /* Reduce logo size on mobile */
+    width: auto;
+  }
+  
+  .footer {
+    padding: 0 rem 0; /* Reduce footer padding */
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .footer-section {
+    text-align: center;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-copyright {
+    font-size: 0.875rem; /* Smaller copyright text */
+  }
+  
+  .footer-links li a {
+    font-size: 0.875rem; /* Smaller link text */
+  }
+}
+
+/* General footer styles */
+.footer-logo-section .navbar_logo_img {
+  transition: max-height 0.3s ease; /* Smooth transition */
+}
 
 </style>
