@@ -62,6 +62,23 @@ Hub.listen('auth', async ({ payload }) => {
   }
 });
 
+function handleDropdownItemClick(action) {
+  // Close the navbar collapse
+  const navbarCollapse = document.getElementById('navbarNavMobile');
+  if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+    const bsCollapse = Collapse.getInstance(navbarCollapse);
+    if (bsCollapse) {
+      bsCollapse.hide();
+    }
+  }
+  
+  // Execute the action
+  if (typeof action === 'function') {
+    action();
+  }
+}
+
+
 function goToAuthPage() {
   router.push({ path: '/auth' });
 }
@@ -219,30 +236,77 @@ onMounted(async () => {
     new Dropdown(dropdownElement);
   }
   
-  const dropdownElementMobile = document.getElementById('dropdownMenuButtonMobile');
-  if (dropdownElementMobile) {
-    new Dropdown(dropdownElementMobile);
-  }
-  
-  // Initialize mobile navbar collapse
-  const navbarToggle = document.querySelector('.navbar-toggler');
-  const navbarCollapse = document.getElementById('navbarNavMobile');
-  
-  if (navbarToggle && navbarCollapse) {
-    const collapse = new Collapse(navbarCollapse, {
-      toggle: false
-    });
+  // FIXED - Initialize mobile navbar collapse properly
+  const initializeMobileNavbar = () => {
+    const navbarToggle = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.getElementById('navbarNavMobile');
     
-    navbarToggle.addEventListener('click', () => {
-      collapse.toggle();
-    });
-  }
+    if (navbarToggle && navbarCollapse) {
+      // Remove existing event listeners to prevent duplicates
+      if (navbarToggle._clickHandler) {
+        navbarToggle.removeEventListener('click', navbarToggle._clickHandler);
+      }
+      
+      // Create a new click handler
+      const clickHandler = (e) => {
+        e.preventDefault();
+        
+        const bsCollapse = Collapse.getInstance(navbarCollapse) || new Collapse(navbarCollapse, {
+          toggle: false
+        });
+        
+        bsCollapse.toggle();
+      };
+      
+      // Store the handler for cleanup
+      navbarToggle._clickHandler = clickHandler;
+      
+      // Add the event listener
+      navbarToggle.addEventListener('click', clickHandler);
+    }
+  };
   
-  // Ensure Bootstrap is aware of dynamic elements
+  // Force initialization of mobile dropdown after nextTick
   nextTick(() => {
-    const triggerTabList = document.querySelectorAll('[data-bs-toggle="dropdown"]');
-    triggerTabList.forEach(triggerEl => {
-      new Dropdown(triggerEl);
+    const initializeMobileDropdown = () => {
+      const dropdownElementMobile = document.getElementById('dropdownMenuButtonMobile');
+      
+      if (dropdownElementMobile) {
+        // Dispose of existing instance if any
+        const existingInstance = Dropdown.getInstance(dropdownElementMobile);
+        if (existingInstance) {
+          existingInstance.dispose();
+        }
+        
+        // Create new dropdown instance with proper config
+        const dropdown = new Dropdown(dropdownElementMobile);
+        
+        // Add click handler
+        dropdownElementMobile.addEventListener('click', (e) => {
+          e.preventDefault();
+          dropdown.toggle();
+        });
+        
+        // Add touch handler for mobile devices
+        dropdownElementMobile.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          dropdown.toggle();
+        });
+      }
+    };
+    
+    // Initialize immediately
+    initializeMobileDropdown();
+    initializeMobileNavbar(); // Add this line to initialize mobile navbar
+    
+    // Also initialize on resize to mobile
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 992) {
+        nextTick(() => {
+          initializeMobileDropdown();
+          initializeMobileNavbar(); // Add this line to reinitialize on resize
+        });
+      }
     });
   });
   
@@ -250,13 +314,6 @@ onMounted(async () => {
   document.addEventListener('click', handleClickOutside);
   window.addEventListener('scroll', handleScrollEvent, { passive: true });
   window.addEventListener('scroll', handleScroll, { passive: true });
-});
-
-// Clean up event listeners when component unmounts
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside);
-  window.removeEventListener('scroll', handleScrollEvent);
-  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
@@ -377,81 +434,128 @@ onBeforeUnmount(() => {
     </nav>
 
     <!-- Mobile navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
-      <div class="container-fluid">
-        <router-link class="navbar_logo_container" to="/home-page">
-          <img class="navbar_logo_img" alt="CareerQuest logo"/>
-        </router-link>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavMobile"
-          aria-controls="navbarNavMobile"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavMobile">
-          <ul class="navbar-nav mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
-            </li>
-          </ul>
-          
-          <form class="d-flex my-2 w-100" @submit.prevent="handleSubmit">
-            <input
-              class="form-control me-2"
-              type="text"
-              v-model="searchText"
-              placeholder="Search jobs..."
-            />
-            <button class="searchbutton btn btn-primary" type="submit">Search</button>
-          </form>
-          
-          <div class="dropdown w-100 d-flex justify-content-end">
-            <button 
-              id="dropdownMenuButtonMobile"
-              class="btn btn-secondary dropdown-toggle" 
-              type="button" 
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src="@/assets/user.png"
-                style="max-height: 30px;"
-                alt="User"
-                class="rounded-circle"
-              />
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButtonMobile">
-              <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-              <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-              <li><hr class="dropdown-divider" /></li>
-              
-              <li v-if="currentUserEmail">
-                <button class="dropdown-item" @click="signOut">Sign Out</button>
-              </li>
-              <li v-else>
-                <button
-                  type="button"
-                  class="dropdown-item"
-                  @click="goToAuthPage"
-                  data-bs-dismiss="modal"
-                >
-                  Sign In
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <!-- Fix for mobile account dropdown in App.vue -->
 
+<!-- Update your mobile navbar with these changes: -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
+  <div class="container-fluid">
+    <router-link class="navbar_logo_container" to="/home-page">
+      <img class="navbar_logo_img" alt="CareerQuest logo"/>
+    </router-link>
+    
+    <!-- User info should appear outside the collapsed menu -->
+    <div class="d-flex align-items-center">
+      <span v-if="currentUserEmail" class="navbar-text user-email me-2">
+        Hello, {{ currentUserEmail.split('@')[0] }}
+      </span>
+      
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavMobile"
+        aria-controls="navbarNavMobile"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="navbarNavMobile">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item">
+          <router-link 
+            class="navbarlink nav-link" 
+            to="/find-jobs"
+            @click="handleDropdownItemClick(() => router.push('/find-jobs'))"
+          >
+            Find Jobs
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link 
+            class="navbarlink nav-link" 
+            to="/saved-jobs"
+            @click="handleDropdownItemClick(() => router.push('/saved-jobs'))"
+          >
+            Saved Jobs
+          </router-link>
+        </li>
+      </ul>
+      
+      <form class="d-flex my-2 w-100" @submit.prevent="handleSubmit">
+        <input
+          class="form-control me-2"
+          type="text"
+          v-model="searchText"
+          placeholder="Search jobs..."
+        />
+        <button class="searchbutton btn btn-primary" type="submit">Search</button>
+      </form>
+      
+      <!-- Account dropdown inside collapse -->
+      <div class="dropdown mt-3 mb-2">
+        <button 
+          id="dropdownMenuButtonMobile"
+          class="btn btn-secondary dropdown-toggle w-100" 
+          type="button" 
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <span class="me-2">Account</span>
+          <img
+            src="@/assets/user.png"
+            style="max-height: 30px;"
+            alt="User"
+            class="rounded-circle"
+          />
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end w-100" aria-labelledby="dropdownMenuButtonMobile">
+          <li>
+            <router-link 
+              class="dropdown-item" 
+              to="/profile"
+              @click="handleDropdownItemClick(() => router.push('/profile'))"
+            >
+              Profile
+            </router-link>
+          </li>
+          <li>
+            <router-link 
+              class="dropdown-item" 
+              to="/settings"
+              @click="handleDropdownItemClick(() => router.push('/settings'))"
+            >
+              Settings
+            </router-link>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          
+          <li v-if="currentUserEmail">
+            <button 
+              class="dropdown-item" 
+              @click="handleDropdownItemClick(signOut)"
+              data-bs-dismiss="modal"
+            >
+              Sign Out
+            </button>
+          </li>
+          <li v-else>
+            <button
+              type="button"
+              class="dropdown-item"
+              @click="handleDropdownItemClick(goToAuthPage)"
+              data-bs-dismiss="modal"
+            >
+              Sign In
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
     <!-- Premium Modal -->
     <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
       <div class="modal-dialog">

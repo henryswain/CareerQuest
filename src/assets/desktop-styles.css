@@ -1,4 +1,4 @@
-/* desktop-styles.css - All desktop styles for App.vue */
+/* This file contains the CSS styles for the desktop version of the application */
 
 /* Styles for the navbar (desktop version) */
 .navbar {
@@ -258,13 +258,20 @@
     border-color: #ffffff;
     color: #ffffff;
   }
+  .current-page-num {
+    color: #333333; /* Dark gray for light mode */
+  }
   
+  /* white text for page number */
+  .dark-mode .current-page-num {
+    color: #ffffff !important;
+  }
   .dark-mode .auth-button:hover {
     background-color: rgba(255, 255, 255, 0.1);
     color: #ffffff;
   }
   
-  /* Dark mode overrides for Premium button */
+  /*  overrides for Premium button */
   .dark-mode .Premium {
     border-color: #FFD700;
     color: #FFD700;
