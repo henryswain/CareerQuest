@@ -47,20 +47,53 @@ Hub.listen('auth', async ({ payload }) => {
         const email = attributes.email;
         localStorage.setItem('currentUserEmail', email);
         currentUserEmail.value = email;
+        
+        // Redirect to home page after sign in
+        router.push('/home-page');
+        
+        // Close any modals
+        const closeModal = document.getElementById("close-modal");
+        if (closeModal) {
+          closeModal.click();
+        }
       } catch (error) {
         console.error("Error getting current user after sign in:", error);
       }
-      document.getElementById("close-modal").click();
       break;
 
     case 'signedOut':
       console.log("signed out");
       localStorage.removeItem('currentUserEmail');
       currentUserEmail.value = null;
-      document.getElementById("close-modal").click();
+      
+      // Redirect to home page after sign out
+      router.push('/home-page');
+      
+      const closeModal = document.getElementById("close-modal");
+      if (closeModal) {
+        closeModal.click();
+      }
       break;
   }
 });
+
+// Also update the goToAuthPage function to ensure proper routing
+function goToAuthPage() {
+  // Use replace instead of push to avoid back navigation issues
+  router.replace({ path: '/auth' });
+}
+
+// Single signOut function - removed duplicate
+async function signOut() {
+  try {
+    await amplifySignOut();
+    console.log("Signed out successfully");
+    // Redirect to home page after sign out
+    router.push('/home-page');
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+}
 
 function handleDropdownItemClick(action) {
   // Close the navbar collapse
@@ -78,25 +111,11 @@ function handleDropdownItemClick(action) {
   }
 }
 
-
-function goToAuthPage() {
-  router.push({ path: '/auth' });
-}
-
 function toggleDropdown() {
   const dropdownElement = document.getElementById('dropdownMenuButton');
   if (dropdownElement) {
     const dropdown = Dropdown.getOrCreateInstance(dropdownElement);
     dropdown.toggle();
-  }
-}
-
-async function signOut() {
-  try {
-    await amplifySignOut();
-    console.log("Signed out successfully");
-  } catch (error) {
-    console.error("Error signing out:", error);
   }
 }
 
@@ -236,13 +255,13 @@ onMounted(async () => {
     new Dropdown(dropdownElement);
   }
   
-  // FIXED - Initialize mobile navbar collapse properly
+  // Initialize mobile navbar collapse properly
   const initializeMobileNavbar = () => {
     const navbarToggle = document.querySelector('.navbar-toggler');
     const navbarCollapse = document.getElementById('navbarNavMobile');
     
     if (navbarToggle && navbarCollapse) {
-      // Remove existing event listeners to prevent duplicates
+      
       if (navbarToggle._clickHandler) {
         navbarToggle.removeEventListener('click', navbarToggle._clickHandler);
       }
@@ -297,14 +316,14 @@ onMounted(async () => {
     
     // Initialize immediately
     initializeMobileDropdown();
-    initializeMobileNavbar(); // Add this line to initialize mobile navbar
+    initializeMobileNavbar(); 
     
     // Also initialize on resize to mobile
     window.addEventListener('resize', () => {
       if (window.innerWidth < 992) {
         nextTick(() => {
           initializeMobileDropdown();
-          initializeMobileNavbar(); // Add this line to reinitialize on resize
+          initializeMobileNavbar(); 
         });
       }
     });
@@ -434,16 +453,15 @@ onMounted(async () => {
     </nav>
 
     <!-- Mobile navbar -->
-    <!-- Fix for mobile account dropdown in App.vue -->
+  
 
-<!-- Update your mobile navbar with these changes: -->
 <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
   <div class="container-fluid">
     <router-link class="navbar_logo_container" to="/home-page">
       <img class="navbar_logo_img" alt="CareerQuest logo"/>
     </router-link>
     
-    <!-- User info should appear outside the collapsed menu -->
+    <!-- User info appears outside the collapsed menu -->
     <div class="d-flex align-items-center">
       <span v-if="currentUserEmail" class="navbar-text user-email me-2">
         Hello, {{ currentUserEmail.split('@')[0] }}
