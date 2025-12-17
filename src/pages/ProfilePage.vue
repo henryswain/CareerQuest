@@ -1,5 +1,4 @@
 <template>
-
   <div class="container">
     <div class="profile">
       <div class="profile__left">
@@ -177,79 +176,79 @@
   </div>
 
   <!-- Skills Section -->
-<div class="container">
-  <div class="skills">
-    <div class="skills__info">
-      <div class="skills-container">
-        <h2 class="skills-title">Skills</h2>
-        <button
-          class="add-skills-btn"
-          data-bs-toggle="modal"
-          data-bs-target="#skillsModal"
-          @click="openSkillsModal"
-        >
-          Add Skills
-        </button>
-      </div>
-      <div class="skills-list">
-        <div class="skills-tags">
-          <!-- show saved skills -->
-          <span v-for="(skill, index) in user.skills" :key="index" class="skill-tag">
-            {{ skill }}
-            <button class="remove-tag" @click="deleteSkill(index)">&times;</button>
-          </span>
+  <div class="container">
+    <div class="skills">
+      <div class="skills__info">
+        <div class="skills-container">
+          <h2 class="skills-title">Skills</h2>
+          <button
+            class="add-skills-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#skillsModal"
+            @click="openSkillsModal"
+          >
+            Add Skills
+          </button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Add Skills Modal -->
-<div
-  class="modal fade"
-  id="skillsModal"
-  tabindex="-1"
-  aria-labelledby="skillsModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="skillsModalLabel">Add Skills</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="skillInput">Add Skills</label>
-          <div class="skill-tags">
-            <!-- show editable skill list while modal is open -->
-            <span v-for="(skill, index) in newSkills" :key="index" class="skill-tag">
+        <div class="skills-list">
+          <div class="skills-tags">
+            <!-- show saved skills -->
+            <span v-for="(skill, index) in user.skills" :key="index" class="skill-tag">
               {{ skill }}
-              <button class="remove-tag" @click="removeSkill(index)">&times;</button>
+              <button class="remove-tag" @click="deleteSkill(index)">&times;</button>
             </span>
           </div>
-          <input
-            type="text"
-            id="skillInput"
-            v-model="skillInput"
-            class="form-control"
-            placeholder="Type a skill and press Enter"
-            @keyup.enter="addSkillTag"
-          />
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" @click="saveSkills">Save Skills</button>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Add Skills Modal -->
+  <div
+    class="modal fade"
+    id="skillsModal"
+    tabindex="-1"
+    aria-labelledby="skillsModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="skillsModalLabel">Add Skills</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="skillInput">Add Skills</label>
+            <div class="skill-tags">
+              <!-- show editable skill list while modal is open -->
+              <span v-for="(skill, index) in newSkills" :key="index" class="skill-tag">
+                {{ skill }}
+                <button class="remove-tag" @click="removeSkill(index)">&times;</button>
+              </span>
+            </div>
+            <input
+              type="text"
+              id="skillInput"
+              v-model="skillInput"
+              class="form-control"
+              placeholder="Type a skill and press Enter"
+              @keyup.enter="addSkillTag"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" @click="saveSkills">Save Skills</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -283,6 +282,25 @@ const user = ref({
 const skillInput = ref('');
 const newSkills = ref([]);
 
+// Modal cleanup function to fix scroll issue
+const cleanupModal = (modalId) => {
+  const modalElement = document.getElementById(modalId);
+  if (modalElement) {
+    const modal = Modal.getInstance(modalElement);
+    if (modal) {
+      modal.hide();
+    }
+  }
+  
+  // Force cleanup of any remaining modal artifacts
+  setTimeout(() => {
+    document.body.classList.remove('modal-open');
+    document.body.style.paddingRight = '';
+    document.body.style.overflow = '';
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+  }, 100);
+};
+
 //profile picture/banner logic
 const handleFileUpload = async (event) => {
   try {
@@ -312,14 +330,9 @@ const saveProfile = async () => {
     const response = await fetch(url);
     const result = await response.json();
     console.log('Profile saved:', result);
-// fix for modal backdrop remaining after closing and freezes the site
-    const modalElement = document.getElementById('profileModal');
-    if (modalElement) {
-      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-      modal.hide();
-    }
-    document.body.classList.remove('modal-open');
-    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    
+    // Use cleanup function
+    cleanupModal('profileModal');
   } catch (error) {
     console.error('Error saving profile:', error);
   }
@@ -330,7 +343,6 @@ const addSkillTag = () => {
   if (skillInput.value.trim()) {
     newSkills.value.push(skillInput.value.trim());
     skillInput.value = '';
-    
   }
 };
 
@@ -359,13 +371,10 @@ const saveSkills = async () => {
   user.value.skills = [...newSkills.value];
   newSkills.value = [];
   skillInput.value = '';
-  const modalElement = document.getElementById('skillsModal');
-  if (modalElement) {
-    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-    modal.hide();
-  }
-  document.body.classList.remove('modal-open');
-  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+  
+  // Use cleanup function
+  cleanupModal('skillsModal');
+  
   console.log("Saving profile");
   await saveProfile();
 };
@@ -384,11 +393,8 @@ const addEducation = async () => {
   user.value.education.push({ ...newEducation.value });
   newEducation.value = { schoolName: '', degree: '', fieldOfStudy: '', startDate: '', endDate: '' };
 
-  const modalElement = document.getElementById('educationModal');
-  if (modalElement) {
-    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-    modal.hide();
-  }
+  // Use cleanup function
+  cleanupModal('educationModal');
 
   await saveProfile();
 };
@@ -412,11 +418,8 @@ const addExperience = async () => {
   user.value.experience.push({ ...newExperience.value });
   newExperience.value = { companyName: '', position: '', startDate: '', endDate: '', description: '' };
 
-  const modalElement = document.getElementById('experienceModal');
-  if (modalElement) {
-    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-    modal.hide();
-  }
+  // Use cleanup function
+  cleanupModal('experienceModal');
 
   await saveProfile();
 };
@@ -445,7 +448,6 @@ const applyDarkMode = () => {
   }
 };
 watch(darkMode, applyDarkMode);
-
 
 const loadSettings = async () => {
   console.log("loadSettings called")
@@ -500,6 +502,30 @@ Hub.listen('auth', ({ payload }) => {
   }
 });
 
+// Initialize modal cleanup
+const initModalCleanup = () => {
+  const modalIds = ['profileModal', 'skillsModal', 'educationModal', 'experienceModal'];
+  
+  modalIds.forEach(modalId => {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      // Clean up on modal hide
+      modalElement.addEventListener('hide.bs.modal', () => {
+        setTimeout(() => {
+          document.body.classList.remove('modal-open');
+          document.body.style.paddingRight = '';
+          document.body.style.overflow = '';
+          document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        }, 50);
+      });
+      
+      // Additional cleanup on modal hidden
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        cleanupModal(modalId);
+      });
+    }
+  });
+};
 
 //load settings and user profile from load, if no profile then the lambda function creates one with the user ID
 onMounted(async () => {
@@ -519,9 +545,14 @@ onMounted(async () => {
       newSkills.value = [...(user.value.skills || [])];
     });
   }
+  
+  // Initialize modal cleanup
+  initModalCleanup();
+  
+  // Apply initial dark mode
+  applyDarkMode();
 });
 </script>
-
 
 <style scoped>
 .profile-page {
@@ -653,6 +684,10 @@ onMounted(async () => {
   margin-bottom: 80px; /* Add space above footer */
 }
 
+body {
+  padding-bottom: 160px; 
+}
+
 .profile {
   position: relative;
   display: flex;
@@ -664,8 +699,6 @@ onMounted(async () => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   min-height: 200px;
 }
-
-
 
 .profile__left {
   margin-top: 0;
@@ -1099,12 +1132,28 @@ onMounted(async () => {
 }
 
 .skills {
-  margin-bottom: 120px !important; /* was 2rem, ensure it's above footer */
-  padding-bottom: 2rem; /* extra space for safety */
+  margin-bottom: 120px !important; 
+  padding-bottom: 2rem; 
 }
 
 body {
-  padding-bottom: 160px; /* in case footer is fixed */
+  padding-bottom: 160px; 
 }
 
+/* blue buttons */
+.dark-mode .change-profile-btn,
+.dark-mode .add-education-btn,
+.dark-mode .add-experience-btn,
+.dark-mode .add-skills-btn {
+  background-color: #0073b1 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.dark-mode .change-profile-btn:hover,
+.dark-mode .add-education-btn:hover,
+.dark-mode .add-experience-btn:hover,
+.dark-mode .add-skills-btn:hover {
+  background-color: #005582 !important;
+}
 </style>

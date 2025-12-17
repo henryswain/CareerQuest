@@ -1,247 +1,5 @@
-<template>
-  <div id="app" style="position: relative;">
-    <!-- Desktop navbar (Hidden on mobile)-->
-    <!-- Desktop navbar -->
-    <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
-  <div class="container-fluid">
-
-    <!-- Left side -->
-    <router-link class="navbar_logo_container" to="/home-page">
-      <img class="navbar_logo_img" alt="CareerQuest logo" />
-    </router-link>
-
-    <ul class="navbar-nav me-auto">
-      <li class="nav-item">
-        <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
-      </li>
-      <li class="nav-item">
-        <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
-      </li>
-    </ul>
-
-    <!-- Right side -->
-    <button
-      class="Premium"
-      id="premium-now"
-      type="button"
-      data-bs-toggle="modal"
-      data-bs-target="#premiumModal"
-    >
-      Premium
-    </button>
-
-    <form class="d-flex me-3" @submit.prevent="handleSubmit">
-      <input
-        class="form-control me-2"
-        type="text"
-        v-model="searchText"
-        placeholder="Search jobs..."
-      />
-      <button class="searchbutton btn btn-primary" type="submit">Search</button>
-    </form>
-
-    <!-- Sign in/display user email-->
-    <div class="d-flex align-items-center me-3">
-      <button
-        v-if="!currentUserEmail"
-        id="desktop-auth-state"
-        type="button"
-        class="auth-button"
-        @click="goToAuthPage"
-      >
-        Sign in
-      </button>
-      <span v-else class="navbar-text user-email">
-        Hello, {{ currentUserEmail }}
-      </span>
-    </div>
-
-    <!-- Dropdown -->
-    <div class="dropdown">
-      <button
-        class="btn btn-secondary dropdown-toggle d-flex align-items-center justify-content-center"
-        type="button"
-        id="dropdownMenuButton"
-        @click="toggleDropdown"
-      >
-        <span class="me-2">Account</span>
-        <img
-          src="@/assets/user.png"
-          style="max-height: 30px;"
-          alt="User"
-          class="rounded-circle"
-        />
-      </button>
-
-      <ul v-if="!isMobile" class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-        <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-        <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li v-if="currentUserEmail">
-          <button class="dropdown-item" @click="signOut">Sign Out</button>
-        </li>
-        <li v-else>
-          <button
-            id="desktop-auth-state"
-            type="button"
-            class="dropdown-item"
-            data-bs-toggle="modal"
-            data-bs-target="#authenticationModal"
-          >
-            Sign In
-          </button>
-        </li>
-      </ul>
-
-      <ul v-else class="dropdown-menu dropdown-menu-end">
-        <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-        <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li v-if="currentUserEmail">
-          <button class="dropdown-item" @click="signOut">Sign Out</button>
-        </li>
-        <li v-else>
-          <button
-            id="desktop-auth-state"
-            type="button"
-            class="dropdown-item"
-            data-bs-toggle="modal"
-            data-bs-target="#authenticationModal"
-          >
-            Sign In
-          </button>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-
-      <!-- Mobile navbar -->
-      <!-- New navbar for mobile. Is not white and adopts new logo-->
-      <nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
-      <div class="container-fluid">
-        <router-link class="navbar_logo_container" to="/home-page">
-        <img class="navbar_logo_img" alt="CareerQuest logo"/>
-        </router-link>
-        <button
-          class="navbar-toggler bg-primary"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavMobile"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse flex-column align-items-center" id="navbarNavMobile">
-          <ul class="navbar-nav mb-2 w-100 d-flex justify-content-center">
-            <li class="nav-item">
-              <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
-            </li>
-          </ul>
-          <form class="d-flex me-3" @submit.prevent="handleSubmit">
-            <input
-              class="form-control me-2"
-              type="text"
-              v-model="searchText"
-              placeholder="Search jobs..."
-            />
-            <button class="btn btn-outline-light" type="submit">Search</button>
-          </form>
-          <div class="dropdown w-100 d-flex justify-content-end">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-              <img
-                src="@/assets/user.png"
-                style="max-height: 30px;"
-                alt="User"
-                class="rounded-circle"
-              />
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
-              <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
-              <li><hr class="dropdown-divider" /></li>
-              
-              <li v-if="currentUserEmail">
-                <button class="dropdown-item" @click="signOut">Sign Out</button>
-              </li>
-              <li v-else>
-                <button
-                  id="desktop-auth-state"
-                  type="button"
-                  class="dropdown-item"
-                  data-bs-toggle="modal"
-                  data-bs-target="#authenticationModal"
-                >
-                  Sign In
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-  <!-- Premium Modal -->
-  <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="premiumModalLabel">Upgrade to Premium</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h4>Premium Benefits:</h4>
-        <ul>
-          <li>Unlimited job applications</li>
-          <li>Priority application status</li>
-          <li>Advanced job matching</li>
-          <li>Early access to new jobs</li>
-        </ul>
-        <div class="price-section">
-          <h5>Monthly Subscription: $9.99</h5>
-        </div>
-        <!-- PayPal Button Container -->
-        <div id="paypal-button-container"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <!-- main content  -->
-    <div style="margin-top: 70px;">
-      <router-view />
-    </div>
-  </div>
-
-<!-- footer content -->
-  <footer class="footer">
-        <div class="footer-content">
-          <div class="footer-section">
-            <p class="footer-copyright">&copy; 2025 CareerQuest, Inc</p>
-          </div>
-
-          <div class="footer-logo-section">
-            <img class="navbar_logo_img" alt="CareerQuest logo" />
-          </div>
-
-          <div class="footer-section">
-            <ul class="footer-links">
-              <li><a href="/about">About</a></li>
-              <li><a href="/contact">Contact</a></li>
-              <li><a href="/privacy">Privacy</a></li>
-              <li><a href="/terms">Terms</a></li>
-            </ul>
-          </div>
-        </div>
-    </footer>
-</template>
-
-
 <script setup>
-import { ref, nextTick, onMounted } from 'vue';
+import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { Authenticator } from "@aws-amplify/ui-vue";
 import "@aws-amplify/ui-vue/styles.css";
@@ -250,8 +8,11 @@ import { Hub } from 'aws-amplify/utils';
 import originalConfig from '../amplify_outputs.json';
 import { fetchUserAttributes, getCurrentUser, signOut as amplifySignOut } from 'aws-amplify/auth';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { Dropdown } from 'bootstrap';
+import { Dropdown, Collapse } from 'bootstrap';
 
+// Import the separate CSS files
+import '@/assets/desktop-styles.css';
+import '@/assets/mobile-styles.css';
 
 // Function to replace env variable placeholders
 const resolveConfig = (config) => {
@@ -267,11 +28,15 @@ const resolveConfig = (config) => {
 };
 
 const amplifyConfig = resolveConfig(originalConfig);
-
 Amplify.configure(amplifyConfig)
 
 // Save user email locally
 const currentUserEmail = ref(localStorage.getItem('currentUserEmail'));
+
+// Footer visibility tracking
+const isFooterVisible = ref(true);
+let lastScrollTop = 0;
+let ticking = false;
 
 Hub.listen('auth', async ({ payload }) => {
   switch (payload.event) {
@@ -280,43 +45,77 @@ Hub.listen('auth', async ({ payload }) => {
       try {
         const attributes = await fetchUserAttributes();
         const email = attributes.email;
-        localStorage.setItem('currentUserEmail', email); // Save email
+        localStorage.setItem('currentUserEmail', email);
         currentUserEmail.value = email;
+        
+        // Redirect to home page after sign in
+        router.push('/home-page');
+        
+        // Close any modals
+        const closeModal = document.getElementById("close-modal");
+        if (closeModal) {
+          closeModal.click();
+        }
       } catch (error) {
         console.error("Error getting current user after sign in:", error);
       }
-      document.getElementById("close-modal").click();
       break;
 
     case 'signedOut':
       console.log("signed out");
-      localStorage.removeItem('currentUserEmail'); // Get rid of it when signed out
+      localStorage.removeItem('currentUserEmail');
       currentUserEmail.value = null;
-      document.getElementById("close-modal").click();
+      
+      // Redirect to home page after sign out
+      router.push('/home-page');
+      
+      const closeModal = document.getElementById("close-modal");
+      if (closeModal) {
+        closeModal.click();
+      }
       break;
   }
 });
 
+// Also update the goToAuthPage function to ensure proper routing
 function goToAuthPage() {
-  router.push({ path: '/auth' });
+  // Use replace instead of push to avoid back navigation issues
+  router.replace({ path: '/auth' });
 }
 
+// Single signOut function - removed duplicate
+async function signOut() {
+  try {
+    await amplifySignOut();
+    console.log("Signed out successfully");
+    // Redirect to home page after sign out
+    router.push('/home-page');
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+}
+
+function handleDropdownItemClick(action) {
+  // Close the navbar collapse
+  const navbarCollapse = document.getElementById('navbarNavMobile');
+  if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+    const bsCollapse = Collapse.getInstance(navbarCollapse);
+    if (bsCollapse) {
+      bsCollapse.hide();
+    }
+  }
+  
+  // Execute the action
+  if (typeof action === 'function') {
+    action();
+  }
+}
 
 function toggleDropdown() {
   const dropdownElement = document.getElementById('dropdownMenuButton');
   if (dropdownElement) {
     const dropdown = Dropdown.getOrCreateInstance(dropdownElement);
     dropdown.toggle();
-  }
-}
-
-
-async function signOut() {
-  try {
-    await amplifySignOut();
-    console.log("Signed out successfully");
-  } catch (error) {
-    console.error("Error signing out:", error);
   }
 }
 
@@ -329,6 +128,39 @@ async function handleSubmit() {
   await nextTick();
 }
 
+// Footer scroll handler
+const handleScroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
+      
+      // Check if on mobile
+      const isMobileDevice = window.innerWidth < 992;
+      
+      // Check if near the bottom of the page
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollPosition = windowHeight + scrollTop;
+      const isNearBottom = documentHeight - scrollPosition < 500;
+      
+      if (scrollDirection === 'down' && isFooterVisible.value) {
+        isFooterVisible.value = false;
+      } else if (scrollDirection === 'up' && !isFooterVisible.value) {
+        isFooterVisible.value = true;
+      }
+      
+      // Don't show footer on mobile when near bottom (prevents bounce)
+      if (isMobileDevice && isNearBottom && isFooterVisible.value) {
+        isFooterVisible.value = false;
+      }
+      
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      ticking = false;
+    });
+    ticking = true;
+  }
+};
 
 // Modify PayPal SDK loading function
 function loadPayPalScript() {
@@ -336,7 +168,6 @@ function loadPayPalScript() {
   script.src = 'https://www.paypal.com/sdk/js?client-id=AfXN2AKlII2ctuOylHuBnHdkkzcPB-kqA8NIdz6Gw1c2nGOhqj-scGysrXaR_VGLrduOlACJAsU22o7K&currency=USD';
   script.async = true;
   
-  // Add event listeners for script loading
   script.addEventListener('load', () => {
     if (window.paypal) {
       window.paypal.Buttons({
@@ -376,6 +207,41 @@ function loadPayPalScript() {
 
 const isMobile = ref(false);
 
+// Event handler functions for cleanup
+const handleScrollEvent = () => {
+  const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+  dropdowns.forEach(dropdown => {
+    const button = dropdown.previousElementSibling;
+    const dropdownInstance = Dropdown.getInstance(button);
+    if (dropdownInstance) {
+      dropdownInstance.hide();
+    }
+  });
+};
+
+const handleClickOutside = (event) => {
+  const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+  dropdowns.forEach(dropdown => {
+    const button = dropdown.previousElementSibling;
+    if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+      const dropdownInstance = Dropdown.getInstance(button);
+      if (dropdownInstance) {
+        dropdownInstance.hide();
+      }
+    }
+  });
+  
+  // Close mobile navbar menu when clicking outside
+  const navbarCollapse = document.getElementById('navbarNavMobile');
+  const navbarToggler = document.querySelector('.navbar-toggler');
+  
+  if (navbarCollapse?.classList.contains('show') && 
+      !navbarCollapse.contains(event.target) && 
+      !navbarToggler?.contains(event.target)) {
+    navbarToggler?.click();
+  }
+};
+
 onMounted(async () => {
   try {
     // Check for user sign in
@@ -396,429 +262,426 @@ onMounted(async () => {
   window.addEventListener('resize', () => {
     isMobile.value = window.innerWidth < 992;
   });
-  // Mobile dropdown
+  
+  // Initialize both desktop and mobile dropdowns
   const dropdownElement = document.getElementById('dropdownMenuButton');
   if (dropdownElement) {
     new Dropdown(dropdownElement);
   }
+  
+  // Initialize mobile navbar collapse properly
+  const initializeMobileNavbar = () => {
+    const navbarToggle = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.getElementById('navbarNavMobile');
+    
+    if (navbarToggle && navbarCollapse) {
+      
+      if (navbarToggle._clickHandler) {
+        navbarToggle.removeEventListener('click', navbarToggle._clickHandler);
+      }
+      
+      // Create a new click handler
+      const clickHandler = (e) => {
+        e.preventDefault();
+        
+        const bsCollapse = Collapse.getInstance(navbarCollapse) || new Collapse(navbarCollapse, {
+          toggle: false
+        });
+        
+        bsCollapse.toggle();
+      };
+      
+      // Store the handler for cleanup
+      navbarToggle._clickHandler = clickHandler;
+      
+      // Add the event listener
+      navbarToggle.addEventListener('click', clickHandler);
+    }
+  };
+  
+  // Force initialization of mobile dropdown after nextTick
+  nextTick(() => {
+    const initializeMobileDropdown = () => {
+      const dropdownElementMobile = document.getElementById('dropdownMenuButtonMobile');
+      
+      if (dropdownElementMobile) {
+        // Dispose of existing instance if any
+        const existingInstance = Dropdown.getInstance(dropdownElementMobile);
+        if (existingInstance) {
+          existingInstance.dispose();
+        }
+        
+        // Create new dropdown instance with proper config
+        const dropdown = new Dropdown(dropdownElementMobile);
+        
+        // Add click handler
+        dropdownElementMobile.addEventListener('click', (e) => {
+          e.preventDefault();
+          dropdown.toggle();
+        });
+        
+        // Add touch handler for mobile devices
+        dropdownElementMobile.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          dropdown.toggle();
+        });
+      }
+    };
+    
+    // Initialize immediately
+    initializeMobileDropdown();
+    initializeMobileNavbar(); 
+    
+    // Also initialize on resize to mobile
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 992) {
+        nextTick(() => {
+          initializeMobileDropdown();
+          initializeMobileNavbar(); 
+        });
+      }
+    });
   });
-
+  
+  // Add event listeners
+  document.addEventListener('click', handleClickOutside);
+  window.addEventListener('scroll', handleScrollEvent, { passive: true });
+  window.addEventListener('scroll', handleScroll, { passive: true });
+});
 </script>
 
+<template>
+  <div id="app" style="position: relative;">
+    <!-- Desktop navbar -->
+    <nav class="navbar navbar-expand navbar-dark fixed-top d-none d-lg-flex">
+      <div class="container-fluid">
+        <!-- Left side -->
+        <router-link class="navbar_logo_container" to="/home-page">
+          <img class="navbar_logo_img" alt="CareerQuest logo" />
+        </router-link>
+
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <router-link class="navbarlink nav-link" to="/find-jobs">Find Jobs</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="navbarlink nav-link" to="/saved-jobs">Saved Jobs</router-link>
+          </li>
+        </ul>
+
+        <!-- Right side -->
+        <button
+          class="Premium"
+          id="premium-now"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#premiumModal"
+        >
+          Premium
+        </button>
+
+        <form class="d-flex me-3" @submit.prevent="handleSubmit">
+          <input
+            class="form-control me-2"
+            type="text"
+            v-model="searchText"
+            placeholder="Search jobs..."
+          />
+          <button class="searchbutton btn btn-primary" type="submit">Search</button>
+        </form>
+
+        <!-- Sign in/display user email-->
+        <div class="d-flex align-items-center me-3">
+          <button
+            v-if="!currentUserEmail"
+            id="desktop-auth-state"
+            type="button"
+            class="auth-button"
+            @click="goToAuthPage"
+          >
+            Sign in
+          </button>
+          <span v-else class="navbar-text user-email">
+            Hello, {{ currentUserEmail }}
+          </span>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle d-flex align-items-center justify-content-center"
+            type="button"
+            id="dropdownMenuButton"
+            @click="toggleDropdown"
+          >
+            <span class="me-2">Account</span>
+            <img
+              src="@/assets/user.png"
+              style="max-height: 30px;"
+              alt="User"
+              class="rounded-circle"
+            />
+          </button>
+
+          <ul v-if="!isMobile" class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
+            <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li v-if="currentUserEmail">
+              <button class="dropdown-item" @click="signOut">Sign Out</button>
+            </li>
+            <li v-else>
+              <button
+                id="desktop-auth-state"
+                type="button"
+                class="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#authenticationModal"
+              >
+                Sign In
+              </button>
+            </li>
+          </ul>
+
+          <ul v-else class="dropdown-menu dropdown-menu-end">
+            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
+            <li><router-link class="dropdown-item" to="/settings">Settings</router-link></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li v-if="currentUserEmail">
+              <button class="dropdown-item" @click="signOut">Sign Out</button>
+            </li>
+            <li v-else>
+              <button
+                id="desktop-auth-state"
+                type="button"
+                class="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#authenticationModal"
+              >
+                Sign In
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile navbar -->
+  
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top d-lg-none custom-navbar">
+  <div class="container-fluid">
+    <router-link class="navbar_logo_container" to="/home-page">
+      <img class="navbar_logo_img" alt="CareerQuest logo"/>
+    </router-link>
+    
+    <!-- User info appears outside the collapsed menu -->
+    <div class="d-flex align-items-center">
+      <span v-if="currentUserEmail" class="navbar-text user-email me-2">
+        Hello, {{ currentUserEmail.split('@')[0] }}
+      </span>
+      
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavMobile"
+        aria-controls="navbarNavMobile"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="navbarNavMobile">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item">
+          <router-link 
+            class="navbarlink nav-link" 
+            to="/find-jobs"
+            @click="handleDropdownItemClick(() => router.push('/find-jobs'))"
+          >
+            Find Jobs
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link 
+            class="navbarlink nav-link" 
+            to="/saved-jobs"
+            @click="handleDropdownItemClick(() => router.push('/saved-jobs'))"
+          >
+            Saved Jobs
+          </router-link>
+        </li>
+      </ul>
+      
+      <form class="d-flex my-2 w-100" @submit.prevent="handleSubmit">
+        <input
+          class="form-control me-2"
+          type="text"
+          v-model="searchText"
+          placeholder="Search jobs..."
+        />
+        <button class="searchbutton btn btn-primary" type="submit">Search</button>
+      </form>
+      
+      <!-- Account dropdown inside collapse -->
+      <div class="dropdown mt-3 mb-2">
+        <button 
+          id="dropdownMenuButtonMobile"
+          class="btn btn-secondary dropdown-toggle w-100" 
+          type="button" 
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <span class="me-2">Account</span>
+          <img
+            src="@/assets/user.png"
+            style="max-height: 30px;"
+            alt="User"
+            class="rounded-circle"
+          />
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end w-100" aria-labelledby="dropdownMenuButtonMobile">
+          <li>
+            <router-link 
+              class="dropdown-item" 
+              to="/profile"
+              @click="handleDropdownItemClick(() => router.push('/profile'))"
+            >
+              Profile
+            </router-link>
+          </li>
+          <li>
+            <router-link 
+              class="dropdown-item" 
+              to="/settings"
+              @click="handleDropdownItemClick(() => router.push('/settings'))"
+            >
+              Settings
+            </router-link>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          
+          <li v-if="currentUserEmail">
+            <button 
+              class="dropdown-item" 
+              @click="handleDropdownItemClick(signOut)"
+              data-bs-dismiss="modal"
+            >
+              Sign Out
+            </button>
+          </li>
+          <li v-else>
+            <button
+              type="button"
+              class="dropdown-item"
+              @click="handleDropdownItemClick(goToAuthPage)"
+              data-bs-dismiss="modal"
+            >
+              Sign In
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+    <!-- Premium Modal -->
+    <div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="premiumModalLabel">Upgrade to Premium (In Beta)</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h4>Premium Benefits:</h4>
+            <ul>
+              <li>Unlimited job applications</li>
+              <li>Priority application status</li>
+              <li>Advanced job matching</li>
+              <li>Early access to new jobs</li>
+            </ul>
+            <div class="price-section">
+              <h5>Monthly Subscription: $9.99</h5>
+            </div>
+            <!-- PayPal Button Container -->
+            <div id="paypal-button-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main content  -->
+    <div style="margin-top: 70px;">
+      <router-view />
+    </div>
+  </div>
+
+  <!-- footer content -->
+  <footer class="footer" :class="{ 'footer-hidden': !isFooterVisible }">
+    <div class="footer-content">
+      <div class="footer-section">
+        <p class="footer-copyright">&copy; 2025 CareerQuest, Inc</p>
+      </div>
+
+      <div class="footer-logo-section">
+        <img class="navbar_logo_img" alt="CareerQuest logo" />
+      </div>
+
+      <div class="footer-section">
+        <ul class="footer-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</template>
+
+
 <style scoped>
-/* Styles for the navbar (desktop version) */
-.navbar {
-  z-index: 2000;
-  background-color: #ffffff;
-  border-bottom: 2px solid #a1a1a1;
-  height: fit-content;
-  padding: 10px;
-}
-/* Logo container and image styling */
-.navbar_logo_container {
-  padding: 0.5rem;
-  transition: background-color .15s ease-in-out;
-  border-radius: 50px;
-  width: 150px;
-}
-
-.navbar_logo_img {
-  content: url("@/assets/CQ_logo_lightmode.svg");
-}
-
-.navbar_logo_container:hover {
-  color: #0073b1;
-  background: rgba(0, 115, 177, 0.1);
-}
-
-.navbarlink {
-  display: block;
-  color: #272727;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 0.5rem;
-  transition: background-color .15s ease-in-out;
-  border-radius: 50px;
-}
-
-.navbarlink:hover {
-  color: #0073b1;
-  background: rgba(0, 115, 177, 0.1);
-}
-
-.searchbutton {
-  border-radius: 50px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.auth-button {
-  background-color: transparent;
-  border: 2px solid #0073b1;
-  color: #0073b1;
-  padding: 0.5rem 1.5rem;
-  border-radius: 50px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.auth-button:hover {
-  background-color: rgba(0, 115, 177, 0.1);
-  color: #0073b1;
-}
-
-/* Add to dark mode section */
-.dark-mode .auth-button {
-  border-color: #ffffff;
-  color: #ffffff;
-}
-
-.dark-mode .auth-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-.Premium {
-  background-color: transparent;
-  border: 2px solid #FFD700;
-  color: #FFD700;
-  padding: 0.5rem 1.5rem;
-  border-radius: 50px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  margin-right: 1rem;
-}
-
-.Premium:hover {
-  background-color: rgba(255, 215, 0, 0.1);
-  color: #FFD700;
-}
-
-/* Add to dark mode section */
-.dark-mode .Premium {
-  border-color: #FFD700;
-  color: #FFD700;
-}
-
-.dark-mode .Premium:hover {
-  background-color: rgba(255, 215, 0, 0.1);
-  color: #FFD700;
-}
-
-/* Premium Modal Styles */
-#premiumModal .modal-body {
-  padding: 2rem;
-}
-
-#premiumModal .price-section {
-  text-align: center;
-  margin: 1.5rem 0;
-}
-
-#premiumModal ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-#premiumModal ul li {
-  margin: 0.5rem 0;
-  padding-left: 1.5rem;
-  position: relative;
-}
-
-#premiumModal ul li:before {
-  content: '✓';
-  color: #28a745;
-  position: absolute;
-  left: 0;
-}
-
-#paypal-button-container {
-  margin-top: 1.5rem;
-}
-</style>
-
-<style>
-.modal {
-  z-index: 2100 !important;
-}
-.modal-backdrop {
-  z-index: 2050 !important;
-}
-.modal-dialog {
-  margin-top: 80px;
-}
-
-.user-email {
-  font-weight: 500;
-  color: black;
-}
-
-.dark-mode .user-email {
-  color: white;
-}
-
-</style>
-
-<!-- Darkmode overrides -->
-<style>
-.dark-mode .form-control,
-.dark-mode input[type="text"],
-.dark-mode input[type="email"],
-.dark-mode input[type="search"],
-.dark-mode input[type="password"],
-.dark-mode select,
-.dark-mode textarea,
-.dark-mode .form-control {
-  background-color: #444444 !important;
-  color: #ffffff !important;
-  border-color: #555555 !important;
-}
-.dark-mode .form-control::placeholder,
-.dark-mode input[type="text"]::placeholder,
-.dark-mode input[type="email"]::placeholder,
-.dark-mode input[type="search"]::placeholder,
-.dark-mode input[type="password"]::placeholder,
-.dark-mode select::placeholder,
-.dark-mode textarea::placeholder,
-.dark-mode .form-control::placeholder {
-  color: #cccccc !important;
-}
-.dark-mode .modal-content,
-.dark-mode .modal-header,
-.dark-mode .modal-body,
-.dark-mode .modal-footer {
-  background-color: #333333 !important;
-  color: #ffffff !important;
-  border-color: #555555 !important;
-}
-.dark-mode .btn-close {
-  filter: invert(1);
-}
-
-/* Navbar overrides */
-.dark-mode .navbar {
-  background-color: #181818;
-  border-bottom: #525151;
-}
-
-.dark-mode .navbar_logo_img {
-  content: url("@/assets/CQ_logo_darkmode.svg");
-}
-
-.dark-mode .navbar_logo_container:hover {
-  color: #0073b1;
-  background: rgba(73, 142, 179, 0.2);
-}
-
-.dark-mode .navbarlink {
-  color: #ffffff;
-}
-
-.dark-mode .navbarlink:hover {
-  color: #b2dbf1;
-  background: rgba(73, 142, 179, 0.2);
-}
-
-/* For Saved Jobs cards */
-.dark-mode .saved-jobs-container,
-.dark-mode .saved-jobs-container * {
-  background-color: #333333 !important;
-  color: #ffffff !important;
-  border-color: #555555 !important;
-}
-
-/* For the Find Jobs page container */
-.dark-mode .find-jobs-page,
-.dark-mode .find-jobs-page * {
-  background-color: #333333 !important;
-  color: #ffffff !important;
-  border-color: #555555 !important;
-}
-
-/* Dark mode OVR for ProfilePage */
-.dark-mode .profile-container {
-  background-color: #333333 !important;
-  color: #ffffff !important;
-  border-color: #555555 !important;
-}
-
-.dark-mode .profile-container * {
-  color: #ffffff !important;
-}
-
-.dark-mode .profile-container .input-field,
-.dark-mode .profile-container input,
-.dark-mode .profile-container textarea,
-.dark-mode .profile-container select {
-  background-color: #444444 !important;
-  color: #ffffff !important;
-  border-color: #555555 !important;
-}
-
-.dark-mode .profile-container a {
-  color: #ffffff !important;
+/* Footer styling for mobile devices */
+@media (max-width: 768px) {
+  .footer-logo-section .navbar_logo_img {
+    max-height: 30px !important; /* Reduce logo size on mobile */
+    width: auto;
   }
-
-/* Darkmode for dropdown */
-.dark-mode .dropdown-menu {
-  background-color: #333333 !important; 
-  border-color: #444444 !important;     
-}
-
-/* Changes dropdown text to white */
-.dark-mode .dropdown-menu .dropdown-item {
-  background-color: #333333 !important; 
-  color: #ffffff !important;            
-}
-
-/* For sign up link */
-.dark-mode .btn-link {
-  color: #ffffff !important;
-}
-
-/* Add this to your dark mode overrides section */
-.dark-mode .btn-secondary.dropdown-toggle {
-  background-color: #333333 !important;
-  color: #ffffff !important;
-  border-color: #555555 !important;
-}
-
-.dark-mode .btn-secondary.dropdown-toggle:hover {
-  background-color: #444444 !important;
-  border-color: #666666 !important;
-}
-
-.dark-mode .btn-secondary.dropdown-toggle:active,
-.dark-mode .btn-secondary.dropdown-toggle.show {
-  background-color: #444444 !important;
-  border-color: #666666 !important;
-}
-</style>
-
-
-<style>
-  /* override the default authentication styles to fit the CareerQuest theme */
-  :root {
-    --amplify-components-authenticator-router-box-shadow: none !important;
-    --amplify-components-authenticator-router-border-width: 0 !important;
-    --amplify-components-input-focus-border-color: #0073b1d !important;
-    --amplify-components-fieldcontrol-focus-box-shadow: 0 0 0 1px #0073b1 !important
+  
+  .footer {
+    padding: 0 rem 0; /* Reduce footer padding */
   }
-
-  .amplify-heading--3 {
-    color: #1a1a1a;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
   }
-  .amplify-label {
-    color: #444;
+  
+  .footer-section {
+    text-align: center;
   }
-  .amplify-button.amplify-button--primary {
-    background-color: #0073b1;
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 0.5rem;
   }
-
-  .amplify-button.amplify-button--primary:hover {
-    background-color: #005d92;
+  
+  .footer-copyright {
+    font-size: 0.875rem; /* Smaller copyright text */
   }
-
-  .amplify-tabs__item {
-    color: rgba(0, 0, 0, 0.5);
+  
+  .footer-links li a {
+    font-size: 0.875rem; /* Smaller link text */
   }
-
-  .amplify-tabs__item:hover {
-    color: #0073b1;
-  }
-
-  .amplify-tabs__item--active {
-    color: #0073b1;
-    border-color: #0073b1;
-  }
-
-
-.footer {
-  /* margin-top: auto; */
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(157, 179, 221, 0.5);
-  padding: 1rem 0;  /* Reduced from 2rem to 1rem */
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+/* General footer styles */
+.footer-logo-section .navbar_logo_img {
+  transition: max-height 0.3s ease; /* Smooth transition */
 }
 
-.footer-section{
-  border: none !important;
-  background-color: transparent !important;
-}
-
-.footer-logo-section{
-  padding: 0.5rem;
-  width: 150px;
-  display: flex;
-}
-
-.footer-logo {
-  height: 30px;  /* Reduced from default size */
-  width: auto;
-}
-
-.footer-links {
-  display: flex;
-  gap: 1rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.footer-links a {
-  color: #666;
-  text-decoration: none;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
-  font-size: 1rem;
-  font-weight: 500;
-  font-size: 0.9rem;  /* Slightly smaller font size */
-  transition: background-color .15s ease-in-out;
-  border-radius: 50px;
-}
-
-.footer-links a:hover {
-  color: #0073b1;
-  background: rgba(0, 115, 177, 0.1);
-}
-
-.footer-copyright {
-  color: #666;
-  font-size: 0.9rem;  /* Slightly smaller font size */
-  margin: 0;
-  border: none;
-}
-
-/* Dark mode overrides for footer */
-.dark-mode .footer {
-  background: rgba(24, 24, 24, 0.95);
-  border-top: 1px solid rgba(85, 85, 85, 0.5);
-}
-
-.dark-mode .footer-links a,
-.dark-mode .footer-copyright {
-  color: #aaa;
-}
-
-.dark-mode .footer-links a:hover {
-  color: #fff;
-}
 </style>
